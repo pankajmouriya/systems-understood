@@ -1,0 +1,27 @@
+---
+title: "Same Origin Policy to Anchors"
+description: "Same Origin Policy to Anchors in Pankaj Mouriya's Same Origin Policy guide."
+slug: "sop-to-anchors"
+book: "same-origin-policy"
+order: 6
+draft: false
+---
+
+How does SOP apply to anchors ?
+
+When we link one website to another website. For example, **sitea.com** is linked **siteb.com**.
+
+```js
+<a href="http://siteb.com"></a>
+```
+
+<Figure src="/img/docs/appsec/sop/anchor1.png" alt="Same Origin Policy to Anchors, figure 1" width={1068} height={336} />
+
+Whenever such hyperlink is visited. The browser always loads the response in new context(tab/window). Via this the browser makes sure that there is no data leakage between **sitea.com** and **siteb.com**.
+
+In simple terms, The response loads in a new window/context. The originating site is replaced by the accessed site.
+
+Hence, **any site can link any other site**, but can't read the response
+
+
+<Figure src="/img/docs/appsec/sop/forms1.png" alt="Same Origin Policy to Anchors, figure 2" width={681} height={539} />

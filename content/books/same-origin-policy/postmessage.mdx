@@ -1,0 +1,83 @@
+---
+title: "postMessage API Implementation and limitations"
+description: "postMessage API Implementation and limitations in Pankaj Mouriya's Same Origin Policy guide."
+slug: "postmessage"
+book: "same-origin-policy"
+order: 13
+draft: false
+---
+
+## postMessage
+
+postMessage safely enables cross origin communication between objects, e.g., between a page, pop up, between a page and an iframe.
+
+**Requirement:** You need to have some kind of reference to the other origin with whom you want to talk to. It can be an embedded iframe
+
+<Figure src="/img/docs/appsec/sop/postmessage1.png" alt="postMessage API Implementation and limitations, figure 1" width={611} height={313} />
+
+
+**Sender**
+
+```js
+targetWindow.postMessage("hello other document!", "*");
+```
+
+**Receiver**
+
+```js
+window.addEventListener("message",function(message){console.log(message.data)});
+```
+
+### Limitation
+
+Let's assume, `store.sitea.com` wants to retrieve a username, so it listens for messages from `login.sitea.com`
+
+```js
+window.addEventListener(‘message’ event => {
+setCurrentUser(event.data.name)
+})
+
+```
+
+`Store.sitea.com` embeds an iframe to `login.sitea.com` which runs below code
+
+```js
+const data = { username: ‘PankajMouriya’ }
+window.parent.postMessage(data, ‘*’)
+```
+
+
+<Figure src="/img/docs/appsec/sop/postmessage2.png" alt="postMessage API Implementation and limitations, figure 2" width={1096} height={601} />
+
+Imagine what if attacker embeds `login.sitea.com`
+
+<Figure src="/img/docs/appsec/sop/postmessage3.png" alt="postMessage API Implementation and limitations, figure 3" width={1142} height={631} />
+
+
+### Remediation
+
+You can specify the destination origin for which the message is intended to
+
+Validate Destination of message - 
+
+
+```js
+const data = { username: ‘PankajMouriya’ }
+window.parent.postMessage(data, ‘http://store.sitea.com’)
+```
+
+But again, because `store.sitea.com` listens for messages from any source as it does not explicitly mentions which source, an attacker can embed `store.sitea.com` and send bogus messages to it
+
+
+<Figure src="/img/docs/appsec/sop/postmessage5.png" alt="postMessage API Implementation and limitations, figure 4" width={1182} height={651} />
+
+### Remediation
+
+Validate source of message -
+
+```js
+window.addEventListener(‘message’ event => {
+if(event.origin !== ‘http://login.sitea.com’) return
+setCurrentUser(event.data.name)
+})
+```

@@ -1,0 +1,31 @@
+source_path,old_url,new_url,status,heading_count,image_count,code_fence_count,notes
+appsecurity/2021-08-26-welcome/2021-07-07-devtools.md,/appsecurity/devtools,/blog/devtools,migrated-earlier,12,14,3,historical edition; source body and local figures preserved
+appsecurity/2021-08-26-welcome/2020-05-09-looking-for-js-gems.md,/appsecurity/looking-for-js-gems,/blog/looking-for-js-gems,migrated,14,13,0,historical edition; source body and local figures preserved
+appsecurity/2021-08-26-welcome/2021-01-11-auth-checks-made-easy.md,/appsecurity/auth-checks-made-easy,/blog/auth-checks-made-easy,migrated,9,17,0,historical edition; source body and local figures preserved
+appsecurity/2021-08-26-welcome/2021-01-17-CSV-formula-injection.md,/appsecurity/csv-formula-injection,/blog/csv-formula-injection,migrated,7,12,1,historical edition; source body and local figures preserved
+appsecurity/2021-08-26-welcome/2021-11-28-long-Lived-JWT.md,/appsecurity/long-Lived-JWT,/blog/long-lived-jwt,migrated,11,0,0,historical edition; source body and local figures preserved
+containersecurity/2024-04-12-guide-admission-controllers.md,/containersecurity/guide-admission-controllers,/blog/guide-admission-controllers,migrated,0,3,0,historical edition; source body and local figures preserved
+containersecurity/2024-04-12-informer-controllers.md,/containersecurity/informer-controllers,/blog/informer-controllers,migrated,4,5,0,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/References.md,/docs/sop/references,/books/same-origin-policy/references,migrated,0,0,0,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/browser-tabs.md,/docs/sop/browser-tabs,/books/same-origin-policy/browser-tabs,migrated,1,3,8,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/cookies.md,/docs/sop/cookies,/books/same-origin-policy/cookies,migrated,1,0,1,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/getting-around-sop.md,/docs/sop/getting-around-sop,/books/same-origin-policy/getting-around-sop,migrated,0,0,0,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/intro.md,/docs/sop/intro,/books/same-origin-policy/intro,migrated,1,0,0,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/postmessage.md,/docs/sop/postmessage,/books/same-origin-policy/postmessage,migrated,4,4,6,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/same-origin-policy.md,/docs/sop/same-origin-policy,/books/same-origin-policy/same-origin-policy,migrated,1,3,0,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/should-be-allowed.md,/docs/sop/should-be-allowed,/books/same-origin-policy/should-be-allowed,migrated,0,0,0,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/sop-in-tabs.md,/docs/sop/sop-in-tabs,/books/same-origin-policy/sop-in-tabs,migrated,0,5,3,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/sop-to-anchors.md,/docs/sop/sop-to-anchors,/books/same-origin-policy/sop-to-anchors,migrated,0,2,1,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/sop-to-forms.md,/docs/sop/sop-to-forms,/books/same-origin-policy/sop-to-forms,migrated,0,1,1,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/sop-to-images-css.md,/docs/sop/sop-to-images-css,/books/same-origin-policy/sop-to-images-css,migrated,1,3,1,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/sop-to-js.md,/docs/sop/sop-to-js,/books/same-origin-policy/sop-to-js,migrated,0,2,1,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/sop-to-localstorage.md,/docs/sop/sop-to-localstorage,/books/same-origin-policy/sop-to-localstorage,migrated,0,3,2,historical edition; source body and local figures preserved
+docs/AppSec/sameOriginPolicy/Online.md,/docs/sop/online,/books/same-origin-policy,redirected to book index,0,0,0,utility page replaced by book navigation
+docs/AppSec/sameOriginPolicy/toc.md,/docs/sop/toc,/books/same-origin-policy,redirected to book index,0,0,0,utility page replaced by book navigation
+docs/Kubernetes/Kubernetes101/01-overview.md,/docs/Kubernetes/Kubernetes101/overview,/books/kubernetes-101/overview,migrated,1,0,0,historical edition; source body and local figures preserved
+docs/Kubernetes/Kubernetes101/02-k8s-master-node.md,/docs/Kubernetes/Kubernetes101/k8s-master-node,/books/kubernetes-101/k8s-master-node,migrated,5,4,0,historical edition; source body and local figures preserved
+docs/Kubernetes/Kubernetes101/03-k8s-nodes.md,/docs/Kubernetes/Kubernetes101/k8s-nodes,/books/kubernetes-101/k8s-nodes,migrated,4,1,0,historical edition; source body and local figures preserved
+docs/Kubernetes/Kubernetes101/04-k8s-declarative-method.md,/docs/Kubernetes/Kubernetes101/k8s-declarative-method,/books/kubernetes-101/k8s-declarative-method,migrated,0,7,0,historical edition; source body and local figures preserved
+docs/Kubernetes/Kubernetes101/05-k8s-pods.md,/docs/Kubernetes/Kubernetes101/k8s-pods,/books/kubernetes-101/k8s-pods,migrated,1,2,0,historical edition; source body and local figures preserved
+docs/Kubernetes/Kubernetes101/06-k8s-service.md,/docs/Kubernetes/Kubernetes101/k8s-service,/books/kubernetes-101/k8s-service,migrated,0,4,0,historical edition; source body and local figures preserved
+docs/Kubernetes/Kubernetes101/08-k8s-deployments.md,/docs/Kubernetes/Kubernetes101/k8s-deployments,/books/kubernetes-101/k8s-deployments,migrated,0,2,0,historical edition; source body and local figures preserved

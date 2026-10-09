@@ -1,0 +1,212 @@
+[
+  {
+    "source": "appsecurity/2021-08-26-welcome/2021-07-07-devtools.md",
+    "old_url": "/appsecurity/devtools",
+    "new_url": "/blog/devtools",
+    "status": "migrated-earlier",
+    "images": 14
+  },
+  {
+    "source": "appsecurity/2021-08-26-welcome/2020-05-09-looking-for-js-gems.md",
+    "old_url": "/appsecurity/looking-for-js-gems",
+    "new_url": "/blog/looking-for-js-gems",
+    "status": "migrated",
+    "images": 13
+  },
+  {
+    "source": "appsecurity/2021-08-26-welcome/2021-01-11-auth-checks-made-easy.md",
+    "old_url": "/appsecurity/auth-checks-made-easy",
+    "new_url": "/blog/auth-checks-made-easy",
+    "status": "migrated",
+    "images": 17
+  },
+  {
+    "source": "appsecurity/2021-08-26-welcome/2021-01-17-CSV-formula-injection.md",
+    "old_url": "/appsecurity/csv-formula-injection",
+    "new_url": "/blog/csv-formula-injection",
+    "status": "migrated",
+    "images": 12
+  },
+  {
+    "source": "appsecurity/2021-08-26-welcome/2021-11-28-long-Lived-JWT.md",
+    "old_url": "/appsecurity/long-Lived-JWT",
+    "new_url": "/blog/long-lived-jwt",
+    "status": "migrated",
+    "images": 0
+  },
+  {
+    "source": "containersecurity/2024-04-12-guide-admission-controllers.md",
+    "old_url": "/containersecurity/guide-admission-controllers",
+    "new_url": "/blog/guide-admission-controllers",
+    "status": "migrated",
+    "images": 3
+  },
+  {
+    "source": "containersecurity/2024-04-12-informer-controllers.md",
+    "old_url": "/containersecurity/informer-controllers",
+    "new_url": "/blog/informer-controllers",
+    "status": "migrated",
+    "images": 5
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/References.md",
+    "old_url": "/docs/sop/references",
+    "new_url": "/books/same-origin-policy/references",
+    "status": "migrated",
+    "images": 0
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/browser-tabs.md",
+    "old_url": "/docs/sop/browser-tabs",
+    "new_url": "/books/same-origin-policy/browser-tabs",
+    "status": "migrated",
+    "images": 3
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/cookies.md",
+    "old_url": "/docs/sop/cookies",
+    "new_url": "/books/same-origin-policy/cookies",
+    "status": "migrated",
+    "images": 0
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/getting-around-sop.md",
+    "old_url": "/docs/sop/getting-around-sop",
+    "new_url": "/books/same-origin-policy/getting-around-sop",
+    "status": "migrated",
+    "images": 0
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/intro.md",
+    "old_url": "/docs/sop/intro",
+    "new_url": "/books/same-origin-policy/intro",
+    "status": "migrated",
+    "images": 0
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/postmessage.md",
+    "old_url": "/docs/sop/postmessage",
+    "new_url": "/books/same-origin-policy/postmessage",
+    "status": "migrated",
+    "images": 4
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/same-origin-policy.md",
+    "old_url": "/docs/sop/same-origin-policy",
+    "new_url": "/books/same-origin-policy/same-origin-policy",
+    "status": "migrated",
+    "images": 3
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/should-be-allowed.md",
+    "old_url": "/docs/sop/should-be-allowed",
+    "new_url": "/books/same-origin-policy/should-be-allowed",
+    "status": "migrated",
+    "images": 0
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/sop-in-tabs.md",
+    "old_url": "/docs/sop/sop-in-tabs",
+    "new_url": "/books/same-origin-policy/sop-in-tabs",
+    "status": "migrated",
+    "images": 5
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/sop-to-anchors.md",
+    "old_url": "/docs/sop/sop-to-anchors",
+    "new_url": "/books/same-origin-policy/sop-to-anchors",
+    "status": "migrated",
+    "images": 2
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/sop-to-forms.md",
+    "old_url": "/docs/sop/sop-to-forms",
+    "new_url": "/books/same-origin-policy/sop-to-forms",
+    "status": "migrated",
+    "images": 1
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/sop-to-images-css.md",
+    "old_url": "/docs/sop/sop-to-images-css",
+    "new_url": "/books/same-origin-policy/sop-to-images-css",
+    "status": "migrated",
+    "images": 3
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/sop-to-js.md",
+    "old_url": "/docs/sop/sop-to-js",
+    "new_url": "/books/same-origin-policy/sop-to-js",
+    "status": "migrated",
+    "images": 2
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/sop-to-localstorage.md",
+    "old_url": "/docs/sop/sop-to-localstorage",
+    "new_url": "/books/same-origin-policy/sop-to-localstorage",
+    "status": "migrated",
+    "images": 3
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/Online.md",
+    "old_url": "/docs/sop/online",
+    "new_url": "/books/same-origin-policy",
+    "status": "redirected to book index",
+    "images": 0
+  },
+  {
+    "source": "docs/AppSec/sameOriginPolicy/toc.md",
+    "old_url": "/docs/sop/toc",
+    "new_url": "/books/same-origin-policy",
+    "status": "redirected to book index",
+    "images": 0
+  },
+  {
+    "source": "docs/Kubernetes/Kubernetes101/01-overview.md",
+    "old_url": "/docs/Kubernetes/Kubernetes101/overview",
+    "new_url": "/books/kubernetes-101/overview",
+    "status": "migrated",
+    "images": 0
+  },
+  {
+    "source": "docs/Kubernetes/Kubernetes101/02-k8s-master-node.md",
+    "old_url": "/docs/Kubernetes/Kubernetes101/k8s-master-node",
+    "new_url": "/books/kubernetes-101/k8s-master-node",
+    "status": "migrated",
+    "images": 4
+  },
+  {
+    "source": "docs/Kubernetes/Kubernetes101/03-k8s-nodes.md",
+    "old_url": "/docs/Kubernetes/Kubernetes101/k8s-nodes",
+    "new_url": "/books/kubernetes-101/k8s-nodes",
+    "status": "migrated",
+    "images": 1
+  },
+  {
+    "source": "docs/Kubernetes/Kubernetes101/04-k8s-declarative-method.md",
+    "old_url": "/docs/Kubernetes/Kubernetes101/k8s-declarative-method",
+    "new_url": "/books/kubernetes-101/k8s-declarative-method",
+    "status": "migrated",
+    "images": 7
+  },
+  {
+    "source": "docs/Kubernetes/Kubernetes101/05-k8s-pods.md",
+    "old_url": "/docs/Kubernetes/Kubernetes101/k8s-pods",
+    "new_url": "/books/kubernetes-101/k8s-pods",
+    "status": "migrated",
+    "images": 2
+  },
+  {
+    "source": "docs/Kubernetes/Kubernetes101/06-k8s-service.md",
+    "old_url": "/docs/Kubernetes/Kubernetes101/k8s-service",
+    "new_url": "/books/kubernetes-101/k8s-service",
+    "status": "migrated",
+    "images": 4
+  },
+  {
+    "source": "docs/Kubernetes/Kubernetes101/08-k8s-deployments.md",
+    "old_url": "/docs/Kubernetes/Kubernetes101/k8s-deployments",
+    "new_url": "/books/kubernetes-101/k8s-deployments",
+    "status": "migrated",
+    "images": 2
+  }
+]

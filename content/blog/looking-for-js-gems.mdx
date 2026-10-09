@@ -1,0 +1,192 @@
+---
+title: "Finding Gems in JavaScript using Dumpster Diver"
+description: "Finding secrets and overlooked details in JavaScript files with Dumpster Diver."
+slug: "looking-for-js-gems"
+date: "2020-05-09"
+author: "Pankaj Mouriya"
+draft: false
+kind: "tutorial"
+tags: ["application-security", "tools-automation"]
+security: {"status": "historical"}
+---
+
+From my past experience, I realized the extensive use of JavaScript in modern applications. Most of the applications front-end logic is driven using JavaScript.
+
+
+I also realized that developers usually comment or use hard-coded secrets and API keys etc into the JavaScript while developing the application and later forget to delete these secrets which directly impacts the confidentiality of the application.  
+
+During the security assessment, it's always important to look for hard-coded secrets as you can find important information like passwords, custom headers like X-API-KEY, AWS secrets, etc. So, in this blog, we will see, how to find secrets in client-side JavaScript code.
+
+
+### Steps to perform Static Analysis
+
+1. Identifying all the JavaScript files in an application
+2. Making the code readable
+3. Identifying secrets
+
+#### Identifying all the JavaScript files in an application
+
+**Note:** We will be using BurpSuite for gathering all the JS files
+
+1. Configure BurpSuite and your browser in such a way that traffic from a browser goes via BurpSuite.
+
+    Browser > Burpsuite > Target
+
+2. Open BurpSuite, turn off intercept if turned on.
+3. Navigate through the whole application while the traffic is being sent through Burp proxy.
+4. Open Burp Suite > Go to Proxy > HTTP History tab
+5. Under filter by file extension, check the `Show only`: and type `js` as shown in below screenshot  
+
+
+    <Figure src="/img/appsec/JS-Finding-GEMS/first.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 1" width={764} height={469} />
+
+6. If you have a professional Edition of Burp Suite. You may try `find scripts` under engagement tools by right-clicking in **target** > **Sitemap**, but for some reasons I try not to depend over it.
+
+7. Under HTTP history, copy all the URLs and paste it in a file. Open the file using VSCode
+
+    <Figure src="/img/appsec/JS-Finding-GEMS/2.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 2" width={766} height={646} />
+
+8. Visit all the URLs manually and copy the content of the page into individual files inside a folder. In my case, I usually name the folder as `JS` or `JavaScript-files` and files with their actual name.
+
+#### Making the code readable
+
+If you are using VSCode then, you can install plugins like [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) or [Beautify](https://marketplace.visualstudio.com/items?itemName=HookyQR.beautify) to format the code and make it readable.
+
+<Figure src="/img/appsec/JS-Finding-GEMS/3.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 3" width={525} height={720} />
+
+Press `Ctrl + shift + i` to format or right-click in VSCode and click format document 
+
+<Figure src="/img/appsec/JS-Finding-GEMS/5.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 4" width={357} height={613} />
+
+#### Identifying secrets
+
+Either you can manually search for secrets or you can use tool to automate the task.
+
+To manually search for secrets,
+
+1. Make the code readable so that it makes sense. I already used VSCode plugins to beautify the code.
+2. Make a list of all the possible keywords which can reveal sensitive information.
+3. Start searching them manually.
+
+To automate the task we can use tools to search for secrets or you may also write your own script,
+
+The tool which I prefer while searching for secrets is `DumpsterDiver (by @Rzepsky)` and the blog is all about using DumpsterDiver.
+
+#### Starting with DumpsterDiver
+
+Dumpster Diver has various options to refine our search. It provides customized options to carry out our search. 
+
+**Customization Options** : 
+
+    using levels
+    using command line parameters
+    using config.yaml file
+
+**Note** Read the complete documentation to learn more about DumpsterDiver `https://github.com/securing/DumpsterDiver`
+
+1. Clone DumpsterDiver from `https://github.com/securing/DumpsterDiver`  or type 
+
+        git clone https://github.com/securing/DumpsterDiver.git
+
+2. Install python libraries to run DumpsterDiver using following command
+
+        pip3 install -r requirements.txt
+
+#### Using DumpsterDiver to find AWS Secret Key
+
+**Note**: Suppose you have more than 1 JS file to analyze, store all the files inside a folder and pass the path in below command
+
+<Figure src="/img/appsec/JS-Finding-GEMS/6.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 5" width={1305} height={178} />
+
+    python3 DumpsterDiver.py -p /path-to-js-files/ --min-key 40 --max-key 40
+
+<Figure src="/img/appsec/JS-Finding-GEMS/7.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 6" width={1218} height={431} />
+
+#### Using DumpsterDiver to find email addresses
+
+To find information like `email address`, `passwords` or any specific keys. We first need to configure the `rules.yaml` file. Follow below screenshot to configure your `rules.yaml`
+
+<Figure src="/img/appsec/JS-Finding-GEMS/9.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 7" width={721} height={592} />
+
+    python3 DumpsterDiver.py -p /path-to-js-files/ -a --entropy 6 --grep-words "*@example.com*"
+
+<Figure src="/img/appsec/JS-Finding-GEMS/8.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 8" width={1356} height={494} />
+
+**Note**: 
+
+* **-a, --advance** - when this flag is set, then all files will be additionally analyzed using rules specified in `rules.yaml` file.
+
+
+Open the underlined file mentioned in response and search for `@example.com`
+
+#### Using DumpsterDiver to find Azure Shared Key 
+
+    python3 DumpsterDiver.py -p /path-to-js-files/ --min-key 66 --max-key 90 --entropy 5.1
+
+<Figure src="/img/appsec/JS-Finding-GEMS/10.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 9" width={1096} height={295} />
+
+#### Using DumpsterDiver to find SSH private key
+
+    python3 DumpsterDiver.py -p /path-to-js-files/ --min-key 1000 --max-key 2000
+
+<Figure src="/img/appsec/JS-Finding-GEMS/11.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 10" width={1120} height={569} />
+
+#### Using DumpsterDiver to look for keywords `x-api-key`, `aws_cognito_identity_pool_id` etc
+
+    python3 DumpsterDiver.py -p /path-to-js-files/ -a --grep-words  "*x-api-key*" "*aws_cognito_identity_pool_id*"
+
+<Figure src="/img/appsec/JS-Finding-GEMS/12.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 11" width={1085} height={245} />
+
+If you notice, the response only contains the file names because you already know the keywords and they are waiting for you to be revealed. So, follow the response and search keywords mentioned in the above files.
+
+#### Customizing your Analysis using levels 
+
+When you don't have anything specific to search and just looking for secrets inside the JavaScript, it is better to use the **levels**. 
+Using **levels** reduces the stress of remembering the max, min values and other options.
+
+There are four levels available, which you can use with DumpsterDiver
+
+`--level 0` - searches for short (20-40 bytes long) keys, 
+                e.g. **AWS Access Key ID**.
+
+`--level 1` - (default) searches for typical (40-70 bytes long) keys,    e.g. **AWS Secret Access Key** or **Azure Shared Key**.
+
+`--level 2` - searches for long (1000-1800 bytes long) keys,         e.g. **SSH private key**
+
+`--level 3` - searches for any key (20-1800 bytes long). Be careful with this setting, because `it may generate lots of false positives`.
+
+An example of level usage is given below :
+
+    python3 DumpsterDiver.py -p /path-to-js-files/ --level 3 -o /path-to-save-file/output1.js
+
+<Figure src="/img/appsec/JS-Finding-GEMS/13.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 12" width={753} height={514} />  
+
+
+The underlined results are false positives. **Level 3** contains a lot of false positive, ignore the results which don't seem to be sensitive.
+
+`-o`:  It is used to save the result in a file in JSON format. Below is a sample of the output generated from DumpsterDiver
+
+<Figure src="/img/appsec/JS-Finding-GEMS/14.png" alt="Finding Gems in JavaScript using Dumpster Diver, figure 13" width={562} height={609} />
+
+
+**Note**: Try using a combination of options from DumpsterDiver and levels. It will help you in reducing false-positive and produce more granular results.
+
+
+    python3 DumpsterDiver.py -p /home/r00trwx/JavaScript-files/ --level 3 -s -a -r -o /home/r00trwx/Documents/project/intern/Appsecco/Resmyces/My-blogs/output3.js
+
+`-r`: when this flag is set, then files that don't contain any secrets will be removed.
+
+`-s`: when this flag is set, then all files will be additionally analyzed in search of hard-coded passwords.
+
+
+### Conclusion
+
+In this blog, I have covered one generic technique towards the static analysis of JavaScript code to identify secrets like AWS secrets, Azure shared keys, SSH private key, passwords, X-API-KEY, etc. There are other techniques and tools available to do the same. One other tool which I highly recommend going for is **Repo-supervisor** by Auth0.
+
+### Feedback
+This brings us to the end of this post. I hope you find this blog useful.
+
+### References
+
+* https://github.com/securing/DumpsterDiver
+* https://medium.com/@rzepsky/hunting-for-secrets-with-the-dumpsterdiver-93d38a9cd4c1

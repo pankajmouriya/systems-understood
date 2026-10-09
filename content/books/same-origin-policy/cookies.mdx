@@ -1,0 +1,44 @@
+---
+title: "Same Origin Policy to Cookies"
+description: "Same Origin Policy to Cookies in Pankaj Mouriya's Same Origin Policy guide."
+slug: "cookies"
+book: "same-origin-policy"
+order: 11
+draft: false
+---
+
+Cookie are used by server to implement sessions
+- Example
+    Login
+    Shopping Carts
+
+
+Cookies follow different model than Same Origin Policy
+
+
+```
+Set-Cookie: name=value; Domain=.sitea.com; Path=/; Secure; HttpOnly;
+```
+They rely on **Name**, **Domain** and **Path** instead of **Protocol**, **Hostname** and **Port**.
+
+The cookies should be sent only to the web servers within the cookies scope because the cookie could include some sensitive information (e.g., **session ID**). The server can inform the browser about cookie scope by adding additional key-value pairs to Set-Cookie header as follows:  
+
+• `domain` indicates a subdomain of servers that are allowed to see the cookie. The browser will use the exact domain of URL as the cookies domain if not set.
+
+• `path` indicates the prefix of URLs’ path that are supposed to get the cookie. Note that path was intended for performance, not security. Web pages having the same origin still can access cookie via document.cookie even though the paths are mismatched.
+
+• If `secure` presents, the browser should send the cookie only over HTTPS connections.
+
+• If `expires` presents, the browser should store the cookie with expiration date, and use the cookie only until that date.
+
+• If `HttpOnly` presents, the browser should not allow script to read the cookie via document.cookie.
+
+When the client browser receives Set-Cookie header with domain, it checks if the domain complies with URL domain so that any server cannot control cookies of other sites. Any domain-suffix can be the cookies domain, except the top level domain-suffix such as `.com, .net, .org`, and so on. If the cookie-domain is
+invalid, the browser just does not set the cookie. The browser uses the cookies domain and other scopes to decide whether the cookie should be sent to the server. Any cookies that have matching scope are sent along with the request.
+
+
+#### Cookie Policy vs. Same-Origin Policy
+Cookie policy should cooperate with same-origin policy such that the browser does not leak any data to the other origins, like document.cookie. The browser can simply prohibit any access to document.cookie from different-origin site even though it is within the cookie’s domain. For example, `apple.foo.com` cannot
+access document.cookie of banana.foo.com despite the domain of the cookie was *.foo.com.
+
+Reference - `https://inst.eecs.berkeley.edu/~cs261/fa17/scribe/web-security-1.pdf`

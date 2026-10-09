@@ -1,0 +1,43 @@
+---
+title: "Same Origin Policy to Web Storage"
+description: "Same Origin Policy to Web Storage in Pankaj Mouriya's Same Origin Policy guide."
+slug: "sop-to-localstorage"
+book: "same-origin-policy"
+order: 10
+draft: false
+---
+
+**Local Storage:** (Persistent)
+
+- Can be shared between windows with Same Origin
+- Remains even after browser window is closed
+
+**Session Storage:** (Non-Persistent)
+
+- Applies to Active window
+- Destroyed after windows is closed
+
+
+Web Storage follows the same rule of Same Origin Policy. Lets see it in action
+
+Steps:
+1. Open Developer Tools
+2. Storage
+3. Under Local Storage, add Key and Value as shown below. You can also do it via console
+
+<Figure src="/img/docs/appsec/sop/localstorage1.png" alt="Same Origin Policy to Web Storage, figure 1" width={1018} height={308} />
+
+```js
+window.localStorage["Token-key-Name"] = "Token-Value"
+```
+
+4. Navigate to Browser Console
+```js
+window.localStorage
+```
+
+<Figure src="/img/docs/appsec/sop/localstorage2.png" alt="Same Origin Policy to Web Storage, figure 2" width={1109} height={298} />
+
+5. Same way it works for sessionStorage
+
+<Figure src="/img/docs/appsec/sop/session-storage1.png" alt="Same Origin Policy to Web Storage, figure 3" width={1103} height={422} />

@@ -1,0 +1,48 @@
+---
+title: "kubernetes Nodes"
+description: "kubernetes Nodes in Pankaj Mouriya's Kubernetes 101 guide."
+slug: "k8s-nodes"
+book: "kubernetes-101"
+order: 3
+draft: false
+---
+
+A node in a cluster consisting of three things -
+
+- Kubelet
+- Container Runtime
+- Kube Proxy
+
+<Figure src="/img/docs/kubernetes/8cf39903d0929e7055b4580748a0dddf.png" alt="kubernetes Nodes, figure 1" width={2320} height={1749} />
+
+Starting with `kubelet`
+
+## Kubelet
+
+It is the **main K8s agent** that runs on every cluster node.
+
+Kubelet registers the machine as a node in the cluster and adds its CPU, ram and other resources to other cluster resource pools. The scheduler can assign work to the nodes.
+
+**Note -** Work in Kubernetes comes in the form of Pods
+
+It's the job of the Kubelet to constantly watch the API Server on the master node for any new pods assigned to it. When it sees one, it picks up and executes the pod.
+
+Kubelet also maintains a reporting channel back to the API server to keep the master node in the loop. Its job is to keep the master updated on the state of the cluster and any running app.
+
+Kubelet runs pods and pods have one or more containers. Just like how Docker does not know how to create and manage containers at low level. K8s and kubelet don't know how to run containers, they don't know how to pull images layers or talk to OS, pull images and build and start a container.
+
+## So for all this stuff we need Container Runtime -
+
+Hence, welcome container runtime(CRI), its alternative in docker was OCI
+
+## Container Runtime
+
+From what I understood, when K8s was using Docker, most of the container management stuff was managed by Docker itself, to be more specific containerD/OCI. Because we are exploring K8s, there is a high chance that K8s might still be using containerD but as per the latest updates, K8s uses a runtime called CRI-O. This container runtime is a pluggable component, one can use other runtimes such as Kata-container, gVisor etc.
+
+## Kube-Proxy
+
+Network brains of the Node - It makes sure that every pod gets its own unique IP. One IP per pod.
+
+If you are running a multi-container pod, all the containers inside the pod will share single IP.
+
+Kube-Proxy does light weight load balancing against all the pods behind the service

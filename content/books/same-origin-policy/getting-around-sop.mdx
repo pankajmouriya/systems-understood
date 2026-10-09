@@ -1,0 +1,20 @@
+---
+title: "Getting Around Same Origin Policy"
+description: "Getting Around Same Origin Policy in Pankaj Mouriya's Same Origin Policy guide."
+slug: "getting-around-sop"
+book: "same-origin-policy"
+order: 12
+draft: false
+---
+
+Various other ways via which you can bypass Same Origin Policy are - 
+
+* JSONP
+  * JSONP abuses JavaScript to load data cross-origin, just like a JavaScript include
+* XHR with CORS
+  * XMLHTTPRequest by default can't do cross origin communication but it is possible to send data cross origin request with CORS header
+* URL Fragment
+  * It is possible to use URL Fragments to communicate Cross Origin
+* postMessage API
+  * It enabled cross origin communication between two different origins
+* many more

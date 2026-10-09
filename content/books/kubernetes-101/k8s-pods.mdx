@@ -1,0 +1,24 @@
+---
+title: "Pods"
+description: "Pods in Pankaj Mouriya's Kubernetes 101 guide."
+slug: "k8s-pods"
+book: "kubernetes-101"
+order: 5
+draft: false
+---
+
+## What is a Pod?
+
+A pod is a thin wrapper wrapped outside of a container or Pod is an execution environment where if multiple or single containers share the same execution environment.
+
+<Figure src="/img/docs/kubernetes/5ae65214e91322753472c80c9901a7be.png" alt="Pods, figure 1" width={1166} height={1294} />
+
+What do we mean by an execution environment?
+
+A collection of things that an app needs in order to run example - IP address, network port, file system or shared memory.
+
+All containers in a port share the same resources from the execution environment
+
+<Figure src="/img/docs/kubernetes/21b741c41745d4233f2f909acbbc227c.png" alt="Pods, figure 2" width={2318} height={1506} />
+
+**Note -** A pod only shows up and running when all the container inside them are up and running

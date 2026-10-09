@@ -1,0 +1,56 @@
+---
+title: "Declarative Manifesto"
+description: "Declarative Manifesto in Pankaj Mouriya's Kubernetes 101 guide."
+slug: "k8s-declarative-method"
+book: "kubernetes-101"
+order: 4
+draft: false
+---
+
+K8s operates on the Declarative Model
+
+Basically, it means that we give the API server(present inside our Master Node) a manifest file(Containing some intructions) that describes the end state(Desired State). In simple terms what we want Kubernetes to do.
+
+**Note -** The state in which we want our cluster or apps to look like is called the end state of the desired state
+
+Let's say that we want three instances of web front end Pod running. Hence we will have 3 nodes and each pod has 1 container. This is what we needed and it is our desired state.
+
+Our folks working inside master node get into action and scheduler see work being assigned to API Server, scheduler immediately picks up the work and spins up 3 nodes based on the manifest instructions. We asked for 3 replicas. Our controllers folks set a watch loop and check if the Desired state(3) are = Observer State
+
+Now the desired State and Observed State will be
+
+<Figure src="/img/docs/kubernetes/5dc6e7b380509fc50f1acc9c3693f3b5.png" alt="Declarative Manifesto, figure 1" width={3197} height={2343} />
+
+But what if one of the Node goes down
+
+Then the desired state still says that 3 Pods but the Observed state will now have only 2 Pods.
+
+<Figure src="/img/docs/kubernetes/987bc9e13d6a502b1c0c72cded6cad2e.png" alt="Declarative Manifesto, figure 2" width={3266} height={2049} />
+
+Now by design, K8s is obsessed with observed state matching desired state. And our controller folks are working really hard to ensure that the same is achieved but because the node is down. Controller flags the same and our scheduler spins another pod or maybe a node to balance the desired and observed state.
+
+Hence now Observed State = Desired State
+
+<Figure src="/img/docs/kubernetes/f7f1ae267a862e30070b90a53f27dd08.png" alt="Declarative Manifesto, figure 3" width={3199} height={2193} />
+
+Well, thats all fine but I still didn't understand the actual flow.
+
+To understand that check what's next
+
+Step 1 -  Manifest is passed to API Server via REST API or something, just imagine it
+
+<Figure src="/img/docs/kubernetes/f239ed4baba6fe874ec075a3c0730465.png" alt="Declarative Manifesto, figure 4" width={2271} height={821} />
+
+Step 2 - The Declarative manifest is then stored inside the Cluster Store
+
+<Figure src="/img/docs/kubernetes/02b4f9744e85aefb871b84e92c999802.png" alt="Declarative Manifesto, figure 5" width={1039} height={1031} />
+
+Step 3 - The Desired state of the cluster has been defined now
+
+Step 4 -  Scheduler spins up Nodes containing pods as per the desired state
+
+<Figure src="/img/docs/kubernetes/4e444aaeb9ff71cd925418ddaf41ab1d.png" alt="Declarative Manifesto, figure 6" width={3197} height={1981} />
+
+Step 5 - Controllers keep watch on the nodes and ensure that desired state is = Observed state
+
+<Figure src="/img/docs/kubernetes/cce449a6888b7c569cc6a6b9fd6f7d01.png" alt="Declarative Manifesto, figure 7" width={3194} height={2346} />

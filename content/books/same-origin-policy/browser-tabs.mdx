@@ -1,0 +1,127 @@
+---
+title: "Access Different Orgins"
+description: "Access Different Orgins in Pankaj Mouriya's Same Origin Policy guide."
+slug: "browser-tabs"
+book: "same-origin-policy"
+order: 4
+draft: false
+---
+
+**DOM** : Document Object Model (DOM)  is a programming interface for HTML and XML documents. In case you are still confused and want to have some more clarity over DOM, you may check this source `https://livedom.lab.xss.academy/` which shows live how DOM looks like. I came across this while doing some google. 
+
+When you visit/type sitea.com inside your browser, the browser makes a request to the Web server. Browser creates a context to run SiteA JS and in response it will display a web page or the HTML in a browser tab(inside tab it can be a page, iframe).
+
+Similar to Sitea.com. if you visit siteb.com, then the browser again creates a context to run siteB JS and in response it will display siteB.com inside the browser.
+
+Now the important questions here rises?
+
+Can sitea.com be allowd to access data of siteB.com ? If you can answer that then you understand Same Origin Policy at some level.
+
+#### Demo 1
+
+We have two different web applications running in our browser that is `sitea.com` and `siteb.com`
+
+Open both the windows in different tabs in your browser and follow belows instructions. We will be using Browser developer console to do the demos because whatever a JavaScript can do to a website loaded in a browser can also be done in Browser Console.
+
+
+lets start with the basic command most of us know when we see javascript :)
+
+```js
+alert(1)
+
+document.documentURI
+
+document.scripts
+
+document.body
+
+document.body.innerHTML = "hello"
+```
+
+Lets try to access other site resources using this console, but before that lets create a reference variable to open a new window using this window console.
+
+```js
+var bob = window.open('http://sitea.com','right')
+```
+
+Now that we have a reference defined to `sitea.com`, we can access it. Lets try to access the and see what console shows.
+
+```js
+bob
+
+bob.document.body
+```
+
+Notice that we are able to access the body of bob variable which basically means that we are able to access body of `sitea.com` which we opened in the new window.
+
+if you remember the Same Origin Policy, schema+domain+protocol all match for both the windows we have opened here
+
+
+- window 1 = http://sitea.com  
+- window 2 = http://sitea.com
+
+
+because it follows the Same Origin Policy, we can access the body of `sitea.com` opened in another tab.
+
+Lets try to open new window but with `siteb.com`
+
+```js
+var bob = window.open('http://siteb.com','right')
+```
+
+now type
+
+```js
+bob.document.body
+```
+
+Notice the message which says `Permission denied to access property "document" on cross-origin object`. Because it voilates what Same Origin Policy says
+
+
+- window 1 = http:sitea.com  
+- window 2 = http:siteb.com //the domain changes
+
+
+<Figure src="/img/docs/appsec/sop/console-sop1.png" alt="Access Different Orgins, figure 1" width={1368} height={212} />
+
+
+Each tab/window is isolated in browsers
+
+Always remember that each website has its own separate DOM and separate JavaScript environment. 
+
+Method 2: 
+
+Lets use fetch API to understand this in more better way.
+
+```js
+const res = await fetch('http://sitea.com')
+```
+
+
+fetch API can be used for accessing and manipulating parts of HTTP, such as request and response. To understand Fetch API in detail please refer mozilla documentation.
+
+In simple terms, if I run above command, it will make a GET request, downloading the contents of the url into variable `res`
+
+
+<Figure src="/img/docs/appsec/sop/fetch1.png" alt="Access Different Orgins, figure 2" width={1011} height={464} />
+
+Again we are able to access data because the request complies to Same Origin Policy
+
+```
+http://sitea.com
+http://sitea.com
+```
+
+Have same **protocol**, **hostname**, and **port**
+
+Now what if I run below command
+
+```js
+const res1 = await fetch('http://siteb.com')
+```
+
+<Figure src="/img/docs/appsec/sop/fetch2.png" alt="Access Different Orgins, figure 3" width={1003} height={514} />
+
+**Hostname is different**
+
+Think it of this way, what if **facebook.com** was opened in one window/tab and **sbicard.com** in another tab. If there was no concept of Same Origin policy then facebook would have read or accessed the your credit card details and may have performed transanctions.

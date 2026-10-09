@@ -1,0 +1,20 @@
+---
+title: "Same Origin Policy to JavaScript"
+description: "Same Origin Policy to JavaScript in Pankaj Mouriya's Same Origin Policy guide."
+slug: "sop-to-js"
+book: "same-origin-policy"
+order: 9
+draft: false
+---
+
+- One website can include JavaScript from any other website
+```js
+<script src="https://siteb.com/file.js">
+```
+
+
+<Figure src="/img/docs/appsec/sop/js2.png" alt="Same Origin Policy to JavaScript, figure 1" width={989} height={279} />
+
+<Figure src="/img/docs/appsec/sop/js3.png" alt="Same Origin Policy to JavaScript, figure 2" width={885} height={238} />
+
+Embedding other website JavaScript, you are allowing other website to run its JavaScript into your website. This can lead to JavaScript realated attacks such as Cross Site Scripting.

@@ -1,0 +1,34 @@
+---
+title: "Same Origin Policy to Forms"
+description: "Same Origin Policy to Forms in Pankaj Mouriya's Same Origin Policy guide."
+slug: "sop-to-forms"
+book: "same-origin-policy"
+order: 7
+draft: false
+---
+
+Forms work in same fashion as anchors or vice versa.
+
+When a user submits a form, say when user make a POST request to **siteb.com** by submitting the form. The response loads in new context, the orginating site is replaced by the site where the action is defined.
+
+```html
+<form action="http://store.sitea.com" class="form-signin">
+          <h1 style="text-align: center;" class="h2 mb-6 font-weight-normal">Login to buy Gifts</h1><br>
+          <label for="inputEmail" class="sr-only">Email address</label>
+          <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+          <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+          
+        </form>
+```
+
+**Conclusion** - Any website can make a POST request, but can't read the response in same context.
+
+
+<Figure src="/img/docs/appsec/sop/forms2.png" alt="Same Origin Policy to Forms, figure 1" width={670} height={543} />

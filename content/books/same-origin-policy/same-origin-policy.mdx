@@ -1,0 +1,63 @@
+---
+title: "Same Origin Policy"
+description: "Same Origin Policy in Pankaj Mouriya's Same Origin Policy guide."
+slug: "same-origin-policy"
+book: "same-origin-policy"
+order: 3
+draft: false
+---
+
+* Fundamental Security of the Web.
+* The same-origin policy is a web browser security mechanism that aims to prevent websites from attacking each other **(Portswigger.net)**
+* The same-origin policy is a critical security mechanism that restricts how a document or script loaded from one origin can interact with a resource from another origin. It helps isolate potentially malicious documents, reducing possible attack vectors.**(Mozilla Developer Networks)**
+* Key thing to remember here is - *Two pages from different sources should not be allowed to interfere with each other*.
+
+### Same Origin Policy Analogy - To understand why and what it is
+
+**Analogy 1** -  
+Imagine a hospital, initially all the patients are admitted from outside(say external origins). The hospital may contain many patients at any given time, all unrelated. Now, if any patient in the hospital makes a request to the hospital staff to receive medical records or the status of any other patient, the request will be denied. Similarly, if random members if public make requests to the hospital to either visit or inquire about status of any patients, the hospital will check to ensure they are closely related or are same family or origin before allowing access. - This is the Browser with SOP
+
+Now imagine a hospital that allowed interaction between its patients, the data it held about the patients and anybody from the outside world as well! - This is the browser without SOP
+
+**Analogy 2** -
+Think of web as an operating system then think origin as a process in operating system. The job of OS kernel is to isolate the processes from each other to prevent interference between memory content or any other way. The browser will act as OS kernel here. Every different origin will be a different process. So, its browsers job to isolate the origins.
+
+We depend upon browser, as it implements all the security rules. What if the browser has bug, then all the rules go out the window.
+
+-------------------------------------
+
+Now lets talk about what is an origin?
+
+Look at below URL
+
+
+<Figure src="/img/docs/appsec/sop/sop1.png" alt="Same Origin Policy, figure 1" width={1887} height={454} />
+
+Do not worry about all the keywords mentioned inside the URL, we are only concerned for below three keywords
+
+<Figure src="/img/docs/appsec/sop/sop3.png" alt="Same Origin Policy, figure 2" width={327} height={429} />
+
+
+<Figure src="/img/docs/appsec/sop/sop2.png" alt="Same Origin Policy, figure 3" width={1357} height={489} />
+
+
+SOP was initially defined for external resources, but later was extended to include other types of origins. This includes access to local files using **file** schema and browser related resources using the **chrome schema**.
+
+
+---------------------------
+
+The following table gives examples of origin comparisons with the URL 
+
+`http://store.company.com/dir/page.html`
+
+| URL                                             | Outcome     | Reason                                         |
+|-------------------------------------------------|-------------|------------------------------------------------|
+| http://store.company.com/dir2/other.html        | Same origin | Only the path differs                          |
+| http://store.company.com/dir/inner/another.html | Same origin | Only the path differs                          |
+| https://store.company.com/page.html             | Failure     | Different protocol                             |
+| http://store.company.com:1234/dir/page.html     | Failure     | Different port (http:// is port 80 by default) |
+| http://news.company.com/dir/page.html           | Failure     | Different host                                 |
+
+Now that we understand what is an **Origin**, lets understand what a Same Origin Policy is.
+
+Follow slides for better understanding

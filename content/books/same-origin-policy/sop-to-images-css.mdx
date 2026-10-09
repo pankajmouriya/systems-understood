@@ -1,0 +1,33 @@
+---
+title: "Same Origin Policy to Images and CSS"
+description: "Same Origin Policy to Images and CSS in Pankaj Mouriya's Same Origin Policy guide."
+slug: "sop-to-images-css"
+book: "same-origin-policy"
+order: 8
+draft: false
+---
+
+Website can embed images from any other website over the internet. Interesting thing to notice is, sites can't read the image data from other sites.
+
+
+### CSS
+
+Same any website can load CSS from any other website. Almost every application use such method these days.
+But  sites can't read the CSS data from other websites
+
+**Demo**
+
+1. Open **sitea.com**
+2. Open Developer console
+3. Type
+```js
+document.styleSheets
+```
+4. You will notice css rules, media, type and many other things 
+<Figure src="/img/docs/appsec/sop/css1.png" alt="Same Origin Policy to Images and CSS, figure 1" width={1156} height={681} />
+5. Now go to inspector tab and change the css URL inside head element to any other sites css.
+6. In my case I have pointed the href URL to siteb css file
+<Figure src="/img/docs/appsec/sop/css2.png" alt="Same Origin Policy to Images and CSS, figure 2" width={791} height={577} />
+7. You will notice no rules, no media
+<Figure src="/img/docs/appsec/sop/css3.png" alt="Same Origin Policy to Images and CSS, figure 3" width={1090} height={807} />
+8. This way, if there is any sensitive data in css, **sitea** can not read that data from **siteb**

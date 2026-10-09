@@ -1,0 +1,57 @@
+---
+title: "Same Origin Policy in Tabs"
+description: "Same Origin Policy in Tabs in Pankaj Mouriya's Same Origin Policy guide."
+slug: "sop-in-tabs"
+book: "same-origin-policy"
+order: 5
+draft: false
+---
+
+Remember each tab or window is isolated from each other. And as I mentioned earlier, each site has its own JavaScript context  or say JavaScript execution environment
+
+Whenever we create a reference to different window/site by creating a reference variable, the referenced website or windows has a reference back via **window.opener**.
+
+
+<Figure src="/img/docs/appsec/sop/tab1.png" alt="Same Origin Policy in Tabs, figure 1" width={808} height={401} />
+
+
+Lets see a live demo for this
+
+
+Start by creating a reference to **sitea.com** from **sitea.com**
+
+Steps - 
+1. Visit **sitea.com** and open browser console.
+2. Type 
+```js
+var bob = window.open('http://sitea.com')
+```
+
+<Figure src="/img/docs/appsec/sop/tab2.png" alt="Same Origin Policy in Tabs, figure 2" width={961} height={416} />
+
+3. Switch to **sitea.com** opened into new window and open Browser Console.
+4. Type
+```js
+window.opener.document.body
+```
+
+<Figure src="/img/docs/appsec/sop/tab3.png" alt="Same Origin Policy in Tabs, figure 3" width={906} height={429} />
+
+5. We are able to read data of origin `sitea.com` window.
+6. If you think from attacker perpective, what if referenced window can change the origin window location. 
+7. Type
+```js
+window.opener.location.replace("https://example.com")
+```
+
+<Figure src="/img/docs/appsec/sop/tab4.png" alt="Same Origin Policy in Tabs, figure 4" width={1053} height={441} />
+
+8. A malicious user can change location of origin window to any attacker controlled website  
+
+<Figure src="/img/docs/appsec/sop/tab5.png" alt="Same Origin Policy in Tabs, figure 5" width={1058} height={547} />
+
+
+This kind of attack is called **Tab-nabbing** attack
+
+
+**Note for Pankaj** Read more about tab nabbing or any related attack. Also watch Kirk video where he explain attacks like this

@@ -1,0 +1,88 @@
+---
+title: "Guide to Informers, Custom Controller"
+description: "How Kubernetes informers and custom controllers watch resources and reconcile desired state."
+slug: "informer-controllers"
+date: "2024-04-12"
+author: "Pankaj Mouriya"
+draft: false
+kind: "tutorial"
+tags: ["containers-kubernetes", "engineering"]
+security: {"status": "historical"}
+---
+
+## Kubernetes Controllers Manager
+
+<Figure src="/img/container/informer-controller/informers.png" alt="Guide to Informers, Custom Controller, figure 1" width={1195} height={1188} />
+
+Kubernetes Control plane also called Master Node has various components such as Scheduler, Controller Manager, API Server, ETCD datastore. Controller Manager is one of the main component of Kubernetes that manages the state of the cluster.
+
+**Main task of Kubernetes Controller Manager**
+If we want to define the Kubernetes Controller Manager, its major task is to maintain the state of the cluster to the desired state. For example, if a deployment in a cluster has 3 pod replicas but the new deployment manifest applied says we need 4 pod replicas then its the responsibility of the controllers to match the desired state that is scale it to 4. In other words, controllers are continuously on the lookout for the status of the cluster and take any immediate action required to remediate that problem/state mismatch. To understand more about it, long back when I started learning Kubernetes I wrote this - /books/kubernetes-101/k8s-declarative-method. 
+
+<Figure src="/img/container/informer-controller/1.png" alt="Guide to Informers, Custom Controller, figure 2" width={3197} height={2343} />
+
+**How does the state mismatch look like -**
+
+<Figure src="/img/container/informer-controller/2.png" alt="Guide to Informers, Custom Controller, figure 3" width={3266} height={2049} />
+
+
+The Kubernetes Controller manager may seam like a one man army but it has been loaded with multiple armies. There are different controllers within the controller manager such as:
+- Service Account 
+- Node 
+- Deployment 
+- Namespace 
+- Endpoint
+- Replicaset
+- Replication 
+- etc
+  
+A more detailed list of controllers can be found here - https://github.com/kubernetes/kubernetes/tree/master/pkg/controller.
+
+**Lets talk one of the controller and talk about it**
+
+**Node Controller** - The Node controller is responsible for monitoring the state of the Nodes within the cluster and take any required action when necessary to keep the pods running within them healthy. 
+- By default, the node controller checks the state of each node every 5 seconds. This period can be configured using the `--node-monitor-period` flag on the kube-controller-manager component.
+- If a node remains unreachable, it triggers an API-initiated eviction for all of the Pods on the unreachable node. By default, the node controller waits 5 minutes between marking the node as Unknown and submitting the first eviction request.
+
+## Kubernetes Custom Controllers
+> **Note :** Custom controllers work with Custom Resources
+
+Custom controllers are just like Kubernetes controller manager but we create them based on our needs to match our desired needs(State) with the current state of the clusters. 
+
+Assume we have a Kubernetes cluster running a database like PostgreSQL, and we want to ensure that the database is backed-up regularly. 
+
+**Desired State**
+In this use case, Desired state can be defined by a Custom Resource(CR) that might specify which resources (like databases or volumes) need to be backed up, the frequency of the backups, and where these backups should be stored.
+
+**Current State**
+The current state would be the actual backup status of these resources. It includes whether the backups are up-to-date, where they are stored, and if there have been any errors or failures in the process.
+
+**Custom Controller to match the Desired state**
+
+To monitor the current state of the backups and see if latest changes are backed-up or not, trigger a backup to match the state.
+
+
+Another use case would be may be building a Kubernetes Security Scanner Controller which can monitor, scan and report. At a high level, the desired state will require us to create a Custom Resource which may include configurations/policies like no exposed secrets, or enforced certain RBAC rules and network policies etc.  The custom controller would watch for changes to these Kubernetes resources like Deployments, Pods, Secrets or Network policies. The controller would compare the actual state of the cluster with the desired state defined in the Custom Resources and take action to rectify any discrepancies.
+
+> Note: The second use case is very theoretical and I myself have never implemented it. But it seems a very valid use case to me so wrote it here.
+
+
+## And now the Informers
+
+Until now, we have a basic understanding of what Kubernetes Controllers are, what are custom controllers and how they work hard to keep the state of the cluster to the desired state. Lets now dive a little deeper and ask ourselves how does the controller knows that there has been a change in the state of the clusters. Yes, you are rights. **Informers**, also known as Dynamic Informers make that possible.
+
+Although `watch`  is there in Kubernetes which can be used to carry out similar operation of checking change in resources but it is not recommended plus its very slow. It makes HTTP Long-Polling requests to the Kubernetes API server, the request includes the path of the resource to watch (e.g., `/api/v1/pods``) and a query parameter indicating that it's a watch request (e.g., `?watch=true``). Also if you think about it, continuous polling for retrieving information on the resources can buffer the API server, impacting its performance.  
+
+To retrieve information without loading the API server with multiple requests, **client-go** provides Informers. Informers query the Kubernetes resources and store the information in a local cache. A very detailed diagram of custom controllers making use of the informer is given below
+
+<Figure src="/img/container/informer-controller/3.png" alt="Guide to Informers, Custom Controller, figure 4" width={1058} height={794} />
+
+To understand what all is going here, I would suggesting reading this - https://github.com/kubernetes/sample-controller/blob/master/docs/controller-client-go.md. Below is another picture of how the informer interacts with the K8s API Server.
+<Figure src="/img/container/informer-controller/4.png" alt="Guide to Informers, Custom Controller, figure 5" width={1099} height={979} />
+
+That's all; this is good enough for now. I will write another blog post on how to build a custom controller using the informer or how Informers are written using Go programming.
+
+
+## References:
+- https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
+- https://github.com/kubernetes/kubernetes/tree/master/pkg/controller

@@ -1,0 +1,20 @@
+---
+title: "Deployment - Compute"
+description: "Deployment - Compute in Pankaj Mouriya's Kubernetes 101 guide."
+slug: "k8s-deployments"
+book: "kubernetes-101"
+order: 7
+draft: false
+---
+
+Pods don't self heal or scale or do any other good stuff. To fulfil that gap, we wrap our pods in a High-level controller called Deployment(A Compute). I still am a little confused about the Computes but for now, let's assume that Deployment wrapped around a Pod is different than the Deployment controller present in Control Plane/Master Node
+
+Few list of computes -
+
+<Figure src="/img/docs/kubernetes/78c939099eb4eb9664c2050811d479e1.png" alt="Deployment - Compute, figure 1" width={1493} height={879} />
+
+These controllers do self healing, updates, version rollbacks, guarantee delivery etc. We use above computes depending upon the use cases.
+
+<Figure src="/img/docs/kubernetes/9aed898e4e51c772037c8423e2d061d8.png" alt="Deployment - Compute, figure 2" width={2179} height={1589} />
+
+The Computes are all implemented via Controllers on the Control Plane backend.

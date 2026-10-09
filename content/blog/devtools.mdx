@@ -1,0 +1,244 @@
+---
+title: "The Blend of Developer Tools into Security Assessments"
+description: "Using browser developer tools to investigate postMessage, heap snapshots, Lighthouse findings, and network resources during web security assessments."
+slug: "devtools"
+date: "2021-07-07"
+author: "Pankaj Mouriya"
+draft: false
+kind: "tutorial"
+tags:
+  - application-security
+  - tools-automation
+---
+
+This article looks at Chrome DevTools and how it can help with web security assessments and bug bounties.
+
+<Callout type="note" title="Historical walkthrough">
+  This article was first published in 2021. Tool screens and browser behavior may differ in current releases; verify findings against your own test environment.
+</Callout>
+
+| Tool | Panel | Signal | Example | Evidence | Check | Caveat |
+| --- | --- | --- | --- | --- | --- | --- |
+| Debugger | Console | Function arguments | `postMessage` target origin | Conditional pause | Inspect sender and receiver | A wildcard alone does not prove disclosure |
+| Memory | Memory | Retained strings | `/api` and `/rest` paths | Heap snapshot | Browse more than one page | A path alone does not prove access |
+| Lighthouse | Lighthouse | Best Practices findings | HTTPS and library checks | Audit report | Confirm each finding manually | Tool versions change checks |
+| Network | Network | Loaded resources | JavaScript files and sinks | Request list | Filter by resource type | Requests vary by page state |
+
+
+
+
+## Debug function
+
+It is used to create breakpoints for the function we specify under certain conditions
+
+In the below example, I have specified a function `postMessage` following a condition where if the postMessage is using `*` as the target origin which in general, not a good practice as it could potentially leak sensitive information to third parties.
+
+`debug(postMessage, 'arguments[1] == "*"')`
+
+
+To use debug function, open chrome developer tools
+
+Under `Console`, type
+
+`debug(postMessage, 'arguments[1] == "*"')`
+
+<Figure src="/images/blog/devtools/debug1.png" alt="Chrome DevTools console displaying the debug command" caption="The conditional breakpoint used in this walkthrough." loading="eager" width={783} height={135} />
+
+
+Reload the page and you will see your browser in action setting breakpoints whereever our function's condition is satisfied.
+
+<Figure src="/images/blog/devtools/debug2.png" alt="Debugger paused after the postMessage condition matches" loading="eager" width={1040} height={575} />
+
+Another similar thing is [monitorEvents](https://developers.google.com/web/updates/2015/05/quickly-monitor-events-from-the-console-panel), it creates breakpoints for DOM events and hence we can use `monitorEvents` function too to look for postMessage [events](https://developer.mozilla.org/en-US/docs/Web/API/MessageEvent).
+
+To use `monitorEvents`, open chrome developer tools
+
+Under Console, type
+
+`monitorEvents(window, 'message')`
+
+and refresh the page or click on any hyperlink/feature in the application to check for any `MessageEvent` 
+
+<Figure src="/images/blog/devtools/monitorevents.png" alt="Console output from monitoring message events" width={1173} height={354} />
+
+
+--------------------------------------
+### About postMessage API -- [Additional information]
+
+If you do not know about postMessage API, then below points will give enough idea about what is postMessage API
+
+*The postMessage API is an alternative to JSONP, XHR with CORS headers and other methods enabling sending data between origins. It was introduced with HTML5 and like many other cross-document features it can be a source of client-side vulnerabilities*
+
+### How it works
+
+To send a message, an application simply calls the `"postMessage"` function on the target window it would like to send the message to:
+```javascript title="postmessage.js"
+    targetWindow.postMessage("hello other document!", "*");
+```
+And to receive a message, a “message” event handler can be registered on the receiving end:
+```javascript
+    window.addEventListener("message", function(message){console.log(message.data)});
+```
+
+### What can go wrong, if postMessage function not used properly  
+
+**Scenario 1**
+The first pitfall lies in the second argument of the “postMessage” function. This argument specifies which origin is allowed to receive the message. Using the wildcard “*” means that any origin is allowed to receive the message.
+
+Since the target window is located at a different origin, there is no way for the sender window to know if the target window is at the target origin when sending the message. If the target window has been navigated to another origin, the other origin would receive the data.
+
+**Scenario 2**
+The second pitfall lies on the receiving end. Since the listener listens for any message, an attacker could trick the application by sending a message from the attacker’s origin,  which would make the receiver think it received the message from the sender’s window. To avoid this, the receiver must validate the origin of the message with the “message.origin” attribute.
+
+If regex is used to validate the origin, it’s important to escape the “.” character, since this code:
+```javascript
+    //Listener on http://www.examplereceiver.com/
+    window.addEventListener("message", function(message){
+        if(/^http://www.examplesender.com$/.test(message.origin)){
+            console.log(message.data);
+        }
+    });
+```
+Would not only allow messages from `www.examplesender.com`, but also `wwwaexamplesender.com`, `wwwbexamplesender.com` etc.
+
+------------------------------------
+
+## Memory Function/Feature
+
+The memory tab in the developer tools has been very useful to me in my security assessments. Before digging deep let's understand what memory tab does
+
+----------------------------
+
+### Memory Tab -- [Additional information]
+Memory tab helps to learn about the execution time and memory usage of the whole web page loaded in your browser. Memory tab has three profiling types 
+
+* Heap snapshot
+* Allocation instrumentation on timeline
+* Allocation sampling
+
+For our requirement, the `Heap snapshot` profile is enough and we can ignore the other two.
+
+Heap snapshot can take a snapshot of the memory heap to show the memory distribution of JavaScript objects and related DOM nodes in our loaded webpage. The most interesting thing about this is that the snapshot contains all the possible strings in your websites.
+
+--------------------------------
+
+### How it can help in security assessments
+We can use the snapshot and can search for all possible APIs in the loaded web page.
+
+For example, I am using OWASP Juice Shop and will look for possible APIs in the application.
+
+**Taking Snapshot**  
+
+Before taking the snapshot you must know that it is highly possible that the loaded page may not have all the APIs available in the application, hence you might need to take multiple snapshots by browsing multiple pages.
+
+
+### Steps
+
+1. Load your application into chrome and open developer tools **(F12)**
+2. Navigate to **Memory** tab
+
+    <Figure src="/images/blog/devtools/memory1.png" alt="Chrome DevTools Memory panel before taking a heap snapshot" width={787} height={917} />
+
+3. Select `Heap snapshot` and click **Take Snapshot**
+
+    <Figure src="/images/blog/devtools/memory2.png" alt="Heap snapshot option in the Memory panel" width={879} height={765} />
+
+4. Once the snapshot is completed, press `ctrl+f` to open search bar
+5. Now to search for APIs, search strings like `/api` or `/rest`.
+
+    <Figure src="/images/blog/devtools/memory3.png" alt="Searching a heap snapshot for API paths" width={837} height={677} />
+
+    <Figure src="/images/blog/devtools/memory4.png" alt="Additional API path matches in the heap snapshot" width={720} height={851} />
+
+
+Apart from looking for APIs, we can also use it to look for specific strings in JavaScript code. Most of the time, we end up looking for secrets in JavaScript by first collecting the JavaScript files and then looking for hardcoded secrets. It becomes really annoying to load large JavaScript files and search for string. If this method does not help you in finding sensitive keywords, read [Finding Gems in JavaScript using Dumpster Diver](/blog/looking-for-js-gems).
+
+--------------------------------------
+
+## Lighthouse
+
+An open-source tool built to improve the quality of the web pages. You can run it against any web page, public, or requiring authentication. It has audits for performance, accessibility, progressive web apps, SEO and more - **This is what lighthouse is actually built for, but how is it helpful in our security assessments**
+
+Lighthouse has multiple categories based on which it does audit, the categories are mentioned below
+
+* Performance
+* Progressive Web App
+* Best Practices
+* Accessibility
+* SEO
+
+For our security assessments, **Best Practices** is the one which is required.
+
+**Best Practices**: During audit, Lighthouse does below mentioned checks
+
+* If the application does not use HTTPS [Click Me](https://web.dev/is-on-https/)
+* links to cross-origin destinations are unsafe [Click Me](https://web.dev/external-anchors-use-rel-noopener/)
+* Includes front-end JavaScript libraries with known security vulnerabilities [Click Me](https://web.dev/no-vulnerable-libraries/)
+* Uses Application Cache [Click Me](https://web.dev/appcache-manifest/)
+* Uses deprecated APIs [Click Me](https://web.dev/deprecations/)
+* Listing all the front-end JavaScript libraries [Click Me](https://web.dev/js-libraries/)
+
+**Note:** Use the **click me** hyperlinks to read more about the checks mentioned above.
+
+For me this tool saves a lot of time, it becomes really annoying to individually look for basic security issues like not using HTTPS, outdated libraries, use of deprecated APIs, etc. 
+
+If you are a Burp Suite fan and thinking about Burp Suite doing this same thing under **Issues**, I would say yes it does; but lighthouse still beats Burp Suite as it reduces the steps and the UI is really awesome and user friendly.
+
+Have a look how Burp Suite displays the issues  
+
+<Figure src="/images/blog/devtools/burp-1.png" alt="Burp Suite issues list from the example assessment" width={973} height={586} />
+
+and now look at Lighthouse  doing the same thing 
+
+<Figure src="/images/blog/devtools/lighthouse1.png" alt="Lighthouse Best Practices findings in the example audit" width={1085} height={751} />
+
+<Figure src="/images/blog/devtools/lighthouse2.png" alt="Expanded Lighthouse finding details" width={1178} height={681} />
+
+You just need to click on the Insecure URLs, or the mentioned libraries. Lighthouse will provide all the additional information you may look for.
+
+
+### Using Lighthouse in security assessment of OWASP Juice Shop application
+
+**Steps**
+
+1. Open OWASP juice in the Chrome Web Browser
+2. Open Chrome Developers tools
+3. Navigate to `Lighthouse` tab
+4. Uncheck all the categories except `Best Practices` and because we are on `Desktop` device, choose `Desktop`.
+   
+    <Figure src="/images/blog/devtools/lighhouse3.png" alt="Lighthouse configuration with Best Practices selected" width={1227} height={689} />
+
+5. Click, **Generate report** button.
+6. Wait for the Audit to finish and notice the report in response.
+    <Figure src="/images/blog/devtools/lighhouse4.png" alt="Lighthouse report after the audit completes" width={1338} height={459} />
+
+
+
+------------------------------------
+
+## Network Tab
+
+The network tab is another useful element in security assessment, although a lot of things can be done using the network tab, I will mention a few important ones. 
+
+Network tab helps us in identifying the kind of resources, pages being used by the application. We can filter the resources using the filter tab.
+
+<Figure src="/images/blog/devtools/js1.png" alt="Network panel filtered to JavaScript resources" width={1106} height={555} />
+
+We can use the Network filter tab to identify all the JavaScript files by choosing `JS`. You can also use `ctrl+shift+f` to open the search bar and search for all possible resources loaded in the webpage. 
+For example search for DOM sinks like `innerHTML`.
+
+<Figure src="/images/blog/devtools/network1.png" alt="Network search results for JavaScript resources" width={1304} height={699} />
+
+--------------------------------------
+
+I understand reading such a long blog takes time to process and that is why I am ending the blog here. I have few other things which I will be writing sometime soon till then __*read Healthy, eat healthily and stay healthy*__.  
+
+**-------Thank you for reading--------**
+
+## References
+
+* https://developers.google.com/web/ilt/pwa/lab-auditing-with-lighthouse
+* https://developer.mozilla.org/en-US/docs/Web/API/MessageEvent
+* https://developers.google.com/web/updates/2015/05/quickly-monitor-events-from-the-console-panel
+* https://www.youtube.com/watch?v=Y1S5s3FmFsI
+* https://labs.detectify.com/2016/12/08/the-pitfalls-of-postmessage/

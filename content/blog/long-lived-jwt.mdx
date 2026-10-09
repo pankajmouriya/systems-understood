@@ -1,0 +1,107 @@
+---
+title: "Long-lived JWT - Abuse and Mitigation"
+description: "Why long-lived access tokens increase exposure and how expiration, revocation, and rotation change the tradeoffs."
+slug: "long-lived-jwt"
+date: "2021-11-28"
+author: "Pankaj Mouriya"
+draft: false
+kind: "essay"
+tags: ["application-security"]
+security: {"status": "historical"}
+---
+
+## Problem I am trying to solve - 
+I have an application which is using JWT based Access Token for maintaining the state of the user in the application. The `exp` claim or the expiry of the token is set to 6 months.
+
+I have to convince my cool team of developers that it is not a good practice to use Long Lived JWT tokens.
+
+## Developers wants to know following -
+1. How the token can be stolen ?
+2. What can happen if we continue using the Long Lived JWT?
+3. What should be the best practice to follow?  
+
+After reading bunch of documents, blogs, and RFCs. I came up with below answers.
+
+> **Readers Note -** If you find something incorrect or if I misunderstood something. Just comment below and I will fix it in the blogpost
+
+
+### 1. How the token can be stolen ?
+- It can be stolen if publicly shared
+- It can be Leaked in public github repository/pastebin etc
+- It can be stolen via Man-in-the-Middling(MITM) your connection
+
+
+### 2. What can happen if Long Lived JWT is stolen?
+Once the token is stolen, an attacker can have complete access to the user's account with whom the token is associated with and can potentially perform Read, Create, Update or Delete operations. Having access to a token is similar to having access to your Username and Password.
+
+#### According to [RFC6819](https://datatracker.ietf.org/doc/html/rfc6819#section-4.3.1)     
+> **4.3.1 Threat: Eavesdropping Access Tokens**  
+Attackers may attempt to eavesdrop access tokens in transit from the authorization server to the client.  
+**Impact:** The attacker is able to access all resources with the permissions covered by the scope of the particular access token.
+
+
+### 3. What should be the best practice to follow?    
+
+- Keep the JWT expiry values to a small value, may be 15 minutes or 5 minutesor less. If the token is stolen, it will be stolen for short period of time which will reduce the probability of it being used maliciously.
+#### According to [RFC6819](https://datatracker.ietf.org/doc/html/rfc6819#section-4.3.1) 
+> **5.1.5.3.  Use Short Expiration Time** - A short expiration time for tokens is a means of protection against the following threats:  
+1. replay
+2. token leak (a short expiration time will reduce impact)
+3. online guessing (a short expiration time will reduce the likelihood of success)
+
+
+- Using a **deny-listing**: 
+Use a API endpoint say `/logout` and the moment user logs out and the `/logout` API is called, configure you Auth server to put the JWT in a "Deny-List" or "Invalid List". This way the JWT can be invalidated immediately the user logs out.
+
+> Using Deny-list or blacklist fails the purpose of using JWT over Session ID. But consider it as an extra or optional precaution which you can take if you are worried about token being stolen.
+
+
+> **You can't have everything** - `Security is a kind of trade off here, either you can have Stateless JWT and risk your token to potential misuse or trade statelessness of JWT for security purpose.`
+
+
+**Developer -**   
+Using small expiry is not acceptable, my client does not like being logged out again and again or my client does not want to login again and again using ID and password
+
+**Security Engineer -**   
+Makes sense, having short expiry time of JWT, the user will be logged out after every 5 or 15 minutes depending upon the defined time. No body wants to login again and again.  
+**Why don't you implement Refresh tokens?**  
+Refresh tokens can used to fetch a new JWT/Access Token before the token expires or after.
+
+**Developer -**  
+**But how does that work ?**  
+The Refresh token is issued during the authentication process along with Access Token. In simpler terms, the auth server saves the refresh token for handling renewal of JWT.
+
+To understand more, why don't you read below snippet by [Oauth.com](https://www.oauth.com/oauth2-servers/access-tokens/access-token-lifetime/)
+
+#### **By Oauth.com** - Short-lived access tokens and long-lived refresh tokens
+[Read the original example on GitHub](https://gist.github.com/pankajmouriya/809402d0227608814ecfabb4e62a09e8)
+
+**Developer -**  
+**But what if my Long-lived Refresh token is compromised ??**
+
+**Security Engineer -**  
+You can increase security by using [refresh token rotation](https://auth0.com/docs/security/tokens/refresh-tokens/refresh-token-rotation) available in Auth0 and Okta Dashboard. Basically, every time an application exchanges a refresh token to get a new access token, a new refresh token is also returned. Therefore, you no longer have a long-lived refresh token that, if compromised, could provide illegitimate access to resources. As refresh tokens are continually exchanged and invalidated, the threat is reduced. 
+
+You can also refer below comments -
+#### According to [RFC6819](https://datatracker.ietf.org/doc/html/rfc6819#section-4.3.1)
+> **5.2.2.3.  Refresh Token Rotation**   
+Refresh token rotation is intended to automatically detect and prevent attempts to use the same refresh token in parallel from different apps/devices.  This happens if a token gets stolen from the client and is subsequently used by both the attacker and the legitimate client.  The basic idea is to change the refresh token value with every refresh request in order to detect attempts to obtain access tokens using old refresh tokens.  Since the authorization server cannot determine whether the attacker or the legitimate client is trying to access, in case of such an access attempt the valid refresh token and the access authorization associated with it are both revoked.
+
+#### According to [RFC6819](https://datatracker.ietf.org/doc/html/rfc6819#section-4.3.1)    
+> **5.2.2.4.  Revocation of Refresh Tokens**  
+The authorization server may allow clients or end users to explicitly request the invalidation of refresh tokens.  A mechanism to revoke tokens is specified in [OAuth-REVOCATION].  
+This is a countermeasure against:
+- device theft,
+- impersonation of a resource owner, or
+- suspected compromised client applications.
+
+
+## References
+
+- https://security.stackexchange.com/questions/157061/how-does-csrf-correlate-with-same-origin-policy
+- https://www.oauth.com/oauth2-servers/access-tokens/access-token-lifetime/
+- https://tools.ietf.org/html/rfc7519
+- https://auth0.com/docs/security/tokens/refresh-tokens/refresh-token-rotation
+- https://developer.okta.com/docs/guides/refresh-tokens/refresh-token-rotation/
+- https://blog.indrek.io/articles/invalidate-jwt/
+- https://datatracker.ietf.org/doc/html/rfc6819#section-5.2.2.4
