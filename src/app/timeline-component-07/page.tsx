@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: 'Experience timeline', description: '
 
 export default function TimelinePage() {
   return <main id="main-content" className="portfolio-page timeline-demo-page">
-    <header className="portfolio-intro"><p className="eyebrow">Experience / Timeline 07</p><h1>A career in <em>security.</em></h1><p>Five roles across consulting, application security, cloud infrastructure, and product security.</p></header>
+    <header className="portfolio-intro"><p className="eyebrow">Experience / Compact timeline</p><h1>A career in <em>security.</em></h1><p>Select a company to move through five roles across consulting, application security, cloud infrastructure, and product security.</p></header>
     <section aria-label="Experience timeline"><Process data={experienceSteps} /></section>
   </main>;
 }

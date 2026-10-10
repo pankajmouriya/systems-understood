@@ -27,8 +27,9 @@ test('footer closes the page with useful publication and portfolio paths', async
 test('portfolio routes show experience, a maintained project, and talks', async ({ page }) => {
   await page.goto('/portfolio');
   await expect(page.getByRole('heading', { level: 1, name: /Building security/ })).toBeVisible();
-  await expect(page.getByText('Harness', { exact: true })).toBeVisible();
-  await expect(page.getByText('Kong', { exact: true })).toBeVisible();
+  const companies = page.getByRole('tablist', { name: 'Companies' });
+  await expect(companies.getByRole('tab', { name: /Harness/ })).toBeVisible();
+  await expect(companies.getByRole('tab', { name: /Kong/ })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Portfolio sections' }).getByRole('link', { name: 'Experience' })).toHaveAttribute('aria-current', 'page');
   await page.getByRole('link', { name: 'Projects', exact: true }).first().click();
   await expect(page).toHaveURL(/\/portfolio\/projects$/);

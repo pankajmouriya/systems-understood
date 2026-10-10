@@ -9,8 +9,16 @@ const stacks: Record<string, string[]> = {
   'Appsecco Consulting': ['Security assessments', 'AWS', 'GCP'],
 };
 
+const logos: Record<string, string> = {
+  Harness: '/company-logos/harness.png',
+  Kong: '/company-logos/kong.png',
+  DeepSource: '/company-logos/deepsource.svg',
+  InVideo: '/company-logos/invideo.svg',
+};
+
 export const experienceSteps: ExperienceStep[] = experience.map((item, index) => ({
   id: String(index + 1).padStart(2, '0'),
+  logo: logos[item.organization],
   company: item.organization,
   role: item.role,
   period: item.end ? item.period : item.period.replace('Present', '').trim(),
