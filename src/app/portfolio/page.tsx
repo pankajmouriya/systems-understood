@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PortfolioNav } from '@/components/portfolio/PortfolioNav';
+import { CapabilityLedger } from '@/components/portfolio/CapabilityLedger';
 import Process from '@/components/shadcn-studio/blocks/timeline-component-07/timeline-component-07';
 import { experienceSteps } from '@/lib/experience-timeline';
 import { selectedProjects, talks } from '@/lib/portfolio';
@@ -14,6 +15,7 @@ export default function PortfolioPage() {
     <section className="portfolio-section" aria-labelledby="experience-heading"><div className="portfolio-section-header"><div><p className="eyebrow">01 / Experience</p><h2 id="experience-heading">Where I’ve worked</h2></div><p>From consulting and security research to product security at scale.</p></div>
       <Process data={experienceSteps} />
     </section>
+    <CapabilityLedger />
     <section className="portfolio-teasers" aria-label="More from the portfolio"><Link className="surface-sheen" href="/portfolio/projects"><span className="eyebrow">02 / Projects</span><strong>{selectedProjects[0].name}</strong><span>See selected work ↗</span></Link><Link className="surface-sheen" href="/portfolio/talks"><span className="eyebrow">03 / Speaking</span><strong>{talks.length} talks &amp; conferences</strong><span>Explore the archive ↗</span></Link></section>
   </main>;
 }
