@@ -1,3 +1,4 @@
+import { BorderTrace } from '@/components/effects/BorderTrace';
 import Link from 'next/link';
 import { Icon } from '@/components/ui/icon';
 import { ArticleSecurityBoundary } from './ArticleSecurityBoundary';
@@ -23,7 +24,8 @@ function dateLabel(value: string) {
 export function ArticleHeader({ post, readingMinutes }: { post: ArticleMetadata; readingMinutes: number }) {
   const topic = securityTopicFor(post.tags);
   return (
-    <header className="article-header">
+    <header className="article-header trace-surface">
+      <BorderTrace />
       <Link href="/blog" className="reader-back"><Icon name="back" />All writing</Link>
       <div className={topic ? "article-title-composition" : undefined}><div>
       <div className="article-meta">

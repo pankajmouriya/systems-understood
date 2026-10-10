@@ -1,3 +1,4 @@
+import { BorderTrace } from '@/components/effects/BorderTrace';
 import Link from 'next/link';
 import { ArrowUpRight, BookOpenText, Rss } from 'lucide-react';
 import { Icon } from '@/components/ui/icon';
@@ -22,7 +23,7 @@ export function Footer2() {
   return (
     <footer className="site-footer">
       <div className="site-footer-inner">
-        <div className="footer-invitation">
+        <div className="footer-invitation trace-surface"><BorderTrace />
           <div>
             <p className="footer-eyebrow"><BookOpenText aria-hidden="true" /> An ongoing archive</p>
             <h2>There is always<br />more to understand<span>.</span></h2>

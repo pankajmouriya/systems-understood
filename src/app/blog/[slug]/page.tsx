@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { ReadingStamp } from '@/components/articles/ReadingStamp';
 import { ArticleHeader } from '@/components/articles/ArticleHeader';
 import { ArticleLayout } from '@/components/articles/ArticleLayout';
 import { Callout } from '@/components/articles/Callout';
@@ -48,6 +49,7 @@ export default async function ArticlePage({ params }: Props) {
       <ArticleLayout toc={post.data.toc}>
         {post.data.security?.status === 'historical' && <Callout type="note" title="From the archive">This article preserves the original walkthrough. Tools, APIs, and security guidance may have changed since publication; verify details against current documentation before applying them.</Callout>}
         <Body components={mdxComponents} />
+        <ReadingStamp key={slug} slug={slug} />
       </ArticleLayout>
     </main>
   );

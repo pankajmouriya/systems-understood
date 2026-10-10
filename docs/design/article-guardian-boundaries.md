@@ -56,3 +56,7 @@ Coverage: Kubernetes/application mapping, title and reading continuity, pause/re
 ## Verification evidence (10 October 2026)
 
 Two focused Chrome tests passed against a production build. Final build/TypeScript, lint, and whitespace checks passed. Visual review covered the real Informers header at 1440px, its 375px layout, and all five dark phone diagrams. The final spacing pass fixed long controls cutting across the rounded boundary; updated Cloud, Runtime, and Application captures show them contained. An independent code/document review found no material blockers. Cross-engine and physical-device performance remain unmeasured.
+
+### Compact-circle refinement
+
+The later refinement caps the header slot at 320px and places a true 232px circular boundary in a 280×306px field. Controls and the guardian are smaller; the article title regains horizontal space. See [Reading rewards and traces](reading-rewards-and-traces.md) for this refinement and the reader's earned stamp.
