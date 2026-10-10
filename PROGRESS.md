@@ -223,3 +223,13 @@ Confirmed the boxed appearance comes from the global terracotta `:focus-visible`
 ### Checkpoint 48: Header visual and behavior verification — complete
 
 Inspected production screenshots at 1280px in light and dark, including the name's hover and keyboard focus states, plus a 375px dark header. The blanket hover underline is gone; the short green name rule animates in, and keyboard focus remains visible with a green outline. Confirmed the faint green header tint and active navigation rule on nested Writing, Books, and Portfolio routes and the résumé route. The phone page has no horizontal overflow. Lint, all 11 content checks, production build, and five focused browser checks passed. Local preview is refreshed at port 3101. Ready for local commit.
+
+## AI agent character study — 10 October 2026
+
+### Checkpoint 49: Scene design and implementation — complete
+
+The author chose pixel-art characters for the live homepage and asked to see clean illustrated figures as a comparison. Added a compact green defender and terracotta rogue as original code-native SVG characters beside the hanging portrait. They approach, clash briefly with a small spark, and retreat on a nine-second cycle. The lanyard's existing pause control and viewport visibility also pause the scene; reduced-motion visitors see still characters. Added `/animation-study` as a noindex visual comparison showing pixel and smooth illustrated variants with the same portrait context. No external sprite assets or new runtime dependencies. Next: inspect rendered motion and responsive composition, verify pause/reduced-motion behavior, and commit.
+
+### Checkpoint 50: Scene review and verification — complete
+
+Inspected live desktop and phone screenshots of the homepage and both comparison styles. The characters remain small near the lanyard and do not cover the portrait or text. Connected the study page's lanyard visually to the photo after spotting a gap. The focused browser suite passed all four checks, including pause/resume, reduced motion, both styles at 375px, and no horizontal overflow. Lint, all 11 content checks, TypeScript, and the production build passed. Next: refresh the local preview and commit the task-owned files.

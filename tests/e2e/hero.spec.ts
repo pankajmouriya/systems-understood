@@ -14,6 +14,9 @@ test('homepage portrait loads, can pause, and leaves primary links usable', asyn
   await page.mouse.up();
   await page.getByRole('button', { name: 'Pause card animation' }).click();
   await expect(page.getByRole('button', { name: 'Resume card animation' })).toBeVisible();
+  await expect(page.locator('.profile-lanyard .agent-duel')).toHaveAttribute('data-active', 'false');
+  await page.getByRole('button', { name: 'Resume card animation' }).click();
+  await expect(page.locator('.profile-lanyard .agent-duel')).toHaveAttribute('data-active', 'true');
   await expect(page.getByRole('link', { name: 'Download CV' })).toHaveAttribute('href', '/Pankaj-Mouriya-Resume.pdf');
   await page.getByRole('link', { name: 'Read the writing', exact: true }).click();
   await expect(page).toHaveURL(/\/blog$/);
@@ -25,6 +28,18 @@ test('portrait remains available with reduced motion on a phone', async ({ page 
   await page.goto('/');
   await expect(page.locator('.profile-photo img')).toBeVisible();
   await expect(page.locator('.profile-canvas')).toHaveCount(0);
+  await expect(page.locator('.profile-lanyard .agent-duel-pixel')).toBeVisible();
+  expect(await page.locator('.profile-lanyard .agent-unit').first().evaluate((node) => getComputedStyle(node).animationName)).toBe('none');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+});
+
+test('animation study shows both agent styles without horizontal overflow', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 900 });
+  await page.goto('/animation-study');
+  await expect(page.getByRole('heading', { name: 'Pixel agents · on the homepage' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Clean illustrated agents' })).toBeVisible();
+  await expect(page.locator('.agent-duel-pixel')).toBeVisible();
+  await expect(page.locator('.agent-duel-illustrated')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
 

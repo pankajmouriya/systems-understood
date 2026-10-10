@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { FlowLines } from '@/components/effects/FlowLines';
+import { AgentDuel } from '@/components/effects/AgentDuel';
 import Image from 'next/image';
 import { Component, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Pause, Play } from 'lucide-react';
@@ -45,6 +46,7 @@ export function PortraitLanyard() {
     {animated && <div className="profile-canvas" role="img" aria-label="Animated portrait of Pankaj Mouriya on a draggable lanyard">
       <CardBoundary onFailure={onFailure}><IdCard frontImage="/images/profile/pankaj-portrait.png" active={visible && !paused} onReady={onReady} onFailure={onFailure} /></CardBoundary>
     </div>}
+    <AgentDuel active={animated && visible && !paused} />
     {animated && ready && <div className="profile-card-controls"><span>Drag the card</span><button type="button" onClick={() => setPaused(!paused)} aria-label={paused ? 'Resume card animation' : 'Pause card animation'}>{paused ? <Play size={14} /> : <Pause size={14} />}{paused ? 'Resume' : 'Pause'}</button></div>}
   </div>;
 }

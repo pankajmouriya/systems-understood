@@ -1,0 +1,94 @@
+.agent-duel {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  --agent-top: 5.8rem;
+}
+.agent-unit {
+  position: absolute;
+  top: var(--agent-top);
+  display: block;
+  width: 2.25rem;
+  height: 2.25rem;
+  filter: drop-shadow(0 3px 3px rgb(0 0 0 / .12));
+  animation-duration: 9s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+.agent-unit svg { display: block; width: 100%; height: 100%; }
+.agent-defender {
+  left: calc(50% - 6.5rem);
+  --agent-shell: #93c9a8;
+  --agent-dark: #235541;
+  --agent-glow: #c4f9dc;
+  animation-name: agent-defend;
+}
+.agent-rogue {
+  left: calc(50% + 4.25rem);
+  --agent-shell: #e7a18a;
+  --agent-dark: #8c3b32;
+  --agent-glow: #ffe2ac;
+  animation-name: agent-raid;
+}
+.agent-clash {
+  position: absolute;
+  left: calc(50% - .75rem);
+  top: calc(var(--agent-top) + .6rem);
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #d7a76c;
+  opacity: 0;
+  transform: scale(.25);
+  animation: agent-spark 9s ease-out infinite paused;
+}
+.agent-clash svg { width: 100%; height: 100%; }
+.agent-duel[data-active='true'] .agent-unit,
+.agent-duel[data-active='true'] .agent-clash { animation-play-state: running; }
+@keyframes agent-defend {
+  0%, 15%, 86%, 100% { transform: translate(0, 0); }
+  24% { transform: translate(1rem, -.35rem); }
+  39%, 47% { transform: translate(3.3rem, -.65rem) rotate(-8deg); }
+  54% { transform: translate(2.5rem, .2rem) rotate(7deg); }
+  70% { transform: translate(.6rem, -.2rem); }
+}
+@keyframes agent-raid {
+  0%, 15%, 86%, 100% { transform: translate(0, 0); }
+  24% { transform: translate(-1.1rem, -.2rem); }
+  39%, 47% { transform: translate(-3.3rem, -.6rem) rotate(9deg); }
+  54% { transform: translate(-2rem, .25rem) rotate(-9deg); }
+  70% { transform: translate(-.5rem, -.15rem); }
+}
+@keyframes agent-spark {
+  0%, 36%, 55%, 100% { opacity: 0; transform: scale(.25) rotate(0); }
+  40% { opacity: .85; transform: scale(.85) rotate(25deg); }
+  45% { opacity: .55; transform: scale(1.1) rotate(-15deg); }
+  50% { opacity: .7; transform: scale(.6) rotate(30deg); }
+}
+.agent-duel-illustrated .agent-unit { width: 3.3rem; height: 3.5rem; top: calc(var(--agent-top) - .5rem); filter: drop-shadow(0 5px 8px rgb(0 0 0 / .13)); }
+.agent-duel-illustrated .agent-defender { left: calc(50% - 7rem); }
+.agent-duel-illustrated .agent-rogue { left: calc(50% + 3.8rem); }
+@media (max-width: 760px) {
+  .agent-duel { --agent-top: 3.5rem; }
+  .agent-unit { width: 1.9rem; height: 1.9rem; }
+  .agent-duel-illustrated .agent-unit { width: 2.8rem; height: 3rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .agent-unit, .agent-clash { animation: none !important; }
+  .agent-clash { display: none; }
+}
+.agent-study-page { width: min(100% - 2.5rem, 76rem); margin: 3.5rem auto 7rem; }
+.agent-study-back { color: var(--teal); text-decoration: none; font-size: .8rem; }
+.agent-study-page h1 { margin: 1.2rem 0 .6rem; font: 550 clamp(2.7rem, 5vw, 4.5rem)/1.05 var(--font-display), Georgia, serif; letter-spacing: -.035em; }
+.agent-study-page > p { max-width: 55ch; color: var(--muted); line-height: 1.6; }
+.agent-study-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+.agent-study-option { min-width: 0; padding: 1.25rem; border: 1px solid var(--border); border-radius: .7rem; background: var(--surface); }
+.agent-study-option h2 { margin: 0; font: 550 1.5rem/1.15 var(--font-display), Georgia, serif; }
+.agent-study-option > p { margin: .45rem 0 0; color: var(--muted); font-size: .8rem; }
+.agent-study-stage { position: relative; height: 23rem; margin-top: 1rem; overflow: hidden; border-radius: .4rem; background: var(--background); }
+.agent-study-stage::before { position: absolute; top: 0; left: calc(50% - 4px); width: 8px; height: 8.5rem; background: var(--foreground); content: ''; }
+.agent-study-photo { position: absolute; top: 8.5rem; left: 50%; width: 11rem; height: 13rem; object-fit: cover; object-position: center; border-top: 5px solid var(--teal); border-radius: .4rem; transform: translateX(-50%); }
+.agent-study-stage .agent-duel { --agent-top: 4.5rem; }
+@media (max-width: 760px) { .agent-study-grid { grid-template-columns: 1fr; } }
