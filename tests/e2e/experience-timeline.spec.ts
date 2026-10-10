@@ -9,10 +9,16 @@ test('portfolio experience selects one source-backed role without a long page', 
   await expect(tabs.getByRole('tab', { name: /Harness/ })).toHaveAttribute('aria-selected', 'true');
   await expect(timeline.getByRole('tabpanel')).toContainText('Senior Product Security Engineer');
   await expect(timeline.getByRole('tabpanel')).toContainText('Architected SoS');
+  await expect(timeline.locator('.experience-current-trace')).toBeVisible();
+  const headingBox = await page.locator('.portfolio-section-header').boundingBox();
+  const timelineBox = await timeline.boundingBox();
+  expect(headingBox?.width).toBeGreaterThan(1000);
+  expect(timelineBox?.width).toBeGreaterThan(1000);
   await tabs.getByRole('tab', { name: /Kong/ }).click();
   await expect(tabs.getByRole('tab', { name: /Kong/ })).toHaveAttribute('aria-selected', 'true');
   await expect(timeline.getByRole('tabpanel')).toContainText('Senior Security Engineer');
   await expect(timeline.getByRole('tabpanel')).not.toContainText('Architected SoS');
+  await expect(timeline.locator('.experience-current-trace')).toHaveCount(0);
   await tabs.getByRole('tab', { name: /Kong/ }).press('ArrowRight');
   await expect(tabs.getByRole('tab', { name: /DeepSource/ })).toBeFocused();
   await expect(tabs.getByRole('tab', { name: /DeepSource/ })).toHaveAttribute('aria-selected', 'true');
@@ -32,6 +38,8 @@ test('compact timeline stays usable on a phone with reduced motion', async ({ br
     await timeline.getByRole('tab', { name: /InVideo/ }).click();
     await expect(timeline.getByRole('tabpanel')).toContainText('Security Engineer');
     await expect(timeline.getByRole('tabpanel')).toHaveCSS('animation-name', 'none');
+    await timeline.getByRole('tab', { name: /Harness/ }).click();
+    await expect(timeline.locator('.experience-current-trace')).toHaveCSS('animation-name', 'none');
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
   }
   await context.close();

@@ -21,6 +21,7 @@ export interface ExperienceStep {
 }
 
 function ExperiencePanel({ step, direction, reduceMotion }: { step: ExperienceStep; direction: number; reduceMotion: boolean }) {
+  const isCurrent = step.status?.text === 'Present';
   return (
     <motion.article
       key={step.id}
@@ -34,6 +35,7 @@ function ExperiencePanel({ step, direction, reduceMotion }: { step: ExperienceSt
       exit={reduceMotion ? undefined : { opacity: 0, x: direction * -14, filter: 'blur(2px)' }}
       transition={{ duration: reduceMotion ? 0 : 0.34, ease: [0.16, 1, 0.3, 1] }}
     >
+      {isCurrent && <svg className="experience-current-trace" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect x=".35" y=".35" width="99.3" height="99.3" rx="1.2" pathLength="100" /></svg>}
       <div className="experience-panel-heading">
         <span className="experience-company-mark" aria-hidden="true">
           {step.logo ? <Image src={step.logo} alt="" width={44} height={44} /> : step.company.slice(0, 2).toUpperCase()}
@@ -47,10 +49,8 @@ function ExperiencePanel({ step, direction, reduceMotion }: { step: ExperienceSt
           <p className="experience-description">{step.description}</p>
           <div className="experience-stack" aria-label="Areas of work">{step.stack.map((tech) => <Badge key={tech} variant="secondary" className="experience-stack-badge">{tech}</Badge>)}</div>
         </div>
-        <div>
-          <p className="experience-achievement"><Icon name="shield" />{step.achievement}</p>
-          {step.details && step.details.length > 0 && <ul className="experience-details">{step.details.map((detail) => <li key={detail}>{detail}</li>)}</ul>}
-        </div>
+        <p className="experience-achievement"><Icon name="shield" />{step.achievement}</p>
+        {step.details && step.details.length > 0 && <ul className="experience-details">{step.details.map((detail) => <li key={detail}>{detail}</li>)}</ul>}
       </div>
     </motion.article>
   );
@@ -103,6 +103,7 @@ export default function Process({ data, className }: { data: ExperienceStep[]; c
               onClick={() => select(index)}
               onKeyDown={(event) => onKeyDown(event, index)}
             >
+              {step.status?.text === 'Present' && index === activeIndex && <svg className="experience-current-orbit" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="21" pathLength="100" /></svg>}
               <span className="experience-milestone-logo" aria-hidden="true">{step.logo ? <Image src={step.logo} alt="" width={36} height={36} /> : step.company.slice(0, 2).toUpperCase()}</span>
               <span className="experience-milestone-copy"><strong>{step.company}</strong><small>{step.period.replace(' — ', '–')}</small></span>
             </button>
