@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, type CSSProperties } from 'react';
+import { useEffect, useRef, useId, type CSSProperties } from 'react';
 import { SECURITY_STORIES, type SecurityStory } from './security-stories';
 
 export type AgentStyle = 'pixel' | 'illustrated';
@@ -10,13 +10,39 @@ type AgentDuelProps = {
   active?: boolean;
   startAt?: number;
   story?: SecurityStory;
+  entranceFromName?: boolean;
 };
 
 /** One coordinated scene. Every layer shares its clock, story, and pause state. */
-export function AgentDuel({ variant = 'illustrated', active = false, startAt = 0, story = SECURITY_STORIES[0] }: AgentDuelProps) {
+export function AgentDuel({ variant = 'illustrated', active = false, startAt = 0, story = SECURITY_STORIES[1], entranceFromName = false }: AgentDuelProps) {
+  const host = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!entranceFromName) return;
+    const anchor = document.getElementById('guardian-name-anchor');
+    const svg = host.current?.querySelector('svg');
+    if (!anchor || !svg) return;
+    const measure = () => {
+      const matrix = svg.getScreenCTM();
+      if (!matrix) return;
+      const bounds = anchor.getBoundingClientRect();
+      const point = new DOMPoint(bounds.x + bounds.width * .72, bounds.y).matrixTransform(matrix.inverse());
+      const x = point.x - 42;
+      const y = point.y - 82;
+      host.current?.style.setProperty('--entrance-x', `${x}px`);
+      host.current?.style.setProperty('--entrance-y', `${y}px`);
+      host.current?.style.setProperty('--jump-x', `${(x + 40) / 2}px`);
+      host.current?.style.setProperty('--jump-y', `${Math.min(y, 95) - 90}px`);
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(anchor);
+    observer.observe(svg);
+    measure();
+    document.fonts.ready.then(measure);
+    return () => observer.disconnect();
+  }, [entranceFromName]);
   const id = useId().replaceAll(':', '');
   const atlas = `/images/agents/sentinel-rogue-${variant}.webp`;
-  return <div className={`agent-duel agent-duel-${variant}`} data-active={active} data-story={story.id}
+  return <div ref={host} data-name-entrance={entranceFromName} className={`agent-duel agent-duel-${variant}`} data-active={active} data-story={story.id}
     style={{ '--scene-delay': `${-startAt}s` } as CSSProperties}
     role="img" aria-label={`Illustrative security story: ${story.title}. ${story.detail}`}>
     <svg className="breach-stage" viewBox="0 0 480 520" fill="none" aria-hidden="true">
@@ -72,7 +98,7 @@ export function AgentDuel({ variant = 'illustrated', active = false, startAt = 0
 }
 
 function StoryMechanism({ story }: { story: SecurityStory }) {
-  return <g className="story-mechanism" transform="translate(140 256)" stroke="currentColor" color="var(--teal)">
+  return <g className="story-mechanism" transform="translate(140 310)" stroke="currentColor" color="var(--teal)">
     {story.id === 'sqli' && <g>
       <path d="M0 25h52m96 0h52" strokeDasharray="4 5" />
       {[68, 91, 114].map(x => <rect className="story-wall" key={x} x={x} y="-8" width="16" height="68" rx="3" fill="currentColor" fillOpacity=".12" />)}

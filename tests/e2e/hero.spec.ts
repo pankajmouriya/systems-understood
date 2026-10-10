@@ -85,3 +85,24 @@ test('four stories have distinct defenses and paused stories do not advance', as
   await page.getByRole('button', { name: /^All clear/ }).click();
   await expect(page.locator('.agent-study-stage')).toHaveAttribute('data-phase', 'portrait');
 });
+
+test('AI opens first and sound starts only after enabling it', async ({ page }) => {
+  await page.addInitScript(() => {
+    const original = AudioContext.prototype.createOscillator;
+    (window as Window & { cueVoices?: number }).cueVoices = 0;
+    AudioContext.prototype.createOscillator = function () {
+      const state = window as Window & { cueVoices?: number };
+      state.cueVoices = (state.cueVoices ?? 0) + 1;
+      return original.call(this);
+    };
+  });
+  await page.goto('/');
+  await expect(page.locator('.profile-lanyard')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
+  await expect(page.locator('.profile-lanyard .agent-duel')).toHaveAttribute('data-story', 'prompt');
+  await expect(page.getByRole('button', { name: 'Enable scene sound' })).toHaveAttribute('aria-pressed', 'false');
+  expect(await page.evaluate(() => (window as Window & { cueVoices?: number }).cueVoices)).toBe(0);
+  await page.getByRole('button', { name: 'Enable scene sound' }).click();
+  await expect.poll(() => page.evaluate(() => (window as Window & { cueVoices?: number }).cueVoices)).toBe(2);
+  await page.getByRole('button', { name: 'Mute scene sound' }).click();
+  await expect(page.getByRole('button', { name: 'Enable scene sound' })).toHaveAttribute('aria-pressed', 'false');
+});

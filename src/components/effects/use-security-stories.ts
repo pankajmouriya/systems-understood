@@ -4,10 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { COMBAT_START, PORTRAIT_RETURN, SECURITY_STORIES, STORY_SECONDS, scenePhaseAt, type ScenePhase } from './security-stories';
 
 /** Three phase changes and one story change per cycle; no animation-frame React updates. */
-export function useSecurityStories(active: boolean) {
-  const [run, setRun] = useState({ id: 0, index: 0, startAt: 0 });
+export function useSecurityStories(active: boolean, onArrival?: () => void) {
+  const [run, setRun] = useState({ id: 0, index: 1, startAt: 0 });
   const [phase, setPhase] = useState<ScenePhase>('portrait');
   const pausedClock = useRef({ id: -1, elapsed: 0 });
+  const arrival = useRef(onArrival);
+  useEffect(() => { arrival.current = onArrival; }, [onArrival]);
   useEffect(() => {
     if (!active) return;
     const base = pausedClock.current.id === run.id ? pausedClock.current.elapsed : run.startAt;
@@ -15,13 +17,14 @@ export function useSecurityStories(active: boolean) {
     let timer: ReturnType<typeof setTimeout>;
     const schedule = () => {
       const elapsed = base + (performance.now() - started) / 1000;
-      const next = [COMBAT_START, PORTRAIT_RETURN, 18, STORY_SECONDS].find(t => t > elapsed + .002) ?? STORY_SECONDS;
+      const next = [1.2, COMBAT_START, PORTRAIT_RETURN, 18, STORY_SECONDS].find(t => t > elapsed + .002) ?? STORY_SECONDS;
       timer = setTimeout(() => {
         if (next === STORY_SECONDS) {
           setPhase('portrait');
           setRun(r => ({ id: r.id + 1, index: (r.index + 1) % SECURITY_STORIES.length, startAt: 0 }));
         } else {
-          setPhase(scenePhaseAt(next));
+          if (next === 1.2) arrival.current?.();
+          else setPhase(scenePhaseAt(next));
           schedule();
         }
       }, Math.max(0, (next - elapsed) * 1000));

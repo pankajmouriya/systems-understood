@@ -1,5 +1,5 @@
 export const STORY_SECONDS = 24;
-export const COMBAT_START = 3.6;
+export const COMBAT_START = 5.8;
 export const PORTRAIT_RETURN = 15.6;
 export type ScenePhase = 'portrait' | 'combat' | 'return';
 export const SECURITY_STORIES = [

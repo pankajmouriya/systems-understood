@@ -44,7 +44,7 @@ export function HeroGreeting() {
           </AnimatePresence>
         </span> I’m
       </span>
-      Pankaj Mouriya<span className="profile-period">.</span>
+      Pankaj <span id="guardian-name-anchor">Mouriya</span><span className="profile-period">.</span>
     </h1>
   </>;
 }

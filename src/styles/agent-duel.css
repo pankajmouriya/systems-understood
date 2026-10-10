@@ -25,24 +25,34 @@
 .breach-verdict text, .breach-patrol-label text { font-family: var(--font-mono), monospace; font-size: 8px; letter-spacing: .7px; }
 .breach-patrol-label { color: var(--teal); opacity: .75; animation-name: patrol-label; }
 @keyframes sentinel-move {
-  0%,12%,82%,100% { transform: translate(45px,330px); }
-  20% { transform: translate(42px,337px) rotate(-5deg); }
-  29% { transform: translate(36px,175px) rotate(-12deg); }
-  36%,39% { transform: translate(40px,95px); }
-  42% { transform: translate(32px,100px) rotate(-4deg); }
-  48% { transform: translate(40px,95px); }
-  58% { transform: translate(44px,215px) rotate(8deg); }
-  66%,78% { transform: translate(45px,330px); }
+  0%,5% { transform: translate(45px,200px) scale(.65); opacity: 0; }
+  8%,12% { transform: translate(45px,200px) scale(.65); opacity: 1; }
+  20% { transform: translate(40px,200px); opacity: 1; }
+  29% { transform: translate(36px,120px) rotate(-12deg); opacity: 1; }
+  36%,39%,48%,63% { transform: translate(40px,95px); opacity: 1; }
+  42% { transform: translate(32px,100px) rotate(-4deg); opacity: 1; }
+  66%,78%,100% { transform: translate(45px,330px); opacity: 1; }
+}
+.agent-duel[data-name-entrance='true'] .agent-defender { animation-name: sentinel-name-entrance; }
+@keyframes sentinel-name-entrance {
+  0%,5% { transform: translate(var(--entrance-x,45px),var(--entrance-y,200px)) scale(.65); opacity: 0; }
+  8%,12% { transform: translate(var(--entrance-x,45px),var(--entrance-y,200px)) scale(.65); opacity: 1; }
+  16% { transform: translate(var(--jump-x,40px),var(--jump-y,110px)) scale(.78) rotate(-12deg); opacity: 1; }
+  22% { transform: translate(40px,200px); opacity: 1; }
+  29% { transform: translate(36px,120px) rotate(-12deg); opacity: 1; }
+  36%,39%,48%,63% { transform: translate(40px,95px); opacity: 1; }
+  42% { transform: translate(32px,100px) rotate(-4deg); opacity: 1; }
+  66%,78%,100% { transform: translate(45px,330px); opacity: 1; }
 }
 @keyframes rogue-move {
-  0%,7% { transform: translate(363px,260px) scale(.65); opacity: 0; }
-  13%,19% { transform: translate(335px,255px); opacity: 1; }
-  26% { transform: translate(343px,185px) rotate(6deg); opacity: 1; }
+  0%,4% { transform: translate(363px,160px) scale(.65); opacity: 0; }
+  8%,19% { transform: translate(335px,155px); opacity: 1; }
+  26% { transform: translate(343px,135px) rotate(6deg); opacity: 1; }
   31%,49% { transform: translate(325px,110px); opacity: 1; }
-  53% { transform: translate(339px,120px) rotate(13deg); opacity: 1; }
-  60% { transform: translate(359px,205px) rotate(24deg); opacity: 1; }
-  66% { transform: translate(365px,260px) scale(.5) rotate(35deg); opacity: 0; }
-  67%,100% { transform: translate(363px,260px) scale(.65); opacity: 0; }
+  53% { transform: translate(339px,110px) rotate(13deg); opacity: 1; }
+  60% { transform: translate(339px,120px) rotate(24deg); opacity: 1; }
+  66% { transform: translate(345px,145px) scale(.5) rotate(35deg); opacity: 0; }
+  67%,100% { transform: translate(363px,160px) scale(.65); opacity: 0; }
 }
 @keyframes sentinel-pose { 0%,22% { transform: translateX(0); } 23%,62% { transform: translateX(-512px); } 63%,78% { transform: translateX(-1024px); } 79%,100% { transform: translateX(0); } }
 @keyframes rogue-pose { 0%,27% { transform: translateX(0); } 28%,50% { transform: translateX(-512px); } 51%,72% { transform: translateX(-1024px); } 73%,100% { transform: translateX(0); } }
@@ -125,7 +135,7 @@
 .breach-packet { color: var(--accent); }
 .story-wall { animation-name: story-wall; }
 .story-containment { opacity: 0; animation-name: story-containment; }
-@keyframes story-mechanism { 0%,17%,66%,100% { opacity: 0; } 23%,61% { opacity: 1; } }
+@keyframes story-mechanism { 0%,23%,63%,100% { opacity: 0; } 28%,60% { opacity: 1; } }
 @keyframes story-attack-tag { 0%,23%,51%,100% { opacity: 0; } 27%,46% { opacity: .85; } }
 @keyframes story-wall { 0%,35%,52%,100% { fill-opacity: .08; } 39%,47% { fill-opacity: .3; } }
 @keyframes story-containment { 0%,42%,68%,100% { opacity: 0; } 47%,61% { opacity: 1; } }
@@ -147,7 +157,10 @@
   30% { opacity: 1; transform: translate(367px,190px); }
   36% { opacity: 1; transform: translate(273px,145px); }
   40% { opacity: 1; transform: translate(220px,214px); }
-  44% { opacity: 1; transform: translate(243px,278px) scale(.8); }
-  47%,100% { opacity: 0; transform: translate(243px,278px) scale(.1); }
+  44% { opacity: 1; transform: translate(243px,332px) scale(.8); }
+  47%,100% { opacity: 0; transform: translate(243px,332px) scale(.1); }
 }
 @keyframes runtime-alert { 0%,42%,53%,100% { opacity: 0; } 45%,50% { opacity: 1; } }
+
+.security-sound-toggle { display: inline-flex; align-items: center; gap: .3rem; margin-top: .25rem; padding: .25rem .5rem; font-size: .65rem; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; cursor: pointer; }
+.security-sound-toggle[aria-pressed='true'] { color: var(--teal); }
