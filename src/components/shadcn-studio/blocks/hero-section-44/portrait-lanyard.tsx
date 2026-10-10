@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { FlowLines } from '@/components/effects/FlowLines';
 import Image from 'next/image';
 import { Component, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Pause, Play } from 'lucide-react';
@@ -35,7 +36,8 @@ export function PortraitLanyard() {
   }, []);
 
   const animated = enabled && !failed;
-  return <div ref={host} className="profile-lanyard" data-ready={animated && ready}>
+  return <div ref={host} className="profile-lanyard" data-ready={animated && ready} data-flow-active={animated && visible && !paused}>
+    <FlowLines />
     <div className="profile-card-fallback" aria-hidden={animated && ready}>
       <span className="profile-cord" /><span className="profile-clip" />
       <div className="profile-photo"><Image src="/images/profile/pankaj-portrait.png" alt="Pankaj Mouriya" width={740} height={758} priority /><span>Pankaj Mouriya<small>Engineering · Security · Writing</small></span></div>

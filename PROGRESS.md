@@ -183,3 +183,17 @@ Added the supplied Hello / नमस्ते / 你好 / Ciao rotation and the e
 ### Checkpoint 39: Portrait and greeting verified — complete
 
 Production build and lint passed. Inspected desktop/phone hero captures and confirmed the new portrait in the animated card and static fallback. The five affected browser checks pass across the initial run and focused rerun: card dragging/pause, reduced motion, rotating greeting/pause, responsive layout, and navigation. The initial greeting assertion encountered both entering/exiting words during the intended transition; corrected the selector to target the incoming word and confirmed rotation, pause, and static Hello behavior. Refreshed the preview on port 3101. Ready for local commit.
+
+## Restrained signal lines and sheen — 10 October 2026
+
+### Checkpoint 40: Reference and placement — complete
+
+Inspected the supplied recording frame and screenshot: fine curved tracks, short travelling highlights, and soft reflected light on cards. Place low-opacity green signal paths behind the homepage portrait and in the two book panels. Add one-pass hover/focus sheen to homepage work links, portfolio project/talk links, and book panels. Keep reading pages free of new effects. Hero lines share the existing card pause/viewport state; book motion runs briefly on hover/focus. Reduced-motion users see static tracks only.
+
+### Checkpoint 41: Effects implemented — complete
+
+Added reusable decorative SVG paths with CSS-driven signals and a pointer-transparent sheen. No new dependencies, canvas, layout shifts, or pointer handlers. Effects use existing theme colors, lower opacity on phones, and are excluded from accessibility navigation. Next: verify actual appearance, links, pause/reduced-motion behavior, and responsive rendering.
+
+### Checkpoint 42: Effects verified — complete
+
+Production build, lint, and six focused browser checks passed. Reviewed the homepage tracks and book-panel sheen in rendered captures, including dark theme; responsive suite confirms desktop/phone layouts and navigation. Direct browser checks confirmed hero signal animation pauses with the portrait control, sheen activates on hover, reduced-motion preferences hide all new animated highlights, and the book link remains clickable. The effects are deliberately faint; no new effects were added to article prose or reader controls. Local preview refreshed on port 3101. Ready for local commit.

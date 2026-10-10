@@ -459,3 +459,27 @@ button { cursor: pointer; }
 .profile-greeting-word { position: relative; display: inline-grid; overflow: hidden; vertical-align: bottom; line-height: 1.4; margin-bottom: -.12em; }
 .profile-greeting-sizer, .profile-greeting-current { grid-column: 1; grid-row: 1; white-space: nowrap; }
 .profile-greeting-sizer { visibility: hidden; }
+
+/* Sparse signal motion and a single, low-contrast sweep on selected surfaces. */
+.flow-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; color: var(--teal); mask-image: linear-gradient(to right, transparent, #000 45%, #000 85%, transparent); }
+.flow-line-track { stroke: currentColor; stroke-width: .65; opacity: .12; vector-effect: non-scaling-stroke; }
+.flow-line-signal { stroke: currentColor; stroke-width: 1; stroke-linecap: round; stroke-dasharray: 1.2 98.8; opacity: .3; animation: signal-travel 14s linear infinite paused; vector-effect: non-scaling-stroke; }
+@keyframes signal-travel { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+.profile-lanyard > .flow-lines { inset: 0 -1rem 2rem; width: calc(100% + 1rem); height: calc(100% - 2rem); }
+.profile-lanyard[data-flow-active='true'] > .flow-lines .flow-line-signal { animation-play-state: running; }
+.surface-sheen { position: relative; isolation: isolate; overflow: hidden; }
+.surface-sheen::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(110deg, transparent 25%, rgb(255 255 255 / .16) 46%, color-mix(in srgb, var(--teal) 7%, transparent) 51%, transparent 72%); transform: translateX(-120%); opacity: 0; }
+@keyframes surface-sweep { 0% { transform: translateX(-120%); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateX(120%); opacity: 0; } }
+.book-signal-panel > :not(.flow-lines) { position: relative; z-index: 1; }
+.book-signal-panel > .flow-lines { opacity: .65; }
+@media (hover: hover) and (pointer: fine) {
+  .surface-sheen:hover::after { animation: surface-sweep 1.4s ease-out both; }
+  .book-signal-panel:hover .flow-line-signal { animation: signal-travel 4s linear 1; }
+}
+.surface-sheen:focus-within::after { animation: surface-sweep 1.4s ease-out both; }
+.book-signal-panel:focus-within .flow-line-signal { animation: signal-travel 4s linear 1; }
+@media (prefers-reduced-motion: reduce) {
+  .flow-line-signal { display: none; animation: none !important; }
+  .surface-sheen::after { display: none; animation: none !important; }
+}
+@media (max-width: 760px) { .flow-lines { opacity: .6; } }
