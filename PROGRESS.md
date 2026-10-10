@@ -78,3 +78,26 @@ Restored the earlier green tokens (`#275d49` light, `#9acaad` dark) and matching
 ### Checkpoint 17: Local repository snapshot — prepared
 
 Audited the initial commit on `feat/portfolio-publication`: site code, content, migration scripts, documentation, source assets, and the résumé PDF are in scope. Generated Playwright screenshots are reproducible and excluded from version control through `.gitignore`; they remain available in the local review directory. The latest verified checks remain the 19-browser-test publication run and the four focused green-accent visual checks, plus 11 content tests, lint, and typecheck.
+
+## Experience timeline block — 10 October 2026
+
+### Checkpoint 18: Format and integration plan — complete
+
+Reviewed the supplied Shadcn Studio Timeline 07 code, the Timeline 4 screenshot, the current five-role portfolio timeline, `components.json`, and the installed Next.js page guidance. Recommend a vertical numbered timeline for experience: it keeps full role details legible at desktop and phone widths, while the pictured horizontal sequence works better for short milestones. The project already runs React 19.2.8, Tailwind CSS 4.3.3, and TypeScript 6.0.3. Add Motion, shadcn Badge, and `cn` utilities; create the supplied block and demo route under `src/`, then replace the portfolio's current timeline with source-backed career data. Keep the site's Newsreader/DM Sans and green/terracotta palette, support reduced motion and visible content without animation, and verify desktop/mobile interactions and build.
+
+### Checkpoint 19: Block dependencies and project paths — complete
+
+Confirmed `components.json` points to `src/components` and `src/app/globals.css`, with `@/*` resolving to `src/*`. Installed the declared pnpm 10.18.3 into a temporary tool directory because it was not on the shell path; used it to add Motion, clsx, and tailwind-merge to the project lockfile. Installed the official shadcn Badge via `pnpm dlx shadcn@latest add badge --yes`, which generated `src/components/ui/badge.tsx`. No Tailwind/React/TypeScript setup migration is needed. Next: adapt the supplied Timeline 07 block and connect source-backed roles.
+
+### Checkpoint 20: Timeline block and portfolio integration — complete
+
+Created the adapted Timeline 07 block, scroll animation component, real five-role data mapping, `cn` utility, and `/timeline-component-07` demo route under `src/`. Replaced the old ReUI timeline on `/portfolio`; retained every résumé-backed role and highlight. Sample company logos, career claims, and metrics were not introduced. The current Harness role has a Present status, company initials stand in for unavailable logos, and reduced-motion users get visible static content. Added only the theme mappings needed for shadcn Badge styling to `globals.css`. Initial 11 content tests and typecheck passed; lint found one Next image warning, corrected before browser QA.
+
+
+### Checkpoint 21: Timeline responsive and regression review — complete
+
+- Production build passed through Playwright's server setup. Lint and typecheck passed without warnings; 11 content tests and all 21 browser tests passed.
+- Inspected full-page portfolio screenshots at 1280px in light/dark and 375px with reduced motion. The five roles appear in source order, all résumé-backed highlights remain visible, and no horizontal overflow occurs. The same component renders at `/timeline-component-07`.
+- Initial reduced-motion browser check found Motion left the connecting line scaled to zero. The browser media preference was confirmed and a CSS override now keeps the line and all rows visible; the focused rerun and complete browser suite passed.
+- Removed the unused ReUI career timeline source and styles. The numbered Shadcn Studio adaptation uses local company initials when no validated logo asset exists, so the portfolio does not display unrelated sample brands. A standalone demo route is excluded from search indexing.
+- The local preview is refreshed on port 3101. The component, data map, dependencies, documentation, and test are ready for the next local commit.

@@ -1,6 +1,6 @@
 # Pankaj Mouriya — portfolio and writing
 
-A personal portfolio and technical publication built with Next.js 16, React 19, Fumadocs MDX, Tailwind CSS 4, and source-owned shadcn/ReUI components. Writing is the center of the homepage; the Portfolio holds résumé-backed experience, a selected project, and conference talks.
+A personal portfolio and technical publication built with Next.js 16, React 19, Fumadocs MDX, Tailwind CSS 4, and source-owned shadcn components. Writing is the center of the homepage; the Portfolio holds résumé-backed experience, a selected project, and conference talks.
 
 ## Run locally
 
@@ -11,7 +11,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open `http://localhost:3000`. Routes include `/blog`, `/books`, `/search`, `/portfolio`, `/portfolio/projects`, `/portfolio/talks`, and `/resume`. The résumé PDF is served at `/Pankaj-Mouriya-Resume.pdf`. The RSS feed is `/rss.xml`.
+Open `http://localhost:3000`. Routes include `/blog`, `/books`, `/search`, `/portfolio`, `/portfolio/projects`, `/portfolio/talks`, and `/resume`. The adapted Shadcn Studio experience block has a standalone preview at `/timeline-component-07` and is used on `/portfolio`. The résumé PDF is served at `/Pankaj-Mouriya-Resume.pdf`. The RSS feed is `/rss.xml`.
 
 Set `NEXT_PUBLIC_SITE_URL` to the absolute deployment origin before a public build so canonical URLs, RSS, robots, and sitemap use the intended host. Production deployment, DNS, and cutover are separate from this local implementation.
 
@@ -48,5 +48,7 @@ Local permanent redirects cover the migrated Docusaurus paths. The existing `nos
 ## Portfolio sources
 
 The user-supplied September 2026 résumé is the source for the career timeline and recent talks. The PDF in `public/` is an unchanged byte-for-byte copy. The Security Diff is the selected active public project, linked to its live site and source repository. Earlier talks and resource links come from the author's public talk archive. Its Kong “current” label is stale against the supplied résumé. Other repositories are not described as maintained until reviewed.
+
+The numbered experience block lives in `src/components/shadcn-studio/blocks/timeline-component-07/`. Its five entries come from `src/lib/experience-timeline.ts`, which maps the résumé-backed roles and highlights in `src/lib/portfolio.ts`. Motion draws the timeline as the page scrolls; reduced-motion preferences keep the content and line static.
 
 Component and font sources are recorded in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
