@@ -197,3 +197,11 @@ Added reusable decorative SVG paths with CSS-driven signals and a pointer-transp
 ### Checkpoint 42: Effects verified — complete
 
 Production build, lint, and six focused browser checks passed. Reviewed the homepage tracks and book-panel sheen in rendered captures, including dark theme; responsive suite confirms desktop/phone layouts and navigation. Direct browser checks confirmed hero signal animation pauses with the portrait control, sheen activates on hover, reduced-motion preferences hide all new animated highlights, and the book link remains clickable. The effects are deliberately faint; no new effects were added to article prose or reader controls. Local preview refreshed on port 3101. Ready for local commit.
+
+### Checkpoint 43: Recognizable technology marks — implemented
+
+Replaced the generic three-category outline-icon strip with six actual technology marks: Burp Suite, OWASP, Kubernetes, Docker, Google Cloud, and GitHub. These appear in the site's existing talks, guides, experience, or public-profile links. Downloaded local SVGs from Simple Icons, retained visible names, added restrained icon mounts with brand colors, and kept the portfolio link. Phone layout uses two rows of three logos. Next: production and responsive rendering checks.
+
+### Checkpoint 44: Technology strip verified — complete
+
+Inspected rendered desktop and phone logo-strip crops: all six SVG marks load, labels stay readable, and the mobile three-column layout fits without overflow. Production build, lint, and both responsive/navigation browser checks passed, covering light and dark themes. The refreshed homepage is available on port 3101. Ready for local commit.

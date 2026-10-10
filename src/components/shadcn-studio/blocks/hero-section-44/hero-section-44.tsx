@@ -1,8 +1,17 @@
 import Link from 'next/link';
 import { HeroGreeting } from './greeting-word';
-import { ArrowDownToLine, ArrowUpRight, BookOpen, Boxes, ShieldCheck, Terminal } from 'lucide-react';
+import { ArrowDownToLine, ArrowUpRight, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PortraitLanyard } from './portrait-lanyard';
+
+const technologies = [
+  { name: 'Burp Suite', slug: 'burpsuite', color: '#d95424' },
+  { name: 'OWASP', slug: 'owasp', color: 'var(--teal)' },
+  { name: 'Kubernetes', slug: 'kubernetes', color: '#326ce5' },
+  { name: 'Docker', slug: 'docker', color: '#2496ed' },
+  { name: 'Google Cloud', slug: 'googlecloud', color: '#4285f4' },
+  { name: 'GitHub', slug: 'github', color: 'var(--foreground)' },
+];
 
 // Adapted from the author's supplied Shadcn Studio Hero 44 block.
 export default function HeroSection() {
@@ -21,8 +30,12 @@ export default function HeroSection() {
       </div>
       <PortraitLanyard />
     </div>
-    <div className="profile-topics" aria-label="Writing interests">
-      <span><ShieldCheck />Application security</span><span><Boxes />Cloud &amp; Kubernetes</span><span><Terminal />Software systems</span><Link href="/portfolio">Explore my work <ArrowUpRight /></Link>
+    <div className="profile-technologies" aria-label="Technologies across my work and writing">
+      <ul>{technologies.map(({ name, slug, color }) => <li key={slug}>
+        <span className="technology-mark" aria-hidden="true"><span style={{ maskImage: `url(/images/technologies/${slug}.svg)`, backgroundColor: color }} /></span>
+        <span>{name}</span>
+      </li>)}</ul>
+      <Link href="/portfolio">Explore my work <ArrowUpRight size={18} /></Link>
     </div>
   </section>;
 }
