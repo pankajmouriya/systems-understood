@@ -32,6 +32,7 @@ export function SiteHeader() {
           <Link href="/blog" aria-current={inSection('/blog') ? 'page' : undefined}><Icon name="writing" />Writing</Link>
           <Link href="/books" aria-current={inSection('/books') ? 'page' : undefined}><Icon name="book" />Books</Link>
           <button type="button" className="site-search-trigger" onClick={() => setSearchOpen(true)} aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K"><Icon name="search" />Search <kbd>⌘ K</kbd></button>
+          <Link href="/about" aria-current={inSection('/about') ? 'page' : undefined}><Icon name="user" />About Me</Link>
           <Link href="/portfolio" aria-current={inSection('/portfolio') ? 'page' : undefined}><Icon name="work" />Portfolio</Link>
           <Link href="/resume" aria-current={inSection('/resume') ? 'page' : undefined}><Icon name="file" />Résumé</Link>
         </nav>

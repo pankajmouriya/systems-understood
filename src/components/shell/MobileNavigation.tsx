@@ -18,6 +18,7 @@ export function MobileNavigation({ onSearch }: { onSearch: () => void }) {
           <SheetClose asChild><Link href="/blog"><Icon name="writing" />Writing</Link></SheetClose>
           <SheetClose asChild><Link href="/books"><Icon name="book" />Books</Link></SheetClose>
           <SheetClose asChild><button type="button" onClick={onSearch}><Icon name="search" />Search writing</button></SheetClose>
+          <SheetClose asChild><Link href="/about"><Icon name="user" />About Me</Link></SheetClose>
           <SheetClose asChild><Link href="/portfolio"><Icon name="work" />Portfolio</Link></SheetClose>
           <SheetClose asChild><Link href="/resume"><Icon name="file" />Résumé</Link></SheetClose>
         </nav>

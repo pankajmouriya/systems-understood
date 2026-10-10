@@ -11,7 +11,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open `http://localhost:3000`. Routes include `/blog`, `/books`, `/portfolio`, `/portfolio/projects`, `/portfolio/talks`, and `/resume`. Search published articles and book chapters from the header or with Ctrl/⌘ K; old `/search?q=...` links open the search dialog on the homepage. The adapted Shadcn Studio experience block has a standalone preview at `/timeline-component-07` and is used on `/portfolio`. The résumé PDF is served at `/Pankaj-Mouriya-Resume.pdf`. The RSS feed is `/rss.xml`.
+Open `http://localhost:3000`. Routes include `/about`, `/blog`, `/books`, `/portfolio`, `/portfolio/projects`, `/portfolio/talks`, and `/resume`. Search published articles and book chapters from the header or with Ctrl/⌘ K; old `/search?q=...` links open the search dialog on the homepage. The adapted Shadcn Studio experience block has a standalone preview at `/timeline-component-07` and is used on `/portfolio`. The résumé PDF is served at `/Pankaj-Mouriya-Resume.pdf`. The RSS feed is `/rss.xml`.
 
 Set `NEXT_PUBLIC_SITE_URL` to the absolute deployment origin before a public build so canonical URLs, RSS, robots, and sitemap use the intended host. Production deployment, DNS, and cutover are separate from this local implementation.
 

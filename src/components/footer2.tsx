@@ -8,6 +8,7 @@ import { Icon } from '@/components/ui/icon';
 const explore = [
   { label: 'Writing', href: '/blog' },
   { label: 'Books', href: '/books' },
+  { label: 'About Me', href: '/about' },
   { label: 'Portfolio', href: '/portfolio' },
   { label: 'Résumé', href: '/resume' },
 ];

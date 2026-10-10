@@ -41,6 +41,7 @@ test('feed, sitemap, resume and legacy route are available', async ({ page, requ
   expect(await feed.text()).toContain('The Blend of Developer Tools');
   expect(await feed.text()).not.toContain('Reader draft route fixture');
   const sitemap = await request.get('/sitemap.xml');
+  expect(await sitemap.text()).toContain('/about');
   expect(await sitemap.text()).toContain('/blog/devtools');
   expect(await sitemap.text()).toContain('/books/same-origin-policy/postmessage');
   expect(await sitemap.text()).not.toContain('/blog/reader-draft');
