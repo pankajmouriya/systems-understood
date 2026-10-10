@@ -1,12 +1,38 @@
 import { expect, test } from '@playwright/test';
 
 test('search finds published article text and hides drafts', async ({ page }) => {
-  await page.goto('/search?q=postMessage');
-  await expect(page.getByRole('heading', { level: 1, name: 'Search writing' })).toBeVisible();
-  await expect(page.getByRole('link', { name: /The Blend of Developer Tools/ })).toBeVisible();
-  await page.getByRole('searchbox', { name: 'Search articles and book chapters' }).fill('Reader draft route fixture');
-  await page.getByRole('button', { name: 'Search' }).click();
+  await page.goto('/');
+  await page.keyboard.press('Control+k');
+  const dialog = page.getByRole('dialog', { name: 'Search writing' });
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole('combobox', { name: 'Search articles and book chapters' }).fill('postMessage');
+  await expect(dialog.getByText('The Blend of Developer Tools into Security Assessments')).toBeVisible();
+  await dialog.getByRole('combobox').fill('Reader draft route fixture');
   await expect(page.getByText('No writing found')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+});
+
+test('old search URL opens the dialog on the homepage', async ({ page }) => {
+  await page.goto('/search?q=postMessage');
+  await expect(page).toHaveURL(/\/$/);
+  const dialog = page.getByRole('dialog', { name: 'Search writing' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole('combobox')).toHaveValue('postMessage');
+  await expect(dialog.getByText('postMessage API Implementation and limitations', { exact: true })).toBeVisible();
+});
+
+test('mobile menu opens search without leaving the page', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/portfolio');
+  await page.getByRole('button', { name: /Menu/ }).click();
+  await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('button', { name: 'Search writing' }).click();
+  await expect(page).toHaveURL(/\/portfolio$/);
+  await expect(page.getByRole('dialog', { name: 'Search writing' })).toBeVisible();
+  const bounds = await page.getByRole('dialog', { name: 'Search writing' }).boundingBox();
+  expect(bounds?.x).toBeGreaterThanOrEqual(0);
+  expect((bounds?.x ?? 0) + (bounds?.width ?? 0)).toBeLessThanOrEqual(375);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
 
 test('feed, sitemap, resume and legacy route are available', async ({ page, request }) => {

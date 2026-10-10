@@ -35,7 +35,12 @@ test('books offer ordered chapters and mobile navigation', async ({ page }) => {
 });
 
 test('application security writing and chapters are both searchable', async ({ page }) => {
-  await page.goto('/search?q=postMessage');
-  await expect(page.getByRole('link', { name: 'postMessage API Implementation and limitations' })).toHaveAttribute('href', '/books/same-origin-policy/postmessage');
-  await expect(page.getByRole('link', { name: 'The Blend of Developer Tools into Security Assessments' })).toHaveAttribute('href', '/blog/devtools');
+  await page.goto('/');
+  await page.getByRole('button', { name: /Search/ }).click();
+  const dialog = page.getByRole('dialog', { name: 'Search writing' });
+  await dialog.getByRole('combobox').fill('postMessage');
+  await expect(dialog.getByText('postMessage API Implementation and limitations', { exact: true })).toBeVisible();
+  await expect(dialog.getByText('The Blend of Developer Tools into Security Assessments')).toBeVisible();
+  await dialog.getByRole('combobox').press('Enter');
+  await expect(page).toHaveURL(/\/books\/same-origin-policy\/postmessage$/);
 });

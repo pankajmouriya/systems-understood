@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 
-export function MobileNavigation() {
+export function MobileNavigation({ onSearch }: { onSearch: () => void }) {
   return (
     <Sheet>
       <SheetTrigger className="mobile-menu-trigger">Menu <Icon name="list" /></SheetTrigger>
@@ -17,7 +17,7 @@ export function MobileNavigation() {
         <nav className="mobile-navigation" aria-label="Mobile navigation">
           <SheetClose asChild><Link href="/blog"><Icon name="writing" />Writing</Link></SheetClose>
           <SheetClose asChild><Link href="/books"><Icon name="book" />Books</Link></SheetClose>
-          <SheetClose asChild><Link href="/search"><Icon name="search" />Search</Link></SheetClose>
+          <SheetClose asChild><button type="button" onClick={onSearch}><Icon name="search" />Search writing</button></SheetClose>
           <SheetClose asChild><Link href="/portfolio"><Icon name="work" />Portfolio</Link></SheetClose>
           <SheetClose asChild><Link href="/resume"><Icon name="file" />Résumé</Link></SheetClose>
         </nav>

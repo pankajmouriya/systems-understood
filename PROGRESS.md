@@ -101,3 +101,17 @@ Created the adapted Timeline 07 block, scroll animation component, real five-rol
 - Initial reduced-motion browser check found Motion left the connecting line scaled to zero. The browser media preference was confirmed and a CSS override now keeps the line and all rows visible; the focused rerun and complete browser suite passed.
 - Removed the unused ReUI career timeline source and styles. The numbered Shadcn Studio adaptation uses local company initials when no validated logo asset exists, so the portfolio does not display unrelated sample brands. A standalone demo route is excluded from search indexing.
 - The local preview is refreshed on port 3101. The component, data map, dependencies, documentation, and test are ready for the next local commit.
+
+## Search in the site header — 10 October 2026
+
+### Checkpoint 22: Search redesign and dependency review — complete
+
+The separate `/search` page breaks the flow between the portfolio and writing. The current search already covers published article and book-chapter bodies while excluding drafts; preserve that behavior in a compact header dialog with keyboard navigation, mobile access, and a Ctrl/⌘ K shortcut. Keep existing `/search?q=...` URLs as redirects that open the dialog with the supplied query. Reviewed the installed Next.js route and redirect guides and `components.json`; installed the official shadcn Command component with its Dialog dependency through the project pnpm CLI. Next: implement the search endpoint and shared dialog, then test responsive behavior and legacy links.
+
+### Checkpoint 23: Integrated search implementation — complete
+
+Added a shared Command/Dialog search overlay, desktop and mobile triggers, Ctrl/⌘ K shortcut, published-only article/chapter API, and relevance ordering. The old page now redirects to the homepage and opens the overlay with its query. Removed the footer link and retired the old page presentation; added search styling in the existing green, terracotta, and neutral palette. Updated browser tests and the README. Lint, typecheck, and all 11 content tests pass; browser and production checks follow.
+
+### Checkpoint 24: Responsive review and local verification — complete
+
+Reviewed search dialog screenshots at desktop and 375px phone widths in light and dark themes. The first mobile capture revealed a dialog shifted offscreen; corrected its positioning and added a viewport bounding-box assertion. The final focused browser run passed 10/10, and the full regression run passed 23/23; all 11 content tests, lint, standalone typecheck, and production build passed. A parallel typecheck/build attempt briefly raced over generated `.next` types; rerunning typecheck after build passed. The refreshed production preview is running at `http://127.0.0.1:3101`: homepage and search API return 200, the API returns four published results for `postMessage`, and `/search?q=postMessage` redirects to the homepage dialog. Search is now part of the shared navigation; original-host publication cutover remains a separate release step.

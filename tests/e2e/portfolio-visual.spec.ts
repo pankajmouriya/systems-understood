@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 
 test('capture publication and portfolio at phone and desktop sizes', async ({ page }) => {
   await mkdir('docs/review/screenshots', { recursive: true });
-  const routes = [['home', '/'], ['writing', '/blog'], ['portfolio', '/portfolio'], ['resume', '/resume'], ['projects', '/portfolio/projects'], ['talks', '/portfolio/talks'], ['search', '/search']] as const;
+  const routes = [['home', '/'], ['writing', '/blog'], ['portfolio', '/portfolio'], ['resume', '/resume'], ['projects', '/portfolio/projects'], ['talks', '/portfolio/talks']] as const;
   for (const theme of ['light', 'dark']) {
     for (const viewport of [{ name: 'phone', width: 375 }, { name: 'desktop', width: 1280 }]) {
       await page.setViewportSize({ width: viewport.width, height: 900 });
@@ -19,6 +19,16 @@ test('capture publication and portfolio at phone and desktop sizes', async ({ pa
         }
         await page.screenshot({ path: `docs/review/screenshots/${name}-${viewport.name}-${theme}.png`, fullPage: true });
       }
+      await page.goto('/');
+      if (viewport.name === 'phone') {
+        await page.getByRole('button', { name: /Menu/ }).click();
+        await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('button', { name: 'Search writing' }).click();
+      } else {
+        await page.getByRole('button', { name: /Search/ }).click();
+      }
+      await page.getByRole('dialog', { name: 'Search writing' }).getByRole('combobox').fill('postMessage');
+      await expect(page.getByRole('dialog').getByText('The Blend of Developer Tools into Security Assessments')).toBeVisible();
+      await page.screenshot({ path: `docs/review/screenshots/search-dialog-${viewport.name}-${theme}.png` });
     }
   }
 });
