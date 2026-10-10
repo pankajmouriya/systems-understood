@@ -6,7 +6,7 @@ test('site navigation presents the author and reaches portfolio and public profi
   await expect(header.getByRole('link', { name: 'Pankaj Mouriya, home' })).toBeVisible();
   await expect(header.getByRole('link', { name: 'Writing' })).toHaveAttribute('href', '/blog');
   await expect(header.getByRole('link', { name: 'Portfolio' })).toHaveAttribute('href', '/portfolio');
-  await expect(header.getByRole('link', { name: 'Résumé' })).toHaveAttribute('href', '/resume');
+  await expect(header.getByRole('link', { name: 'Résumé' })).toHaveCount(0);
   await expect(header.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/pankajmouriya');
   await expect(header.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/pankajmouriya/');
 });
@@ -38,4 +38,17 @@ test('portfolio routes show experience, a maintained project, and talks', async 
   await page.getByRole('link', { name: 'Talks', exact: true }).first().click();
   await expect(page).toHaveURL(/\/portfolio\/talks$/);
   await expect(page.getByText('BSides Goa 2024')).toBeVisible();
+});
+
+test('résumé is a source-backed portfolio section with a downloadable document', async ({ page }) => {
+  await page.goto('/portfolio/resume');
+
+  await expect(page.getByRole('heading', { level: 1, name: 'Résumé.' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Portfolio sections' }).getByRole('link', { name: 'Résumé' })).toHaveAttribute('aria-current', 'page');
+  await expect(page.getByRole('link', { name: /Download PDF/ })).toHaveAttribute('href', '/Pankaj-Mouriya-Resume.pdf');
+  await expect(page.getByRole('heading', { name: 'Career record' })).toBeVisible();
+  await expect(page.locator('.portfolio-resume-role')).toHaveCount(5);
+  await expect(page.getByText('Architected SoS, a vulnerability management and security posture platform used across Harness and acquired companies.')).toBeVisible();
+  await expect(page.getByText('Certified Kubernetes Administrator (CKA)')).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(1280);
 });

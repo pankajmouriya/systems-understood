@@ -4,7 +4,7 @@ import { siteOrigin } from '@/lib/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const origin = siteOrigin();
-  const paths = ['/', '/about', '/blog', '/books', '/portfolio', '/portfolio/projects', '/portfolio/talks', '/resume', ...books.map((book) => `/books/${book.slug}`)];
+  const paths = ['/', '/about', '/blog', '/books', '/portfolio', '/portfolio/projects', '/portfolio/talks', '/portfolio/resume', ...books.map((book) => `/books/${book.slug}`)];
   return [
     ...paths.map((path) => ({ url: new URL(path, origin).toString(), changeFrequency: 'monthly' as const, priority: path === '/' ? 1 : .7 })),
     ...getPublishedPages().map((post) => ({ url: new URL(`/blog/${post.data.slug}`, origin).toString(), lastModified: post.data.updated ?? post.data.date, changeFrequency: 'yearly' as const, priority: .8 })),

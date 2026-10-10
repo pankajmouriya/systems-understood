@@ -20,7 +20,6 @@ export function MobileNavigation({ onSearch }: { onSearch: () => void }) {
           <SheetClose asChild><button type="button" onClick={onSearch}><Icon name="search" />Search writing</button></SheetClose>
           <SheetClose asChild><Link href="/about"><Icon name="user" />About Me</Link></SheetClose>
           <SheetClose asChild><Link href="/portfolio"><Icon name="work" />Portfolio</Link></SheetClose>
-          <SheetClose asChild><Link href="/resume"><Icon name="file" />Résumé</Link></SheetClose>
         </nav>
         <Separator />
         <div className="mobile-social-links">

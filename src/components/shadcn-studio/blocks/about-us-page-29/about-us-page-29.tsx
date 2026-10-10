@@ -86,7 +86,7 @@ function PracticeCard() {
       <div className="about-links">
         <a href="https://github.com/pankajmouriya" target="_blank" rel="noopener noreferrer"><Icon name="code" />GitHub<ArrowUpRight aria-hidden="true" /></a>
         <a href="https://www.linkedin.com/in/pankajmouriya/" target="_blank" rel="noopener noreferrer"><Icon name="work" />LinkedIn<ArrowUpRight aria-hidden="true" /></a>
-        <Link href="/resume"><BookOpenText aria-hidden="true" />Résumé<ArrowUpRight aria-hidden="true" /></Link>
+        <Link href="/portfolio/resume"><BookOpenText aria-hidden="true" />Résumé<ArrowUpRight aria-hidden="true" /></Link>
       </div>
     </CardContent>
   </Card>;

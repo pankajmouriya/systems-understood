@@ -42,12 +42,16 @@ test('feed, sitemap, resume and legacy route are available', async ({ page, requ
   expect(await feed.text()).not.toContain('Reader draft route fixture');
   const sitemap = await request.get('/sitemap.xml');
   expect(await sitemap.text()).toContain('/about');
+  expect(await sitemap.text()).toContain('/portfolio/resume');
   expect(await sitemap.text()).toContain('/blog/devtools');
   expect(await sitemap.text()).toContain('/books/same-origin-policy/postmessage');
   expect(await sitemap.text()).not.toContain('/blog/reader-draft');
   expect((await request.get('/robots.txt')).status()).toBe(200);
-  await page.goto('/resume');
-  await expect(page.getByRole('heading', { level: 1, name: /Résumé/ })).toBeVisible();
+  const oldResume = await request.get('/resume', { maxRedirects: 0 });
+  expect(oldResume.status()).toBe(308);
+  expect(oldResume.headers().location).toBe('/portfolio/resume');
+  await page.goto('/portfolio/resume');
+  await expect(page.getByRole('heading', { level: 1, name: 'Résumé.' })).toBeVisible();
   await expect(page.getByRole('link', { name: /Download PDF/ })).toHaveAttribute('href', '/Pankaj-Mouriya-Resume.pdf');
   expect((await request.get('/Pankaj-Mouriya-Resume.pdf')).status()).toBe(200);
   const legacy = await request.get('/appsecurity/devtools', { maxRedirects: 0 });

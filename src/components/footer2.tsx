@@ -10,13 +10,13 @@ const explore = [
   { label: 'Books', href: '/books' },
   { label: 'About Me', href: '/about' },
   { label: 'Portfolio', href: '/portfolio' },
-  { label: 'Résumé', href: '/resume' },
 ];
 
 const work: { label: string; href: string; external?: boolean }[] = [
   { label: 'Experience', href: '/portfolio' },
   { label: 'Projects', href: '/portfolio/projects' },
   { label: 'Talks & conferences', href: '/portfolio/talks' },
+  { label: 'Résumé', href: '/portfolio/resume' },
   { label: 'The Security Diff', href: 'https://tsd.report', external: true },
 ];
 

@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 
 test('capture publication and portfolio at phone and desktop sizes', async ({ page }) => {
   await mkdir('docs/review/screenshots', { recursive: true });
-  const routes = [['home', '/'], ['writing', '/blog'], ['portfolio', '/portfolio'], ['resume', '/resume'], ['projects', '/portfolio/projects'], ['talks', '/portfolio/talks']] as const;
+  const routes = [['home', '/'], ['writing', '/blog'], ['portfolio', '/portfolio'], ['resume', '/portfolio/resume'], ['projects', '/portfolio/projects'], ['talks', '/portfolio/talks']] as const;
   for (const theme of ['light', 'dark']) {
     for (const viewport of [{ name: 'phone', width: 375 }, { name: 'desktop', width: 1280 }]) {
       await page.setViewportSize({ width: viewport.width, height: 900 });

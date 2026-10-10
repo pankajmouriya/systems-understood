@@ -34,7 +34,6 @@ export function SiteHeader() {
           <button type="button" className="site-search-trigger" onClick={() => setSearchOpen(true)} aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K"><Icon name="search" />Search <kbd>⌘ K</kbd></button>
           <Link href="/about" aria-current={inSection('/about') ? 'page' : undefined}><Icon name="user" />About Me</Link>
           <Link href="/portfolio" aria-current={inSection('/portfolio') ? 'page' : undefined}><Icon name="work" />Portfolio</Link>
-          <Link href="/resume" aria-current={inSection('/resume') ? 'page' : undefined}><Icon name="file" />Résumé</Link>
         </nav>
         <div className="site-header-actions">
           <a href="https://github.com/pankajmouriya" target="_blank" rel="noopener noreferrer">GitHub</a>
