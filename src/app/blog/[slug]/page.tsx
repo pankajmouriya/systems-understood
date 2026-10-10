@@ -43,7 +43,7 @@ export default async function ArticlePage({ params }: Props) {
   const Body = post.data.body;
   const raw = await post.data.getText('raw');
   return (
-    <main id="main-content">
+    <main id="main-content" className="article-page">
       <ArticleHeader post={post.data} readingMinutes={estimateReadingMinutes(raw)} />
       <ArticleLayout toc={post.data.toc}>
         {post.data.security?.status === 'historical' && <Callout type="note" title="From the archive">This article preserves the original walkthrough. Tools, APIs, and security guidance may have changed since publication; verify details against current documentation before applying them.</Callout>}

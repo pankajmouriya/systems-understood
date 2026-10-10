@@ -10,6 +10,8 @@ tags: ["containers-kubernetes"]
 security: {"status": "historical"}
 ---
 
+## The API request path
+
 Generally when you want to create, list or delete pods or any resource within a Kubernetes Cluster. This is how the workflow looks like at a high level
 
 <Figure src="/img/container/admission-controller/1.jpg" alt="Quick Guide on Kubernetes Admission Controllers, figure 1" width={854} height={82} />
@@ -30,6 +32,8 @@ Control over certain container capabilities
 
 <Figure src="/img/container/admission-controller/3.png" alt="Quick Guide on Kubernetes Admission Controllers, figure 3" width={1606} height={282} />
 
+## Where admission controllers fit
+
 **Def** - Admission controllers provides us with some level of control on what to do with the request before it is being executed. With admission controllers, you can not only validate the kind of operation/request but also change or perform additional operations before the pod is created
 
 **List of known built in Admission controllers at present** - https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#what-does-each-admission-controller-do . The Kubernetes document contains detailed information about these admission controllers so I won't be mentioning them here.
@@ -39,16 +43,18 @@ Admission controllers are of two different types
 1. Validating Admission controllers
 2. Mutating Admission controllers
 
-**Validating Admission controllers**
+## Validating admission controllers
+
 Take example of PodSecurity Admission controller, the PodSecurity admission controller checks new Pods before they are admitted, determines if it should be admitted based on the requested security context and the restrictions on permitted Pod Security Standards for the namespace that the Pod would be in. The Pods security standard has certain labels which define the scope of allowed or disallowed values from security context and if the pod manifest violates the Pod Security Standard restrictions then PodSecurity Admission controllers kicks in and rejects the admission of the pod.
 
 
-**Mutating Admission controllers**
+## Mutating admission controllers
+
 Lets take an example of DefaultStorageClass admission controller, this admission controller observes creation of PersistentVolumeClaim objects that do not request any specific storage class or missed adding the type of storage class. It automatically adds a default storage class to them. This way, users that do not request any special storage class do not need to care about them at all and they will get the default one. This way it changes or updates the request before creating the actual object.
 
 > Note: If both the type of controllers have been added in the object creation then Mutating admission controllers are invoked first and then validating admission controllers kick in if required so that any change made by the Mutating admission controllers can also be validated.
 
-**External Admission Controllers:** 
+## External admission controllers
 Kubernetes has already provided with bunch of controllers but what if you want to have admission controllers which you control. You control what validations it should do or mutations it should do before creating the actual resource. Kubernetes does have a support for that as well.
 
 Presenting,

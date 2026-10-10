@@ -143,3 +143,17 @@ Added three other published articles below the homepage DevTools feature using a
 ### Checkpoint 30: Editorial layout visual and regression review — complete
 
 Inspected refreshed home and Writing screenshots at 1280px and 375px in light and dark themes. The first pass found an archive topic marker wrapping its arrow on desktop; simplified the marker and confirmed the final captures keep rows aligned. A featured article appeared twice by design (in selected paths and the complete index), so the browser selector was scoped to the index. All seven published articles remain available, the homepage shows three additional articles beneath its illustrated feature, and no page overflows at 375px. Focused browser checks passed 6/6; the full browser suite and its production build passed 24/24. Lint, standalone typecheck, and all 11 content tests passed. The refreshed preview at `http://127.0.0.1:3101` returns 200 with the new home and Writing sections. Next: local commit.
+
+## Article reader character — 10 October 2026
+
+### Checkpoint 31: Reader inspection and direction — complete
+
+Inspected the admission controllers reader in the local production preview and reviewed shared header, prose, figures, and table-of-contents components. The article currently has no semantic section headings, so its long walkthrough has no navigation rail. Keep the established wide reading layout and green/terracotta palette; add a faint dotted header/margin treatment, green section rules, restrained figure mounts, and an active TOC marker. Promote the existing admission-controller section labels into headings and introduce a request-path heading without changing technical claims. Scope visual changes to blog readers so book layouts stay intact. The Impeccable launcher was unavailable; used current source and rendered page as design context. Next: implement and inspect desktop/phone in both themes.
+
+### Checkpoint 32: Reader treatment implemented — complete
+
+Added blog-scoped dotted margins and a fading header texture using CSS, with no image assets or client animation. Green header/section rules, a clearer active TOC rail, and surface-backed figure frames carry the existing identity through the reading page. The admission controllers walkthrough now has five semantic sections, enabling desktop and mobile navigation; original technical prose and legacy figure assets are preserved. Book presentation remains outside the new CSS scope. Next: production build, reader interaction checks, and visual review.
+
+### Checkpoint 33: Reader visual and functional verification — complete
+
+Inspected admission-controller opening and figure captures at 1280px and 375px in light/dark. Texture fades across the title area and stays at the outer edges of body content; diagrams retain their original colors inside neutral frames. Verified all five headings, desktop/mobile section navigation, image enlargement, Escape/focus restoration, and no horizontal overflow. The existing reader regression checks passed 7/7, including code copy, metadata, keyboard controls, wide prose, and the unchanged book layout. All 11 content tests, lint, standalone typecheck, and the production build passed. Updated local production preview is running at `http://127.0.0.1:3101/blog/guide-admission-controllers`. No deployment or technical-content claims changed. Ready for local commit.
