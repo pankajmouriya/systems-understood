@@ -129,3 +129,17 @@ Installed free `@shadcnblocks/footer2` via the project pnpm CLI and adapted its 
 ### Checkpoint 27: Footer visual and functional review — complete
 
 Inspected the home page's footer at 1280px and 375px in light and dark themes. The deep green closing section, editorial invitation, grouped navigation, and copyright row stay legible without horizontal overflow; the dark theme retains clear separation from the page body. Added a footer browser check for writing, books, talks, RSS, GitHub, and back-to-top behavior. Focused browser checks passed 5/5; the full browser suite and production build passed 24/24. Lint, standalone typecheck, and all 11 content tests passed. Shadcn's component audit found no missing imports or dependencies; the unused registry demo assets and package were removed. The refreshed preview at `http://127.0.0.1:3101` returns 200 for home and RSS and includes the footer content. Next: local commit.
+
+## Editorial writing layout — 10 October 2026
+
+### Checkpoint 28: Reference and current-page review — complete
+
+Reviewed the supplied krash.dev screenshot against current home and Writing captures. The useful reference cues are a concise introduction, featured reading paths, a technical illustration, compact dated rows, and a small topic marker. The current Writing index repeats each article description in a large preview card, making seven posts unnecessarily long. Preserve the personal name and selected DevTools story on home, and the existing green/terracotta identity. Add a short list of other published pieces below the home feature; on `/blog`, give three source-backed articles a featured area with original systems artwork and replace repetitive cards with a compact date/title/description index. Keep all seven published posts, semantic links/dates, book discovery, and phone readability. Next: implement and inspect both pages in light/dark at desktop and phone widths.
+
+### Checkpoint 29: Home and Writing composition — complete
+
+Added three other published articles below the homepage DevTools feature using a shared compact article-row component. Rebuilt `/blog` with three curated paths (Kubernetes controllers, DevTools, and long-lived JWT), original diagrammatic artwork, and a dated seven-post index. The previous per-row preview cards repeated each summary and were removed; rows now have one description, a date, a topic marker, and a direct title link. The archive introduction is shorter and its display scale is reduced. Updated focused browser expectations; lint and typecheck pass. Next: production browser checks, responsive screenshots, and final visual adjustments.
+
+### Checkpoint 30: Editorial layout visual and regression review — complete
+
+Inspected refreshed home and Writing screenshots at 1280px and 375px in light and dark themes. The first pass found an archive topic marker wrapping its arrow on desktop; simplified the marker and confirmed the final captures keep rows aligned. A featured article appeared twice by design (in selected paths and the complete index), so the browser selector was scoped to the index. All seven published articles remain available, the homepage shows three additional articles beneath its illustrated feature, and no page overflows at 375px. Focused browser checks passed 6/6; the full browser suite and its production build passed 24/24. Lint, standalone typecheck, and all 11 content tests passed. The refreshed preview at `http://127.0.0.1:3101` returns 200 with the new home and Writing sections. Next: local commit.

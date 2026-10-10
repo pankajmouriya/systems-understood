@@ -7,15 +7,17 @@ test('home gives the author and selected writing distinct space', async ({ page 
   const feature = page.locator('[data-featured-writing]');
   await expect(feature.getByRole('link', { name: /The Blend of Developer Tools/ })).toHaveAttribute('href', '/blog/devtools');
   await expect(feature.locator('[data-technical-artifact]')).toBeVisible();
+  await expect(page.locator('.home-more-writing [data-writing-row]')).toHaveCount(3);
 });
 
-test('writing archive is an editorial index with visible article context on phones', async ({ page }) => {
+test('writing archive has selected paths and a compact complete index on phones', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/blog');
   await expect(page.getByRole('heading', { level: 1, name: 'Writing' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Selected paths' })).toBeVisible();
+  await expect(page.locator('.writing-feature-art')).toBeVisible();
   await expect(page.locator('[data-writing-row]')).toHaveCount(7);
-  await expect(page.locator('[data-writing-preview]').first()).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Guide to Informers, Custom Controller' })).toHaveAttribute('href', '/blog/informer-controllers');
+  await expect(page.locator('.writing-archive').getByRole('link', { name: 'Guide to Informers, Custom Controller' })).toHaveAttribute('href', '/blog/informer-controllers');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
 
