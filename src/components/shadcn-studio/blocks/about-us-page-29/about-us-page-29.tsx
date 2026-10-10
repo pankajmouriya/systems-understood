@@ -4,12 +4,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
-import { ArrowUpRight, BookOpenText, MapPin, RotateCcw, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight, BookOpenText, Boxes, Fingerprint, GitBranch, MapPin, RotateCcw, ShieldCheck, Workflow } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
 import { Separator } from '@/components/ui/separator';
+import { experience } from '@/lib/portfolio';
 
 const facts = [
   { value: '5', label: 'roles' },
@@ -18,10 +19,10 @@ const facts = [
 ] as const;
 
 const practices = [
-  ['Product security', 'Build controls into the way products are designed and delivered.'],
-  ['Cloud & Kubernetes', 'Treat identity, policy, workload boundaries, and runtime as one system.'],
-  ['Supply chain security', 'Protect the path from source and dependency to a trusted release.'],
-  ['Security automation', 'Reduce repetitive analysis while keeping judgment with engineers.'],
+  [Fingerprint, 'Product security', 'Build controls into the way products are designed and delivered.'],
+  [Boxes, 'Cloud & Kubernetes', 'Treat identity, policy, workload boundaries, and runtime as one system.'],
+  [GitBranch, 'Supply chain security', 'Protect the path from source and dependency to a trusted release.'],
+  [Workflow, 'Security automation', 'Reduce repetitive analysis while keeping judgment with engineers.'],
 ] as const;
 
 function PortraitSeal() {
@@ -54,6 +55,7 @@ function ProfileCard() {
             </div>
             <Separator />
             <dl className="about-facts">{facts.map(({ value, label }) => <div key={label}><dt>{value}</dt><dd>{label}</dd></div>)}</dl>
+            <div className="about-card-current"><span>Currently at {experience[0].organization}</span><p>{experience[0].summary}</p></div>
             <span className="about-flip-hint"><RotateCcw aria-hidden="true" /> Flip for the short version</span>
           </CardContent>
         </Card>
@@ -71,7 +73,7 @@ function ProfileCard() {
         </Card>
       </button>
     </motion.div>
-    <Badge variant="outline" className="about-connect-status"><span />Available to connect</Badge>
+    <div className="about-profile-footer"><Badge variant="outline" className="about-connect-status"><span />Available to connect</Badge><Link href="/portfolio">Explore my experience <ArrowUpRight aria-hidden="true" /></Link></div>
   </div>;
 }
 
@@ -80,7 +82,7 @@ function PracticeCard() {
     <CardContent>
       <div className="about-practice-heading"><div><h2>What shapes my work</h2><p>Security practice grounded in product context, clear ownership, and tools that fit engineering workflows.</p></div><ShieldCheck aria-hidden="true" /></div>
       <Separator />
-      <ul>{practices.map(([title, description]) => <li key={title}><strong>{title}</strong><span>{description}</span></li>)}</ul>
+      <ul>{practices.map(([PracticeIcon, title, description]) => <li key={title}><PracticeIcon aria-hidden="true" /><div><strong>{title}</strong><span>{description}</span></div></li>)}</ul>
       <div className="about-links">
         <a href="https://github.com/pankajmouriya" target="_blank" rel="noopener noreferrer"><Icon name="code" />GitHub<ArrowUpRight aria-hidden="true" /></a>
         <a href="https://www.linkedin.com/in/pankajmouriya/" target="_blank" rel="noopener noreferrer"><Icon name="work" />LinkedIn<ArrowUpRight aria-hidden="true" /></a>
@@ -93,14 +95,14 @@ function PracticeCard() {
 export default function AboutUs() {
   return <div className="about-page-content">
     <header className="about-intro">
-      <h1>Security is how I<br />understand systems<span>.</span></h1>
+      <h1>Security is how I understand systems<span>.</span></h1>
       <p>I build security programs and engineering systems, then write about the decisions, boundaries, and details that make them work.</p>
     </header>
 
     <section className="about-story" aria-labelledby="about-story-heading">
       <figure className="about-portrait">
         <PortraitSeal />
-        <Image src="/images/profile/pankaj-portrait.png" alt="Pankaj Mouriya outdoors" width={740} height={758} sizes="(max-width: 760px) 100vw, 46vw" priority />
+        <Image src="/images/profile/pankaj-portrait.png" alt="Pankaj Mouriya outdoors" width={740} height={758} sizes="(max-width: 650px) 100vw, 40vw" priority />
         <figcaption><div><strong>Pankaj Mouriya</strong><span>Security Engineer</span></div><Badge variant="outline" className="about-portrait-status"><span />Bengaluru, India</Badge></figcaption>
       </figure>
 
