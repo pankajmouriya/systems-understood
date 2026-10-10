@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { HeroGreeting } from './greeting-word';
 import { ArrowDownToLine, ArrowUpRight, BookOpen, Boxes, ShieldCheck, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PortraitLanyard } from './portrait-lanyard';
@@ -8,7 +9,7 @@ export default function HeroSection() {
   return <section className="profile-hero" aria-labelledby="home-title">
     <div className="profile-hero-main">
       <div className="profile-hero-copy">
-        <h1 id="home-title"><span className="profile-hello">Hi, I’m</span>Pankaj Mouriya<span className="profile-period">.</span></h1>
+        <HeroGreeting />
         <p className="profile-role">Senior Product Security Engineer</p>
         <p className="profile-location">At Harness · Bengaluru, India</p>
         <p className="profile-description">I work where software engineering meets security. Here I write through the tools, decisions, and details that make complex systems easier to understand.</p>

@@ -27,3 +27,15 @@ test('portrait remains available with reduced motion on a phone', async ({ page 
   await expect(page.locator('.profile-canvas')).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
+
+test('greeting rotates, can pause, and respects reduced motion', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.profile-available')).toHaveText('Available');
+  await expect(page.locator('.profile-greeting-current').last()).toHaveText('नमस्ते', { timeout: 6000 });
+  await page.getByRole('button', { name: 'Pause greeting animation' }).click();
+  await page.waitForTimeout(2700);
+  await expect(page.locator('.profile-greeting-current').last()).toHaveText('नमस्ते');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(page.locator('.profile-greeting-current').last()).toHaveText('Hello');
+  await expect(page.getByRole('button', { name: 'Resume greeting animation' })).toHaveCount(0);
+});

@@ -171,3 +171,15 @@ Added the adapted Hero 44 block and its physics-based draggable portrait, using 
 ### Checkpoint 36: Hero visual and interaction verification — complete
 
 Inspected desktop/phone captures in both themes and corrected spacing between the hanging card and pause control. Verified real pointer capture/drag, pause/resume, working writing/CV links, reduced-motion static portrait, and a simulated unavailable-WebGL fallback. No horizontal overflow at 375px. The first complete browser run passed 25/26; the only failure was an obsolete first-viewport article-title requirement from the prior hero. Updated that check to require a visible writing action and the featured article directly after the new hero; the affected four tests then passed. All other browser regressions passed, plus lint, standalone typecheck, 11 content tests, and production build. The downloaded model/assets are local, and source attribution is documented in `docs/credits/hero-44.md`. The user's `tmp/` reference files remain untouched and uncommitted. Refreshed preview runs on port 3101; next: local commit.
+
+### Checkpoint 37: Author-supplied hero portrait — implemented
+
+Replaced the GitHub avatar with the author's supplied photograph for both the draggable 3D card and static fallback. Stored the original PNG unchanged under a new asset URL to avoid stale browser/texture caches and updated the portrait attribution. Next: production preview and crop check.
+
+### Checkpoint 38: Animated greeting and availability — implemented
+
+Added the supplied Hello / नमस्ते / 你好 / Ciao rotation and the explicitly requested green Available badge. The greeting reserves its width to avoid shifting surrounding text, has a stable accessible heading, includes a pause control, and stays on Hello for reduced-motion users. The author-supplied portrait has been visually verified in the 3D card and checked in its static fallback. Next: verify the combined homepage update and commit locally.
+
+### Checkpoint 39: Portrait and greeting verified — complete
+
+Production build and lint passed. Inspected desktop/phone hero captures and confirmed the new portrait in the animated card and static fallback. The five affected browser checks pass across the initial run and focused rerun: card dragging/pause, reduced motion, rotating greeting/pause, responsive layout, and navigation. The initial greeting assertion encountered both entering/exiting words during the intended transition; corrected the selector to target the incoming word and confirmed rotation, pause, and static Hello behavior. Refreshed the preview on port 3101. Ready for local commit.

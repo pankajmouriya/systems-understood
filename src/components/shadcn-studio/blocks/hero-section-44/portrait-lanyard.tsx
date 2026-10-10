@@ -38,10 +38,10 @@ export function PortraitLanyard() {
   return <div ref={host} className="profile-lanyard" data-ready={animated && ready}>
     <div className="profile-card-fallback" aria-hidden={animated && ready}>
       <span className="profile-cord" /><span className="profile-clip" />
-      <div className="profile-photo"><Image src="/images/profile/pankaj-github.png" alt="Pankaj Mouriya" width={800} height={800} priority /><span>Pankaj Mouriya<small>Engineering · Security · Writing</small></span></div>
+      <div className="profile-photo"><Image src="/images/profile/pankaj-portrait.png" alt="Pankaj Mouriya" width={740} height={758} priority /><span>Pankaj Mouriya<small>Engineering · Security · Writing</small></span></div>
     </div>
     {animated && <div className="profile-canvas" role="img" aria-label="Animated portrait of Pankaj Mouriya on a draggable lanyard">
-      <CardBoundary onFailure={onFailure}><IdCard frontImage="/images/profile/pankaj-github.png" active={visible && !paused} onReady={onReady} onFailure={onFailure} /></CardBoundary>
+      <CardBoundary onFailure={onFailure}><IdCard frontImage="/images/profile/pankaj-portrait.png" active={visible && !paused} onReady={onReady} onFailure={onFailure} /></CardBoundary>
     </div>}
     {animated && ready && <div className="profile-card-controls"><span>Drag the card</span><button type="button" onClick={() => setPaused(!paused)} aria-label={paused ? 'Resume card animation' : 'Pause card animation'}>{paused ? <Play size={14} /> : <Pause size={14} />}{paused ? 'Resume' : 'Pause'}</button></div>}
   </div>;
