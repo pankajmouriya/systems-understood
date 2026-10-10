@@ -8,4 +8,4 @@ Adapted from the Shadcn Studio Hero 44 files supplied by the author in `tmp/hero
 - Portrait: author-supplied photograph, provided 10 October 2026; stored unchanged as `public/images/profile/pankaj-portrait.png`. Replaces the initial GitHub avatar.
 - The multilingual greeting and Available badge are included at the author’s request. Sample identity and unrelated brand logos are omitted.
 - The installed shadcn Button uses `asChild`; the supplied block's `render` API was adapted accordingly.
-- Technology marks: Simple Icons SVGs from `https://github.com/simple-icons/simple-icons/tree/develop/icons`, stored locally. Burp Suite, OWASP, Kubernetes, Docker, Google Cloud, and GitHub reflect the existing talks, guides, experience, and public profile; no proficiency ratings or endorsements are implied.
+- Skills strip: existing shadcn Badge, informed by ReUI outline/light badge patterns (https://reui.io/docs/components/base/badge). Tool-logo strip removed in favor of source-backed skill areas.

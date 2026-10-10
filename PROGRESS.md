@@ -205,3 +205,11 @@ Replaced the generic three-category outline-icon strip with six actual technolog
 ### Checkpoint 44: Technology strip verified — complete
 
 Inspected rendered desktop and phone logo-strip crops: all six SVG marks load, labels stay readable, and the mobile three-column layout fits without overflow. Production build, lint, and both responsive/navigation browser checks passed, covering light and dark themes. The refreshed homepage is available on port 3101. Ready for local commit.
+
+### Checkpoint 45: Skills correction and component review — complete
+
+The previous logo strip misread the requirement: show skills and preserve hero space. Searched shadcn Badge through its MCP registry and reviewed current shadcn/ReUI badge documentation. Reused the installed shadcn Badge with compact icon-and-label styling informed by ReUI light variants. Replaced tool names with résumé-backed Application security, Cloud security, Supply chain security, and Security automation. Removed the tile grid, large mounts, and now-unused downloaded logos. Next: verify reduced strip height and responsive behavior.
+
+### Checkpoint 46: Compact skills strip verified — complete
+
+Inspected screenshots of the actual strip at 1280px and 375px. It measures 55px high on desktop and 117px on phone, with four readable skill badges and the portfolio link; the previous phone logo grid occupied roughly 277px. Lint, production build/type compilation, and both responsive/navigation browser checks passed in light/dark. Preview refreshed on port 3101. Ready for local commit.

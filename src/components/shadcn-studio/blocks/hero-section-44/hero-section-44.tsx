@@ -1,16 +1,15 @@
 import Link from 'next/link';
 import { HeroGreeting } from './greeting-word';
-import { ArrowDownToLine, ArrowUpRight, BookOpen } from 'lucide-react';
+import { ArrowDownToLine, ArrowUpRight, BookOpen, ShieldCheck, Cloud, PackageCheck, Workflow } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { PortraitLanyard } from './portrait-lanyard';
 
-const technologies = [
-  { name: 'Burp Suite', slug: 'burpsuite', color: '#d95424' },
-  { name: 'OWASP', slug: 'owasp', color: 'var(--teal)' },
-  { name: 'Kubernetes', slug: 'kubernetes', color: '#326ce5' },
-  { name: 'Docker', slug: 'docker', color: '#2496ed' },
-  { name: 'Google Cloud', slug: 'googlecloud', color: '#4285f4' },
-  { name: 'GitHub', slug: 'github', color: 'var(--foreground)' },
+const skills = [
+  { name: 'Application security', icon: ShieldCheck, tone: 'teal' },
+  { name: 'Cloud security', icon: Cloud, tone: 'blue' },
+  { name: 'Supply chain security', icon: PackageCheck, tone: 'teal' },
+  { name: 'Security automation', icon: Workflow, tone: 'warm' },
 ];
 
 // Adapted from the author's supplied Shadcn Studio Hero 44 block.
@@ -30,12 +29,11 @@ export default function HeroSection() {
       </div>
       <PortraitLanyard />
     </div>
-    <div className="profile-technologies" aria-label="Technologies across my work and writing">
-      <ul>{technologies.map(({ name, slug, color }) => <li key={slug}>
-        <span className="technology-mark" aria-hidden="true"><span style={{ maskImage: `url(/images/technologies/${slug}.svg)`, backgroundColor: color }} /></span>
-        <span>{name}</span>
+    <div className="profile-skills" aria-label="Skills">
+      <ul>{skills.map(({ name, icon: SkillIcon, tone }) => <li key={name}>
+        <Badge variant="outline" className={`profile-skill skill-${tone}`}><SkillIcon aria-hidden="true" />{name}</Badge>
       </li>)}</ul>
-      <Link href="/portfolio">Explore my work <ArrowUpRight size={18} /></Link>
+      <Link href="/portfolio">Explore my work <ArrowUpRight size={16} /></Link>
     </div>
   </section>;
 }
