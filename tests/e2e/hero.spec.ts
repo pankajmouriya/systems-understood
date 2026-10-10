@@ -33,13 +33,17 @@ test('portrait remains available with reduced motion on a phone', async ({ page 
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
 
-test('animation study shows both agent styles without horizontal overflow', async ({ page }) => {
+test('animation study switches art, seeks moments, and replays without horizontal overflow', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('/animation-study');
-  await expect(page.getByRole('heading', { name: 'Pixel agents · on the homepage' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Clean illustrated agents' })).toBeVisible();
   await expect(page.locator('.agent-duel-pixel')).toBeVisible();
+  await page.getByRole('button', { name: 'Illustrated', exact: true }).click();
   await expect(page.locator('.agent-duel-illustrated')).toBeVisible();
+  await page.getByRole('button', { name: /^Intercept/ }).click();
+  await expect(page.locator('.agent-duel')).toHaveAttribute('data-active', 'false');
+  await expect(page.getByRole('button', { name: /^Intercept/ })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Replay', exact: true }).click();
+  await expect(page.locator('.agent-duel')).toHaveAttribute('data-active', 'true');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
 
