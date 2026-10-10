@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { Icon } from '@/components/ui/icon';
+import { ArticleSecurityBoundary } from './ArticleSecurityBoundary';
+import { securityTopicFor } from './security-topics';
 import { TopicBadge } from './TopicBadge';
 
 type ArticleMetadata = {
@@ -19,9 +21,11 @@ function dateLabel(value: string) {
 }
 
 export function ArticleHeader({ post, readingMinutes }: { post: ArticleMetadata; readingMinutes: number }) {
+  const topic = securityTopicFor(post.tags);
   return (
     <header className="article-header">
       <Link href="/blog" className="reader-back"><Icon name="back" />All writing</Link>
+      <div className={topic ? "article-title-composition" : undefined}><div>
       <div className="article-meta">
         <span><Icon name="writing" />{post.kind}</span>
         <span><Icon name="calendar" /><time dateTime={post.date}>{dateLabel(post.date)}</time></span>
@@ -35,6 +39,7 @@ export function ArticleHeader({ post, readingMinutes }: { post: ArticleMetadata;
         {post.security?.reviewedOn && <span>Reviewed <time dateTime={post.security.reviewedOn}>{dateLabel(post.security.reviewedOn)}</time></span>}
       </div>
       {post.tags.length > 0 && <div className="article-tags" aria-label="Topics">{post.tags.map((tag) => <TopicBadge key={tag} tag={tag} />)}</div>}
+      </div>{topic && <ArticleSecurityBoundary key={topic} topic={topic} />}</div>
     </header>
   );
 }

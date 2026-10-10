@@ -174,3 +174,7 @@ Manual checks still recommended before public release: physical touch scrolling 
 - Desktop 1280×900: portrait beside identity; surname perch; red inbound attack; infrastructure and defense labels remain separate.
 - Phone 375×900, dark: portrait remains beside name, theater fits without horizontal overflow (document width 375), and held attack/secured states are readable.
 - Independent code/document review found no actionable blocker; that review did not replace the executed browser suite or device caveats above.
+
+## Related article-header scenes
+
+The article reader now has an independent, silent, finite guardian illustration. It shares the approved atlas and visibility hook, but does not use the homepage story clock or sound. See [Article guardian boundaries](article-guardian-boundaries.md) for the five topic mappings, references, lifecycle, and tests.

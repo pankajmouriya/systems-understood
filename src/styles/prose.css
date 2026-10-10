@@ -168,3 +168,49 @@
 @media print {
   .article-page::before, .article-page .article-header::after { display: none; }
 }
+
+/* Finite title scene; the reading column below keeps its existing measure. */
+.article-title-composition { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(340px,1fr); align-items: center; gap: clamp(1.5rem,4vw,4rem); }
+.article-title-composition h1 { font-size: clamp(2.6rem,4vw,4.2rem); }
+.article-boundary { margin: 0; min-width: 0; color: var(--teal); }
+.boundary-heading { display: flex; justify-content: center; align-items: center; gap: .4rem; font-size: .85rem; font-weight: 600; }
+.boundary-field { position: relative; height: 340px; }
+.boundary-ring, .boundary-pulse { position: absolute; inset: 52px 26px; border: 1px solid color-mix(in srgb,var(--teal) 65%,transparent); border-radius: 95px; background: color-mix(in srgb,var(--teal) 3%,transparent); }
+.boundary-pulse { background: transparent; pointer-events: none; animation: boundary-settle 12s ease-out both paused; }
+.boundary-guardian { position: absolute; width: 112px; height: 112px; top: 118px; left: calc(50% - 56px); }
+.boundary-controls, .boundary-threats { list-style: none; padding: 0; margin: 0; }
+.boundary-controls li { overflow-wrap: anywhere; position: absolute; z-index: 1; transform: translate(-50%,-50%); padding: .35rem .4rem; background: var(--background); font-size: .7rem; line-height: 1.3; text-align: center; max-width: 108px; border-radius: .3rem; }
+.boundary-controls li:nth-child(1) { left: 32%; top: 98px; }
+.boundary-controls li:nth-child(2) { left: 68%; top: 98px; }
+.boundary-controls li:nth-child(3) { left: 21%; top: 174px; }
+.boundary-controls li:nth-child(4) { left: 79%; top: 174px; }
+.boundary-controls li:nth-child(5) { left: 32%; top: 247px; }
+.boundary-controls li:nth-child(6) { left: 68%; top: 247px; }
+.boundary-threats li { position: absolute; display: flex; align-items: center; justify-content: center; gap: .25rem; color: var(--accent); font-size: .68rem; line-height: 1.3; width: 47%; text-align: center; }
+.boundary-threats li:nth-child(1) { left: 0; top: 13px; }
+.boundary-threats li:nth-child(2) { right: 0; top: 13px; }
+.boundary-threats li:nth-child(3) { left: 0; bottom: 13px; }
+.boundary-threats li:nth-child(4) { right: 0; bottom: 13px; }
+.boundary-packet { position: absolute; left: 50%; top: 24px; width: 3px; height: 5px; border-radius: 1px; background: currentColor; opacity: 0; animation: boundary-probe 2.4s ease-out 4 both paused; animation-delay: calc(var(--threat) * .35s); }
+.boundary-threats li:nth-child(n+3) .boundary-packet { top: auto; bottom: 24px; --probe-y: -14px; }
+.article-boundary[data-active='true'] .boundary-pulse, .article-boundary[data-active='true'] .boundary-packet { animation-play-state: running; }
+.article-boundary[data-pattern='network'] .boundary-packet { --probe-x: 8px; }
+.article-boundary[data-pattern='perimeter'] .boundary-pulse { border-style: dashed; }
+.article-boundary[data-pattern='requests'] .boundary-packet { width: 9px; height: 2px; }
+.article-boundary[data-pattern='telemetry'] .boundary-packet { border-radius: 50%; width: 4px; height: 4px; }
+.article-boundary[data-pattern='screening'] .boundary-packet { transform: rotate(45deg); }
+@keyframes boundary-probe { 0%,15% { opacity: 0; translate: 0 0; } 35% { opacity: .7; } 65% { opacity: .7; translate: var(--probe-x,0) var(--probe-y,14px); } 80%,100% { opacity: 0; translate: var(--probe-x,0) var(--probe-y,14px); } }
+@keyframes boundary-settle { 0%,100% { opacity: 0; scale: 1; } 15%,40%,65% { opacity: .4; scale: 1.025; } 25%,50%,80% { opacity: 0; scale: 1; } }
+.article-boundary figcaption { display: flex; justify-content: center; align-items: center; gap: .75rem; font-size: .65rem; color: var(--muted); }
+.article-boundary figcaption button { display: inline-flex; align-items: center; gap: .3rem; padding: .35rem .55rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--background); color: var(--foreground); cursor: pointer; }
+.boundary-context { margin: .6rem auto 0; max-width: 40ch; text-align: center; color: var(--muted); font-size: .65rem; }
+.boundary-context summary { cursor: pointer; }
+.boundary-context p { line-height: 1.6; }
+.boundary-context a { display: inline-block; margin: .25rem .5rem; color: var(--teal); }
+@media (max-width: 960px) { .article-title-composition { grid-template-columns: 1fr; } .article-boundary { width: min(100%,440px); margin-inline: auto; } }
+@media (prefers-reduced-motion: reduce) { .boundary-pulse, .boundary-packet { animation: none !important; display: none; } }
+.security-study-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 3rem; margin-top: 3rem; }
+@media (max-width: 760px) { .security-study-grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .boundary-controls li:nth-child(3), .boundary-controls li:nth-child(4) { max-width: 82px; } }
+
+.boundary-controls li:nth-child(1), .boundary-controls li:nth-child(2), .boundary-controls li:nth-child(5), .boundary-controls li:nth-child(6) { max-width: 90px; }
