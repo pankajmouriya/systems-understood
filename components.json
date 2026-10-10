@@ -16,5 +16,8 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "iconLibrary": "lucide"
+  "iconLibrary": "lucide",
+  "registries": {
+    "@shadcnblocks": "https://www.shadcnblocks.com/r/{style}/{name}"
+  }
 }

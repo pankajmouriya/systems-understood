@@ -11,6 +11,19 @@ test('site navigation presents the author and reaches portfolio and public profi
   await expect(header.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/pankajmouriya/');
 });
 
+test('footer closes the page with useful publication and portfolio paths', async ({ page }) => {
+  await page.goto('/blog');
+  const footer = page.getByRole('contentinfo');
+  await expect(footer.getByRole('heading', { name: /There is always more to understand/ })).toBeVisible();
+  await expect(footer.getByRole('link', { name: 'Explore the writing' })).toHaveAttribute('href', '/blog');
+  await expect(footer.getByRole('link', { name: 'Books' })).toHaveAttribute('href', '/books');
+  await expect(footer.getByRole('link', { name: 'Talks & conferences' })).toHaveAttribute('href', '/portfolio/talks');
+  await expect(footer.getByRole('link', { name: 'RSS feed' })).toHaveAttribute('href', '/rss.xml');
+  await expect(footer.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/pankajmouriya');
+  await footer.getByRole('link', { name: 'Back to top' }).click();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+});
+
 test('portfolio routes show experience, a maintained project, and talks', async ({ page }) => {
   await page.goto('/portfolio');
   await expect(page.getByRole('heading', { level: 1, name: /Building security/ })).toBeVisible();

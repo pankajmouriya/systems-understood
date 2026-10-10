@@ -115,3 +115,17 @@ Added a shared Command/Dialog search overlay, desktop and mobile triggers, Ctrl/
 ### Checkpoint 24: Responsive review and local verification — complete
 
 Reviewed search dialog screenshots at desktop and 375px phone widths in light and dark themes. The first mobile capture revealed a dialog shifted offscreen; corrected its positioning and added a viewport bounding-box assertion. The final focused browser run passed 10/10, and the full regression run passed 23/23; all 11 content tests, lint, standalone typecheck, and production build passed. A parallel typecheck/build attempt briefly raced over generated `.next` types; rerunning typecheck after build passed. The refreshed production preview is running at `http://127.0.0.1:3101`: homepage and search API return 200, the API returns four published results for `postMessage`, and `/search?q=postMessage` redirects to the homepage dialog. Search is now part of the shared navigation; original-host publication cutover remains a separate release step.
+
+## Footer refinement — 10 October 2026
+
+### Checkpoint 25: Footer block and content review — complete
+
+Reviewed the current shared footer and the blueprint's About/RSS/social/copyright contract. The official shadcn registry exposes no public-site footer block; Shadcnblocks Footer 2 is a free shadcn-compatible pattern with an identity area, grouped links, and a separated bottom row. Registered `@shadcnblocks` in `components.json` to inspect/install that block through the project CLI. The adaptation will keep the site's editorial typography, green and terracotta accents, existing profile URLs, and published RSS feed; no fictional contact information or newsletter form is needed. Next: integrate the block and inspect phone/desktop light/dark renders.
+
+### Checkpoint 26: Footer block integration — complete
+
+Installed free `@shadcnblocks/footer2` via the project pnpm CLI and adapted its identity/link-grid/bottom-row structure into the shared `SiteFooter`. Added an editorial writing invitation, distinct Explore/Work/Elsewhere groups, the existing RSS feed, and verified profile/project destinations. Replaced the registry's demo branding and placeholder links with site content; removed its unused demo logo/context-menu files and `react-icons` dependency. The footer remains a server component and uses the existing Next.js Link convention and site's display/body fonts. Next: responsive visual inspection, navigation checks, lint, typecheck, and build.
+
+### Checkpoint 27: Footer visual and functional review — complete
+
+Inspected the home page's footer at 1280px and 375px in light and dark themes. The deep green closing section, editorial invitation, grouped navigation, and copyright row stay legible without horizontal overflow; the dark theme retains clear separation from the page body. Added a footer browser check for writing, books, talks, RSS, GitHub, and back-to-top behavior. Focused browser checks passed 5/5; the full browser suite and production build passed 24/24. Lint, standalone typecheck, and all 11 content tests passed. Shadcn's component audit found no missing imports or dependencies; the unused registry demo assets and package were removed. The refreshed preview at `http://127.0.0.1:3101` returns 200 for home and RSS and includes the footer content. Next: local commit.
