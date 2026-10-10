@@ -23,7 +23,7 @@
 .breach-shard { opacity: 0; animation-name: shield-shards; }
 .breach-verdict { color: var(--teal); opacity: 0; animation-name: intercept-verdict; }
 .breach-verdict text, .breach-patrol-label text { font-family: var(--font-mono), monospace; font-size: 8px; letter-spacing: .7px; }
-.breach-patrol-label { color: var(--teal); opacity: .75; animation-name: patrol-label; }
+.breach-patrol-label { color: var(--teal); opacity: 0; animation-name: patrol-label; }
 @keyframes sentinel-move {
   0%,5% { transform: translate(45px,200px) scale(.65); opacity: 0; }
   8%,12% { transform: translate(45px,200px) scale(.65); opacity: 1; }
@@ -76,7 +76,7 @@
 @keyframes shield-ripple-outer { 0%,38%,52%,100% { opacity: 0; scale: .2; } 40% { opacity: .55; scale: .5; } 49% { opacity: 0; scale: 1.8; } }
 @keyframes shield-shards { 0%,37%,48%,100% { opacity: 0; transform: translateX(0); } 39% { opacity: .9; transform: translateX(1px); } 46% { opacity: 0; transform: translateX(30px); } }
 @keyframes intercept-verdict { 0%,42%,65%,100% { opacity: 0; } 46%,59% { opacity: .9; } }
-@keyframes patrol-label { 0%,12%,82%,100% { opacity: .7; } 20%,76% { opacity: 0; } }
+@keyframes patrol-label { 0%,76%,100% { opacity: 0; } 80%,96% { opacity: .7; } }
 @media (prefers-reduced-motion: reduce) {
   .agent-duel [class] { animation: none !important; }
   .agent-rogue { opacity: 1; }
@@ -164,3 +164,32 @@
 
 .security-sound-toggle { display: inline-flex; align-items: center; gap: .3rem; margin-top: .25rem; padding: .25rem .5rem; font-size: .65rem; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; cursor: pointer; }
 .security-sound-toggle[aria-pressed='true'] { color: var(--teal); }
+
+/* Attack packets run right-to-left; verified defense restores rightward green traffic. */
+.flow-lines[data-signal-mode] { transition: color .35s ease; }
+.flow-lines[data-signal-mode='attack'] { color: var(--accent); }
+.flow-lines[data-signal-mode='attack'] .flow-line-signal { animation-name: signal-inbound; animation-duration: 6s; opacity: .5; }
+.flow-lines[data-signal-mode='secured'] .flow-line-signal { animation-duration: 8s; opacity: .4; }
+.flow-lines[data-signal-mode='idle'] .flow-line-signal { opacity: 0; }
+[data-flow-active='true'] > .flow-lines[data-signal-mode] .flow-line-signal { animation-play-state: running; }
+@keyframes signal-inbound { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 100; } }
+
+/* The author's portrait belongs to the identity; the theater owns all story motion. */
+.profile-identity { display: grid; grid-template-columns: minmax(0,1fr) 142px; align-items: end; gap: .75rem; }
+.profile-identity h1 { font-size: clamp(2.7rem,4vw,3.7rem); }
+.identity-portrait { position: relative; width: 142px; height: 218px; margin: 0 0 1.1rem; }
+.identity-portrait-strap { position: absolute; top: 0; left: 68px; width: 6px; height: 68px; background: linear-gradient(90deg,#26332d,#65756a,#26332d); }
+.identity-portrait-card { position: absolute; top: 61px; left: 10px; width: 120px; height: 156px; border-top: 4px solid var(--teal); border-radius: 7px; transform: rotate(5deg); box-shadow: 0 6px 12px #00000014; }
+.identity-portrait-card img { width: 100%; height: 100%; object-fit: cover; border-radius: 3px 3px 7px 7px; }
+.identity-portrait-clip { position: absolute; z-index: 1; width: 12px; height: 24px; left: calc(50% - 6px); top: -19px; border: 2px solid #afb6ad; border-radius: 5px; background: #536158; }
+.infra-status { fill: var(--teal); }
+.agent-duel[data-signal-mode='attack'] .infra-status { fill: var(--accent); }
+.agent-duel[data-signal-mode='secured'] .infra-status { fill: #70c994; }
+@media (max-width: 760px) {
+  .profile-identity { grid-template-columns: minmax(0,1fr) 98px; gap: .5rem; }
+  .profile-identity h1 { font-size: clamp(2.15rem,7.8vw,3rem); }
+  .identity-portrait { width: 98px; height: 172px; }
+  .identity-portrait-strap { left: 46px; height: 54px; }
+  .identity-portrait-card { top: 49px; left: 5px; width: 88px; height: 120px; }
+}
+.flow-lines[data-signal-mode='idle'] .flow-line-signal { animation-name: none; }

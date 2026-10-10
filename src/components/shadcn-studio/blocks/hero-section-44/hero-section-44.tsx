@@ -3,7 +3,8 @@ import { HeroGreeting } from './greeting-word';
 import { ArrowDownToLine, ArrowUpRight, BookOpen, ShieldCheck, Cloud, PackageCheck, Workflow } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { PortraitLanyard } from './portrait-lanyard';
+import { SecurityTheater } from './security-theater';
+import { IdentityPortrait } from './identity-portrait';
 
 const skills = [
   { name: 'Application security', icon: ShieldCheck, tone: 'teal' },
@@ -17,7 +18,7 @@ export default function HeroSection() {
   return <section className="profile-hero" aria-labelledby="home-title">
     <div className="profile-hero-main">
       <div className="profile-hero-copy">
-        <HeroGreeting />
+        <div className="profile-identity"><div><HeroGreeting /></div><IdentityPortrait /></div>
         <p className="profile-role">Senior Product Security Engineer</p>
         <p className="profile-location">At Harness · Bengaluru, India</p>
         <p className="profile-description">I work where software engineering meets security. Here I write through the tools, decisions, and details that make complex systems easier to understand.</p>
@@ -27,7 +28,7 @@ export default function HeroSection() {
         </div>
         <a className="profile-connect" href="https://www.linkedin.com/in/pankajmouriya/" target="_blank" rel="noopener noreferrer">Let’s connect <ArrowUpRight size={16} /></a>
       </div>
-      <PortraitLanyard />
+      <SecurityTheater />
     </div>
     <div className="profile-skills" aria-label="Skills">
       <ul>{skills.map(({ name, icon: SkillIcon, tone }) => <li key={name}>

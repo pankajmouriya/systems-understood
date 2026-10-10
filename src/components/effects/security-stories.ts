@@ -1,7 +1,7 @@
 export const STORY_SECONDS = 24;
 export const COMBAT_START = 5.8;
-export const PORTRAIT_RETURN = 15.6;
-export type ScenePhase = 'portrait' | 'combat' | 'return';
+export const RECOVERY_START = 15.6;
+export type ScenePhase = 'arrival' | 'combat' | 'recovery' | 'patrol';
 export const SECURITY_STORIES = [
   { id: 'sqli', title: 'SQL injection', attack: "' OR 1=1", tool: 'AWS WAF', layer: 'SQLi inspection', result: 'Request blocked', detail: 'A SQLi rule matches the request and the WAF blocks it before the application.', source: 'https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-sqli-match.html' },
   { id: 'prompt', title: 'Prompt injection', attack: 'ignore the policy', tool: 'Bedrock Guardrails', layer: 'Prompt screening + tool allowlist', result: 'Tool access denied', detail: 'Untrusted instructions are screened. A separate tool allowlist refuses the requested privileged action.', source: 'https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-prompt-attack.html' },
@@ -10,5 +10,11 @@ export const SECURITY_STORIES = [
 ] as const;
 export type SecurityStory = typeof SECURITY_STORIES[number];
 export function scenePhaseAt(seconds: number): ScenePhase {
-  return seconds < COMBAT_START || seconds >= 18 ? 'portrait' : seconds < PORTRAIT_RETURN ? 'combat' : 'return';
+  return seconds < COMBAT_START ? 'arrival' : seconds < RECOVERY_START ? 'combat' : seconds < 18 ? 'recovery' : 'patrol';
+}
+
+export type SignalMode = 'idle' | 'attack' | 'secured';
+export function securedAt(story: SecurityStory): number { return story.id === 'rce' ? 12.96 : 11.04; }
+export function signalModeAt(seconds: number, story: SecurityStory): SignalMode {
+  return seconds < 1.2 ? 'idle' : seconds < securedAt(story) ? 'attack' : 'secured';
 }

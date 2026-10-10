@@ -1,25 +1,16 @@
 import { expect, test } from '@playwright/test';
 
-test('homepage portrait loads, can pause, and leaves primary links usable', async ({ page }) => {
+test('portrait stays beside identity throughout combat and scene can pause', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.profile-lanyard')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
-  await expect(page.locator('.profile-lanyard')).toHaveAttribute('data-phase', 'combat', { timeout: 10000 });
-  await expect(page.locator('.security-portrait')).toHaveCSS('opacity', '0');
-  await page.getByRole('button', { name: 'Show photo', exact: true }).click();
-  await expect(page.locator('.profile-lanyard')).toHaveAttribute('data-phase', 'portrait');
-  await page.waitForTimeout(1200);
-  const canvas = page.locator('.profile-canvas canvas');
-  const bounds = (await canvas.boundingBox())!;
-  await page.mouse.move(bounds.x + bounds.width * .5, bounds.y + bounds.height * .65);
-  await page.mouse.down();
-  await expect.poll(() => canvas.evaluate((node) => node.hasPointerCapture(1))).toBe(true);
-  await page.mouse.move(bounds.x + bounds.width * .7, bounds.y + bounds.height * .4, { steps: 10 });
-  await page.mouse.up();
+  await expect(page.locator('.profile-identity .identity-portrait img')).toBeVisible();
+  await expect(page.locator('canvas')).toHaveCount(0);
+  await expect(page.locator('.security-theater')).toHaveAttribute('data-phase', 'combat', { timeout: 10000 });
+  await expect(page.locator('.identity-portrait img')).toBeVisible();
+  await expect(page.locator('.security-theater .pixel-infrastructure')).toBeVisible();
   await page.getByRole('button', { name: 'Pause scene animation' }).click();
-  await expect(page.getByRole('button', { name: 'Resume scene animation' })).toBeVisible();
-  await expect(page.locator('.profile-lanyard .agent-duel')).toHaveAttribute('data-active', 'false');
+  await expect(page.locator('.security-theater .agent-duel')).toHaveAttribute('data-active', 'false');
   await page.getByRole('button', { name: 'Resume scene animation' }).click();
-  await expect(page.locator('.profile-lanyard .agent-duel')).toHaveAttribute('data-active', 'true');
+  await expect(page.locator('.security-theater .agent-duel')).toHaveAttribute('data-active', 'true');
   await expect(page.getByRole('link', { name: 'Download CV' })).toHaveAttribute('href', '/Pankaj-Mouriya-Resume.pdf');
   await page.getByRole('link', { name: 'Read the writing', exact: true }).click();
   await expect(page).toHaveURL(/\/blog$/);
@@ -29,7 +20,7 @@ test('portrait remains available with reduced motion on a phone', async ({ page 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('/');
-  await expect(page.locator('.profile-photo img')).toBeVisible();
+  await expect(page.locator('.identity-portrait img')).toBeVisible();
   await expect(page.locator('.profile-canvas')).toHaveCount(0);
   await expect(page.locator('.profile-lanyard .agent-duel-illustrated')).toBeVisible();
   expect(await page.locator('.profile-lanyard .agent-unit').first().evaluate((node) => getComputedStyle(node).animationName)).toBe('none');
@@ -83,7 +74,7 @@ test('four stories have distinct defenses and paused stories do not advance', as
   await page.clock.fastForward(30000);
   await expect(page.locator('.agent-duel')).toHaveAttribute('data-story', 'prompt');
   await page.getByRole('button', { name: /^All clear/ }).click();
-  await expect(page.locator('.agent-study-stage')).toHaveAttribute('data-phase', 'portrait');
+  await expect(page.locator('.agent-study-stage')).toHaveAttribute('data-phase', 'patrol');
 });
 
 test('AI opens first and sound starts only after enabling it', async ({ page }) => {
@@ -97,7 +88,7 @@ test('AI opens first and sound starts only after enabling it', async ({ page }) 
     };
   });
   await page.goto('/');
-  await expect(page.locator('.profile-lanyard')).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
+  await expect(page.locator('.security-theater')).toHaveAttribute('data-scene-active', 'true');
   await expect(page.locator('.profile-lanyard .agent-duel')).toHaveAttribute('data-story', 'prompt');
   await expect(page.getByRole('button', { name: 'Enable scene sound' })).toHaveAttribute('aria-pressed', 'false');
   expect(await page.evaluate(() => (window as Window & { cueVoices?: number }).cueVoices)).toBe(0);
@@ -105,4 +96,38 @@ test('AI opens first and sound starts only after enabling it', async ({ page }) 
   await expect.poll(() => page.evaluate(() => (window as Window & { cueVoices?: number }).cueVoices)).toBe(2);
   await page.getByRole('button', { name: 'Mute scene sound' }).click();
   await expect(page.getByRole('button', { name: 'Enable scene sound' })).toHaveAttribute('aria-pressed', 'false');
+});
+
+
+test('traffic changes direction only after defense, pauses, and resets with reduced motion', async ({ page }) => {
+  await page.clock.install();
+  await page.goto('/animation-study');
+  const flow = page.locator('.flow-lines');
+  await expect(flow).toHaveAttribute('data-signal-mode', 'idle');
+  await expect(page.locator('.breach-patrol-label')).toHaveCSS('opacity', '0');
+  await page.clock.runFor(1300);
+  await expect(flow).toHaveAttribute('data-signal-mode', 'attack');
+  await expect(page.locator('.flow-line-signal').first()).toHaveCSS('animation-name', 'signal-inbound');
+  await page.getByRole('button', { name: 'Pause scene', exact: true }).click();
+  await page.clock.fastForward(30000);
+  await expect(flow).toHaveAttribute('data-signal-mode', 'attack');
+  await expect(page.locator('.flow-line-signal').first()).toHaveCSS('animation-play-state', 'paused');
+  await page.getByRole('button', { name: 'Play scene', exact: true }).click();
+  await page.clock.runFor(10000);
+  await expect(flow).toHaveAttribute('data-signal-mode', 'secured');
+  await expect(page.locator('.flow-line-signal').first()).toHaveCSS('animation-name', 'signal-travel');
+  await page.getByRole('button', { name: 'Remote code execution', exact: true }).click();
+  await page.clock.runFor(12000);
+  await expect(flow).toHaveAttribute('data-signal-mode', 'attack');
+  await page.clock.runFor(1100);
+  await expect(flow).toHaveAttribute('data-signal-mode', 'secured');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(page.locator('.agent-study-stage')).toHaveAttribute('data-scene-active', 'false');
+  await expect(flow).toHaveAttribute('data-signal-mode', 'idle');
+  await expect(page.locator('.breach-patrol-label')).toHaveCSS('opacity', '0');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await expect(page.locator('.agent-study-stage')).toHaveAttribute('data-scene-active', 'true');
+  await expect(page.locator('.agent-study-stage')).toHaveAttribute('data-phase', 'arrival');
+  await page.clock.runFor(6100);
+  await expect(page.locator('.agent-study-stage')).toHaveAttribute('data-phase', 'combat');
 });

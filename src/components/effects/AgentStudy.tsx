@@ -2,8 +2,8 @@
 
 import { useRef, useState } from 'react';
 import { useSceneVisibility, useSecurityStories } from './use-security-stories';
+import { FlowLines } from './FlowLines';
 import { SecurityStoryNav } from './SecurityStoryNav';
-import Image from 'next/image';
 import { Pause, Play, RotateCcw, ArrowUpRight } from 'lucide-react';
 import { AgentDuel, type AgentStyle } from './AgentDuel';
 
@@ -20,18 +20,15 @@ export function AgentStudy() {
   const host = useRef<HTMLDivElement>(null);
   const { motion, visible } = useSceneVisibility(host);
   const active = playing && motion && visible;
-  const scene = useSecurityStories(active);
+  const scene = useSecurityStories(active, undefined, motion);
   function seek(time: number) { setPlaying(false); scene.select(scene.run.index, time); }
   function replay() { scene.select(scene.run.index); setPlaying(true); }
   return <div className="agent-study-composition">
     <div className="agent-study-theater">
-      <div ref={host} className="agent-study-stage" data-phase={motion ? scene.phase : 'portrait'} data-scene-active={active}>
+      <div ref={host} className="agent-study-stage" data-phase={motion ? scene.phase : 'arrival'} data-scene-active={active} data-flow-active={active}>
+        <FlowLines key={`flow-${scene.run.id}`} mode={motion ? scene.signal : 'idle'} />
         <div className="security-story-header"><h3>{scene.story.title}</h3></div>
-        <div className="security-portrait" aria-hidden={motion && scene.phase === 'combat'}>
-        <div className="agent-study-cord" />
-        <div className="agent-study-photo"><span className="agent-study-clip" /><Image src="/images/profile/pankaj-portrait.png" alt="Pankaj Mouriya" width={740} height={758} priority /></div>
-        </div>
-        <AgentDuel key={scene.run.id} variant={variant} story={scene.story} active={active} startAt={scene.run.startAt} />
+        <AgentDuel key={`agents-${scene.run.id}`} variant={variant} story={scene.story} signal={motion ? scene.signal : 'idle'} active={active} startAt={scene.run.startAt} />
       </div>
       <div className="agent-study-playback">
         <button type="button" onClick={() => setPlaying(!playing)} aria-label={playing ? 'Pause scene' : 'Play scene'}>{playing ? <Pause size={15} /> : <Play size={15} />}{playing ? 'Pause' : 'Play'}</button>
@@ -56,7 +53,7 @@ export function AgentStudy() {
           <span>{moment.name}<ArrowUpRight size={15} /></span><small>{moment.detail}</small>
         </button>)}
       </div>
-      <p className="agent-study-note">Choose a moment to hold the scene. Reduced motion keeps the portrait visible. These are illustrative scenarios, not this website’s infrastructure.</p>
+      <p className="agent-study-note">Choose a moment to hold the scene. Reduced motion keeps the infrastructure still. These are illustrative scenarios, not this website’s infrastructure.</p>
     </aside>
   </div>;
 }

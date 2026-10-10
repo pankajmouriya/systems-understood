@@ -6,16 +6,26 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 export function useThreatAudio(active: boolean) {
   const context = useRef<AudioContext | null>(null);
   const voices = useRef<OscillatorNode[]>([]);
+  const mounted = useRef(true);
+  const request = useRef(0);
   const [enabled, setEnabled] = useState(false);
   const stop = useCallback(() => {
     voices.current.forEach(voice => { try { voice.stop(); } catch { /* already ended */ } });
     voices.current = [];
   }, []);
   useEffect(() => {
-    if (!active || !enabled) { stop(); void context.current?.suspend(); }
+    if (!active || !enabled) { stop(); void context.current?.suspend().catch(() => {}); }
     else if (context.current) void context.current.resume().catch(() => {});
   }, [active, enabled, stop]);
-  useEffect(() => () => { stop(); void context.current?.close(); }, [stop]);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      stop();
+      void context.current?.close().catch(() => {});
+      context.current = null;
+    };
+  }, [stop]);
   const play = useCallback(() => {
     const ctx = context.current;
     if (!enabled || !active || !ctx || ctx.state !== 'running') return;
@@ -39,10 +49,12 @@ export function useThreatAudio(active: boolean) {
     });
   }, [active, enabled, stop]);
   async function toggle() {
+    const currentRequest = ++request.current;
     if (enabled) { stop(); setEnabled(false); return false; }
     try {
       context.current ??= new AudioContext();
       await context.current.resume();
+      if (!mounted.current || currentRequest !== request.current) return false;
       setEnabled(true);
       return true;
     } catch { return false; }

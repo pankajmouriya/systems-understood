@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Pause, Play } from 'lucide-react';
+import { useSceneVisibility } from '@/components/effects/use-security-stories';
 import { Badge } from '@/components/ui/badge';
 
 const GREETINGS = [
@@ -16,26 +17,21 @@ const GREETINGS = [
 export function HeroGreeting() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [reduced, setReduced] = useState(true);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const { motion: allowMotion, visible } = useSceneVisibility(heading);
+  const reduced = !allowMotion;
   useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setReduced(media.matches);
-    update();
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
-  }, []);
-  useEffect(() => {
-    if (paused || reduced) return;
+    if (paused || reduced || !visible) return;
     const timer = setInterval(() => setIndex(value => (value + 1) % GREETINGS.length), 2200);
     return () => clearInterval(timer);
-  }, [paused, reduced]);
+  }, [paused, reduced, visible]);
   const greeting = GREETINGS[reduced ? 0 : index];
   return <>
     <div className="profile-status-row">
       <Badge variant="outline" className="profile-available"><span aria-hidden="true" />Available</Badge>
       {!reduced && <button className="profile-greeting-toggle" type="button" onClick={() => setPaused(!paused)} aria-label={paused ? 'Resume greeting animation' : 'Pause greeting animation'} title={paused ? 'Resume greeting' : 'Pause greeting'}>{paused ? <Play size={13} /> : <Pause size={13} />}</button>}
     </div>
-    <h1 id="home-title" aria-label="Hello, I’m Pankaj Mouriya">
+    <h1 ref={heading} id="home-title" aria-label="Hello, I’m Pankaj Mouriya">
       <span className="profile-hello" aria-hidden="true">
         <span className="profile-greeting-word">
           {GREETINGS.map(({ word, lang }) => <span className="profile-greeting-sizer" key={word} lang={lang}>{word}</span>)}

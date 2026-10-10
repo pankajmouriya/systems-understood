@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useId, type CSSProperties } from 'react';
-import { SECURITY_STORIES, type SecurityStory } from './security-stories';
+import { SECURITY_STORIES, type SecurityStory, type SignalMode } from './security-stories';
 
 export type AgentStyle = 'pixel' | 'illustrated';
 
@@ -11,10 +11,11 @@ type AgentDuelProps = {
   startAt?: number;
   story?: SecurityStory;
   entranceFromName?: boolean;
+  signal?: SignalMode;
 };
 
 /** One coordinated scene. Every layer shares its clock, story, and pause state. */
-export function AgentDuel({ variant = 'illustrated', active = false, startAt = 0, story = SECURITY_STORIES[1], entranceFromName = false }: AgentDuelProps) {
+export function AgentDuel({ variant = 'illustrated', active = false, startAt = 0, story = SECURITY_STORIES[1], entranceFromName = false, signal = 'idle' }: AgentDuelProps) {
   const host = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!entranceFromName) return;
@@ -42,7 +43,7 @@ export function AgentDuel({ variant = 'illustrated', active = false, startAt = 0
   }, [entranceFromName]);
   const id = useId().replaceAll(':', '');
   const atlas = `/images/agents/sentinel-rogue-${variant}.webp`;
-  return <div ref={host} data-name-entrance={entranceFromName} className={`agent-duel agent-duel-${variant}`} data-active={active} data-story={story.id}
+  return <div ref={host} data-name-entrance={entranceFromName} className={`agent-duel agent-duel-${variant}`} data-active={active} data-story={story.id} data-signal-mode={signal}
     style={{ '--scene-delay': `${-startAt}s` } as CSSProperties}
     role="img" aria-label={`Illustrative security story: ${story.title}. ${story.detail}`}>
     <svg className="breach-stage" viewBox="0 0 480 520" fill="none" aria-hidden="true">
@@ -69,6 +70,7 @@ export function AgentDuel({ variant = 'illustrated', active = false, startAt = 0
       <g className="story-attack-tag" transform="translate(355 120)">
         <text textAnchor="middle" fill="currentColor">{story.attack}</text>
       </g>
+      <PixelInfrastructure />
       <StoryMechanism story={story} />
       <g className="agent-unit agent-defender">
         <ellipse className="agent-ground" cx="64" cy="122" rx="29" ry="3" fill="#295b47" fillOpacity=".13" />
@@ -130,5 +132,26 @@ function StoryMechanism({ story }: { story: SecurityStory }) {
     </g>}
     <text className="story-tool-name" x="100" y="113" textAnchor="middle" stroke="none" fill="currentColor">{story.tool}</text>
     <text className="story-tool-layer" x="100" y="134" textAnchor="middle" stroke="none" fill="currentColor">{story.layer}</text>
+  </g>;
+}
+
+/** Original pixel-grid infrastructure diagram: gateway, terminal, and server rack. */
+function PixelInfrastructure() {
+  return <g className="pixel-infrastructure" transform="translate(182 222)" shapeRendering="crispEdges">
+    <path d="M0 68h116v6H0zM8 74h100v4H8z" fill="var(--teal)" opacity=".12" />
+    <path d="M17 58v9h82V56M59 48v19" fill="none" stroke="var(--teal)" strokeWidth="2" />
+    <g className="infra-node">
+      <path d="M29 8h58v39H29zM35 47h46v5H35zM52 52h12v6H52zM42 58h32v4H42z" fill="#263a34" />
+      <path d="M33 12h50v31H33z" fill="#101e1a" />
+      <path d="m40 20 5 5-5 5m11 0h9" stroke="#94c9a3" strokeWidth="3" fill="none" />
+      <path className="infra-status" d="M66 18h5v5h-5zM74 18h5v5h-5z" />
+    </g>
+    <g fill="#33473e">
+      <path d="M4 35h20v27H4zM91 24h22v39H91z" />
+      <path d="M8 30h12v5H8zM95 19h14v5H95z" fill="#647969" />
+    </g>
+    {[31, 41, 51].map(y => <g key={y}><path d={`M95 ${y}h9v4h-9z`} fill="#9aafa0" /><path className="infra-status" d={`M106 ${y}h3v4h-3z`} /></g>)}
+    <path d="M8 41h12v3H8zM8 49h12v3H8z" fill="#9aafa0" />
+    <path className="infra-status" d="M8 56h4v3H8z" />
   </g>;
 }
