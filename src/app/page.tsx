@@ -1,3 +1,4 @@
+import HeroSection from '@/components/shadcn-studio/blocks/hero-section-44/hero-section-44';
 import { Icon } from '@/components/ui/icon';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -11,15 +12,7 @@ export default function HomePage() {
   const selected = posts.find((post) => post.data.slug === 'devtools');
   const more = posts.filter((post) => post.data.slug !== 'devtools').slice(0, 3);
   return <main id="main-content" className="home-page">
-    <section className="home-intro" aria-labelledby="home-title">
-      <div className="home-intro-copy">
-        <p className="eyebrow">Software systems · Security · Writing</p>
-        <h1 id="home-title">Pankaj Mouriya<span aria-hidden="true">.</span></h1>
-        <p className="home-lede">I work where software engineering meets security. Here I write through the tools, decisions, and details that make complex systems easier to understand.</p>
-        <div className="home-intro-actions"><Link className="text-action" href="/blog">Read the writing <Icon name="arrow" /></Link><Link className="quiet-action" href="/portfolio">Explore my work</Link></div>
-      </div>
-      <aside className="home-side-note" aria-label="Current role"><span className="side-rule" aria-hidden="true" /><p>Senior Product Security Engineer at Harness.</p><span>Based in Bengaluru, India</span></aside>
-    </section>
+    <HeroSection />
     {selected && <section className="home-feature-section" aria-labelledby="selected-writing" data-featured-writing>
       <div className="section-heading"><div><p className="eyebrow">From the archive</p><h2 id="selected-writing">Selected writing</h2></div><Link href="/blog">All writing <span aria-hidden="true">↗</span></Link></div>
       <article className="featured-story">

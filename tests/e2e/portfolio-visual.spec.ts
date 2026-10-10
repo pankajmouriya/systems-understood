@@ -15,7 +15,9 @@ test('capture publication and portfolio at phone and desktop sizes', async ({ pa
         expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(viewport.width);
         if (name === 'home') {
           const title = await page.locator('[data-featured-writing] h3').boundingBox();
-          expect(title?.y).toBeLessThan(viewport.name === 'phone' ? 812 : 900);
+          await expect(page.getByRole('link', { name: 'Read the writing', exact: true })).toBeInViewport();
+          const hero = await page.locator('.profile-hero').boundingBox();
+          expect(title?.y).toBeLessThan((hero?.y ?? 0) + (hero?.height ?? 0) + 300);
         }
         await page.screenshot({ path: `docs/review/screenshots/${name}-${viewport.name}-${theme}.png`, fullPage: true });
       }

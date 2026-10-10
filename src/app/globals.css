@@ -403,3 +403,50 @@ button { cursor: pointer; }
 @media (max-width: 600px) { .site-search-footer { display: none; } .site-search-result-description { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; } .site-search-dialog { top: 1rem; translate: -50% 0; } }
 @media (max-width: 360px) { .site-header-inner { flex-wrap: wrap; } .site-mark { flex-basis: 100%; } .mobile-theme-control { margin-left: 0; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .timeline-animate-progress, .timeline-animate-index, .timeline-animate-content { transform: none !important; opacity: 1 !important; } }
+
+/* Shadcn Studio Hero 44: personal introduction and a physical portrait. */
+.profile-hero { padding-bottom: 1rem; }
+.profile-hero-main { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); align-items: center; gap: 2rem; }
+.profile-hero-copy { padding: 3.5rem 0 2.5rem; }
+.profile-hero h1 { margin: 0 0 1.1rem; font-size: clamp(2.8rem, 4.8vw, 4.5rem); font-weight: 650; line-height: 1.08; letter-spacing: -.04em; }
+.profile-hello { display: block; margin-bottom: .6rem; font-size: .52em; font-weight: 450; letter-spacing: -.02em; }
+.profile-period { color: var(--teal); }
+.profile-role { font-size: clamp(1.15rem, 2vw, 1.55rem); color: var(--teal); line-height: 1.4; margin: 0; }
+.profile-location { margin: .5rem 0 1.8rem; color: var(--muted); font-size: .85rem; }
+.profile-description { max-width: 53ch; font-size: 1.1rem; line-height: 1.75; color: var(--muted); }
+.profile-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.75rem; }
+.profile-actions a { border-radius: 999px; min-height: 2.8rem; padding-inline: 1.2rem; text-decoration: none; }
+.profile-actions .profile-primary { background: var(--teal); color: var(--background); }
+.profile-actions .profile-primary:hover { filter: brightness(1.12); }
+.profile-actions .profile-secondary { border-color: var(--border); background: var(--surface); color: var(--foreground); }
+.profile-actions .profile-secondary:hover { background: var(--teal-soft); }
+.profile-connect { display: inline-flex; gap: .35rem; align-items: center; margin-top: 1.4rem; font-size: .85rem; text-decoration: none; }
+.profile-topics { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem 2rem; border-block: 1px solid var(--border); padding: 1.4rem 0; color: var(--muted); font-size: .85rem; }
+.profile-topics span, .profile-topics a { display: inline-flex; align-items: center; gap: .65rem; }
+.profile-topics svg { width: 1.2rem; height: 1.2rem; color: var(--teal); }
+.profile-topics a { text-decoration: none; color: var(--foreground); }
+.profile-lanyard { position: relative; height: 550px; min-width: 0; }
+.profile-canvas { position: absolute; inset: 0 0 2rem; cursor: grab; }
+.profile-canvas:active { cursor: grabbing; }
+.profile-canvas canvas { touch-action: pan-y; }
+.profile-card-fallback { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; pointer-events: none; }
+.profile-lanyard[data-ready='true'] .profile-card-fallback { visibility: hidden; }
+.profile-cord { position: absolute; top: 0; left: calc(50% - 4px); height: 130px; width: 8px; background: var(--foreground); border-radius: 0 0 3px 3px; }
+.profile-clip { position: absolute; width: 16px; height: 46px; top: 108px; left: calc(50% - 8px); border: 3px solid #989b97; border-radius: 7px; z-index: 1; background: #cccfc9; }
+.profile-photo { width: 240px; margin-top: 40px; overflow: hidden; border-radius: 12px; background: var(--surface); box-shadow: 0 14px 28px #00000016; border-top: 7px solid var(--teal); }
+.profile-photo img { display: block; width: 100%; height: 255px; object-fit: cover; }
+.profile-photo > span { display: block; padding: 1rem; font-size: 1rem; font-weight: 600; }
+.profile-photo small { display: block; color: var(--muted); margin-top: .3rem; font-size: .7rem; font-weight: 400; }
+.profile-card-controls { position: absolute; bottom: 1rem; inset-inline: 0; display: flex; align-items: center; justify-content: center; gap: 1rem; color: var(--muted); font-size: .75rem; }
+.profile-card-controls button { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid var(--border); border-radius: 999px; padding: .4rem .65rem; background: var(--surface); color: var(--foreground); }
+@media (max-width: 760px) {
+  .profile-hero-main { grid-template-columns: 1fr; gap: 0; }
+  .profile-hero-copy { padding: 2.5rem 0 0; }
+  .profile-hero h1 { font-size: clamp(2.5rem, 9vw, 3.8rem); }
+  .profile-lanyard { height: 460px; max-width: 420px; width: 100%; margin-inline: auto; }
+  .profile-cord { height: 90px; }
+  .profile-clip { top: 68px; }
+  .profile-photo { width: 220px; margin-top: 0; }
+  .profile-photo img { height: 230px; }
+  .profile-topics { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: .75rem; }
+}

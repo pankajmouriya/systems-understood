@@ -157,3 +157,17 @@ Added blog-scoped dotted margins and a fading header texture using CSS, with no 
 ### Checkpoint 33: Reader visual and functional verification — complete
 
 Inspected admission-controller opening and figure captures at 1280px and 375px in light/dark. Texture fades across the title area and stays at the outer edges of body content; diagrams retain their original colors inside neutral frames. Verified all five headings, desktop/mobile section navigation, image enlargement, Escape/focus restoration, and no horizontal overflow. The existing reader regression checks passed 7/7, including code copy, metadata, keyboard controls, wide prose, and the unchanged book layout. All 11 content tests, lint, standalone typecheck, and the production build passed. Updated local production preview is running at `http://127.0.0.1:3101/blog/guide-admission-controllers`. No deployment or technical-content claims changed. Ready for local commit.
+
+## Hero 44 homepage — 10 October 2026
+
+### Checkpoint 34: Supplied block reviewed — complete
+
+Reviewed the user's local Hero 44 source, including its Three.js/Rapier draggable lanyard. Adapt the split introduction and hanging portrait composition with source-backed name, role, location, résumé, and profile links. Keep selected writing immediately below the hero; avoid importing the demo's availability claim, unrelated technology logos, or stock portrait. Use a locally stored public GitHub portrait by default while a preferred-photo question is pending. Load 3D separately with static portrait fallback for reduced motion and rendering failure; keep the supplied model attribution. Next: dependencies, integration, and responsive/interaction verification.
+
+### Checkpoint 35: Hero and lanyard integration — complete
+
+Added the adapted Hero 44 block and its physics-based draggable portrait, using the GitHub photo confirmed by the author. Installed Three.js, React Three Fiber/Drei/Rapier and Three types through pnpm. Decoded the supplied embedded model into a local GLB and stored its clip/portrait assets locally. The homepage now has compact personal copy, writing/CV/connect actions, and relevant topic links beneath the split hero. A static portrait remains available during loading, reduced motion, or renderer failure; a pause control and viewport suspension limit continuous rendering. Excluded the user's unmodified `tmp/` reference source from lint/typecheck so the demo imports do not become application code. Lint and typecheck pass. Next: production rendering, drag behavior, fallback and responsive checks.
+
+### Checkpoint 36: Hero visual and interaction verification — complete
+
+Inspected desktop/phone captures in both themes and corrected spacing between the hanging card and pause control. Verified real pointer capture/drag, pause/resume, working writing/CV links, reduced-motion static portrait, and a simulated unavailable-WebGL fallback. No horizontal overflow at 375px. The first complete browser run passed 25/26; the only failure was an obsolete first-viewport article-title requirement from the prior hero. Updated that check to require a visible writing action and the featured article directly after the new hero; the affected four tests then passed. All other browser regressions passed, plus lint, standalone typecheck, 11 content tests, and production build. The downloaded model/assets are local, and source attribution is documented in `docs/credits/hero-44.md`. The user's `tmp/` reference files remain untouched and uncommitted. Refreshed preview runs on port 3101; next: local commit.
