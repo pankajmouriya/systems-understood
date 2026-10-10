@@ -304,7 +304,9 @@ const Band = ({ frontImage, isMobile, accentColor }: BandProps) => {
         const lerped = getLerped(ref.current)
         const clampedDistance = Math.max(0.1, Math.min(1, lerped.distanceTo(ref.current.translation())))
 
-        lerped.lerp(ref.current.translation(), delta * 50 * clampedDistance)
+        // The first frame after a hidden combat phase can have a large delta.
+        // Clamp interpolation so the strap never overshoots away from the pin.
+        lerped.lerp(ref.current.translation(), Math.min(1, delta * 50 * clampedDistance))
       })
 
       // Keeps the rope glued to the pin at any card orientation, not just at rest.
@@ -442,7 +444,7 @@ export default function IdCard({ frontImage, active, onReady, onFailure }: IdCar
   return <Canvas
     camera={{ position: [0, 0, 20], fov: 20 }}
     dpr={[1, 1.5]}
-    frameloop={active ? 'always' : 'never'}
+    frameloop={active ? 'always' : 'demand'}
     gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}
     onCreated={({ gl }) => {
       gl.setClearColor(new THREE.Color(0x000000), 0)
