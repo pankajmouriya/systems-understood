@@ -213,3 +213,13 @@ The previous logo strip misread the requirement: show skills and preserve hero s
 ### Checkpoint 46: Compact skills strip verified — complete
 
 Inspected screenshots of the actual strip at 1280px and 375px. It measures 55px high on desktop and 117px on phone, with four readable skill badges and the portfolio link; the previous phone logo grid occupied roughly 277px. Lint, production build/type compilation, and both responsive/navigation browser checks passed in light/dark. Preview refreshed on port 3101. Ready for local commit.
+
+## Header identity refinement — 10 October 2026
+
+### Checkpoint 47: Header hover and focus review — complete
+
+Confirmed the boxed appearance comes from the global terracotta `:focus-visible` outline, while the plain underline comes from a blanket header hover rule. Applied the approved quiet editorial treatment: a faint green header tint, a short green rule beneath the name on hover/focus, and the same rule on the active desktop navigation section. The name keeps a visible green keyboard focus indicator. The client header reads the pathname through Next's documented `usePathname` hook so article, book, and portfolio subroutes highlight their parent link. Next: verify states across desktop/phone and light/dark, then commit locally.
+
+### Checkpoint 48: Header visual and behavior verification — complete
+
+Inspected production screenshots at 1280px in light and dark, including the name's hover and keyboard focus states, plus a 375px dark header. The blanket hover underline is gone; the short green name rule animates in, and keyboard focus remains visible with a green outline. Confirmed the faint green header tint and active navigation rule on nested Writing, Books, and Portfolio routes and the résumé route. The phone page has no horizontal overflow. Lint, all 11 content checks, production build, and five focused browser checks passed. Local preview is refreshed at port 3101. Ready for local commit.

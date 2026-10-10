@@ -3,12 +3,15 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@/components/ui/icon';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ThemeControl } from './ThemeControl';
 import { MobileNavigation } from './MobileNavigation';
 import { SiteSearch } from './SiteSearch';
 
 export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const pathname = usePathname();
+  const inSection = (section: string) => pathname === section || pathname.startsWith(`${section}/`);
 
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
@@ -26,11 +29,11 @@ export function SiteHeader() {
       <div className="site-header-inner">
         <Link className="site-mark" href="/" aria-label="Pankaj Mouriya, home">Pankaj Mouriya<span className="site-mark-dot">.</span></Link>
         <nav className="desktop-navigation" aria-label="Primary navigation">
-          <Link href="/blog"><Icon name="writing" />Writing</Link>
-          <Link href="/books"><Icon name="book" />Books</Link>
+          <Link href="/blog" aria-current={inSection('/blog') ? 'page' : undefined}><Icon name="writing" />Writing</Link>
+          <Link href="/books" aria-current={inSection('/books') ? 'page' : undefined}><Icon name="book" />Books</Link>
           <button type="button" className="site-search-trigger" onClick={() => setSearchOpen(true)} aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K"><Icon name="search" />Search <kbd>⌘ K</kbd></button>
-          <Link href="/portfolio"><Icon name="work" />Portfolio</Link>
-          <Link href="/resume"><Icon name="file" />Résumé</Link>
+          <Link href="/portfolio" aria-current={inSection('/portfolio') ? 'page' : undefined}><Icon name="work" />Portfolio</Link>
+          <Link href="/resume" aria-current={inSection('/resume') ? 'page' : undefined}><Icon name="file" />Résumé</Link>
         </nav>
         <div className="site-header-actions">
           <a href="https://github.com/pankajmouriya" target="_blank" rel="noopener noreferrer">GitHub</a>
