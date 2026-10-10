@@ -9,7 +9,7 @@ The hero uses four fictional encounters to express Pankaj's security interests. 
 
 ## Timing and behavior
 
-Each story lasts 24 seconds, starting with prompt injection. The portrait remains beside the author's name throughout; the separate theater contains the agents and an original pixel-grid infrastructure diagram. The guardian appears over the surname and jumps into the theater. The secured label appears only after the encounter.
+Each story lasts 24 seconds, starting with prompt injection. The homepage identity is intentionally photo-free; personal imagery is reserved for a future About Me page. The separate theater contains the agents and an original pixel-grid infrastructure diagram. The guardian appears over the surname and jumps into the theater. The secured label appears only after the encounter.
 
 Traffic is idle initially, red/right-to-left from rogue arrival at 1.2 seconds, and green/left-to-right after the defense result at 11.04 seconds (12.96 for RCE). Scene and audio pause offscreen/background; reduced motion resets to a static opening. Sound is opt-in and replays the opening when enabled. No per-frame React scene updates are used, and the homepage no longer loads the WebGL portrait.
 

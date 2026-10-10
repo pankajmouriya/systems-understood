@@ -307,3 +307,11 @@ Added “// Stacks & Experience / Where I’m good” below the career timeline 
 ### Checkpoint 68: Capability ledger verified — complete
 
 Seven production-browser checks pass across the new capability ledger, the compact experience selector, and portfolio navigation. The focused checks cover all six evidence-backed capabilities, the visibility-triggered finite signal, a static reduced-motion treatment, and a 375px layout without document overflow. Inspected a 1440px light capture and a 375px dark capture: the ledger holds a compact three-by-two editorial rhythm on desktop, becomes one readable vertical route on mobile, and stays visually subordinate to the experience section. The Impeccable layout scan returned no findings. ESLint, the Next.js 16 production build, TypeScript, static generation, and the final diff checks pass. Ready for local commit.
+
+### Checkpoint 69: Photo-free homepage identity — implemented
+
+Simplified the homepage role from “Senior Product Security Engineer” to “Security Engineer” and removed the hanging author portrait, strap, clip, component, and unused portrait-only CSS. The greeting, name, location, writing actions, skills, and animated security theater remain in place. Personal imagery is reserved for the planned About Me page. Updated the animation handoff and security-story documentation so future changes no longer assume a homepage portrait. Two focused production-browser checks pass for the exact role, absent portrait markup, scene controls, reduced motion, and 375px overflow. Next: visual inspection, full hero regression, lint, production build, and refreshed local preview.
+
+### Checkpoint 70: Simplified homepage hero verified — complete
+
+Inspected the photo-free homepage at 1440×950 in light mode and 375×900 in dark mode. The shorter identity block gives the name and “Security Engineer” role more space while preserving a distinct security-story stage; mobile stacks the two areas without horizontal overflow. All seven hero browser checks pass for the exact role, absent portrait, primary actions, animation study, rotating greeting, four defense stories, opt-in audio, traffic direction, pause behavior, and reduced motion. The Impeccable layout scan returned no findings. ESLint, the Next.js 16 production build, TypeScript, and static generation pass. Ready for local commit.

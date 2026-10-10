@@ -4,7 +4,6 @@ import { ArrowDownToLine, ArrowUpRight, BookOpen, ShieldCheck, Cloud, PackageChe
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SecurityTheater } from './security-theater';
-import { IdentityPortrait } from './identity-portrait';
 
 const skills = [
   { name: 'Application security', icon: ShieldCheck, tone: 'teal' },
@@ -18,8 +17,8 @@ export default function HeroSection() {
   return <section className="profile-hero" aria-labelledby="home-title">
     <div className="profile-hero-main">
       <div className="profile-hero-copy">
-        <div className="profile-identity"><div><HeroGreeting /></div><IdentityPortrait /></div>
-        <p className="profile-role">Senior Product Security Engineer</p>
+        <HeroGreeting />
+        <p className="profile-role">Security Engineer</p>
         <p className="profile-location">At Harness · Bengaluru, India</p>
         <p className="profile-description">I work where software engineering meets security. Here I write through the tools, decisions, and details that make complex systems easier to understand.</p>
         <div className="profile-actions">

@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 
-test('portrait stays beside identity throughout combat and scene can pause', async ({ page }) => {
+test('home identity stays concise while the security scene can pause', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.profile-identity .identity-portrait img')).toBeVisible();
+  await expect(page.locator('.profile-role')).toHaveText('Security Engineer');
+  await expect(page.locator('.identity-portrait')).toHaveCount(0);
   await expect(page.locator('canvas')).toHaveCount(0);
   await expect(page.locator('.security-theater')).toHaveAttribute('data-phase', 'combat', { timeout: 10000 });
-  await expect(page.locator('.identity-portrait img')).toBeVisible();
   await expect(page.locator('.security-theater .pixel-infrastructure')).toBeVisible();
   await page.getByRole('button', { name: 'Pause scene animation' }).click();
   await expect(page.locator('.security-theater .agent-duel')).toHaveAttribute('data-active', 'false');
@@ -16,11 +16,12 @@ test('portrait stays beside identity throughout combat and scene can pause', asy
   await expect(page).toHaveURL(/\/blog$/);
 });
 
-test('portrait remains available with reduced motion on a phone', async ({ page }) => {
+test('photo-free hero stays usable with reduced motion on a phone', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('/');
-  await expect(page.locator('.identity-portrait img')).toBeVisible();
+  await expect(page.locator('.identity-portrait')).toHaveCount(0);
+  await expect(page.locator('.profile-role')).toHaveText('Security Engineer');
   await expect(page.locator('.profile-canvas')).toHaveCount(0);
   await expect(page.locator('.profile-lanyard .agent-duel-illustrated')).toBeVisible();
   expect(await page.locator('.profile-lanyard .agent-unit').first().evaluate((node) => getComputedStyle(node).animationName)).toBe('none');

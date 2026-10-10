@@ -174,22 +174,7 @@
 [data-flow-active='true'] > .flow-lines[data-signal-mode] .flow-line-signal { animation-play-state: running; }
 @keyframes signal-inbound { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 100; } }
 
-/* The author's portrait belongs to the identity; the theater owns all story motion. */
-.profile-identity { display: grid; grid-template-columns: minmax(0,1fr) 142px; align-items: end; gap: .75rem; }
-.profile-identity h1 { font-size: clamp(2.7rem,4vw,3.7rem); }
-.identity-portrait { position: relative; width: 142px; height: 218px; margin: 0 0 1.1rem; }
-.identity-portrait-strap { position: absolute; top: 0; left: 68px; width: 6px; height: 68px; background: linear-gradient(90deg,#26332d,#65756a,#26332d); }
-.identity-portrait-card { position: absolute; top: 61px; left: 10px; width: 120px; height: 156px; border-top: 4px solid var(--teal); border-radius: 7px; transform: rotate(5deg); box-shadow: 0 6px 12px #00000014; }
-.identity-portrait-card img { width: 100%; height: 100%; object-fit: cover; border-radius: 3px 3px 7px 7px; }
-.identity-portrait-clip { position: absolute; z-index: 1; width: 12px; height: 24px; left: calc(50% - 6px); top: -19px; border: 2px solid #afb6ad; border-radius: 5px; background: #536158; }
 .infra-status { fill: var(--teal); }
 .agent-duel[data-signal-mode='attack'] .infra-status { fill: var(--accent); }
 .agent-duel[data-signal-mode='secured'] .infra-status { fill: #70c994; }
-@media (max-width: 760px) {
-  .profile-identity { grid-template-columns: minmax(0,1fr) 98px; gap: .5rem; }
-  .profile-identity h1 { font-size: clamp(2.15rem,7.8vw,3rem); }
-  .identity-portrait { width: 98px; height: 172px; }
-  .identity-portrait-strap { left: 46px; height: 54px; }
-  .identity-portrait-card { top: 49px; left: 5px; width: 88px; height: 120px; }
-}
 .flow-lines[data-signal-mode='idle'] .flow-line-signal { animation-name: none; }

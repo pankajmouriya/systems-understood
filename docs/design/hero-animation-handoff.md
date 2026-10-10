@@ -1,12 +1,12 @@
 # Hero animation: engineering handoff and review
 
-Reviewed: 10 October 2026. Scope: homepage identity, security theater, study route, shared traffic, greeting, audio, motion preferences, and retained legacy portrait code. This document describes the persistent-portrait design; it supersedes earlier photo hide/drop behavior in progress checkpoints 53–56.
+Reviewed: 10 October 2026. Scope: homepage identity, security theater, study route, shared traffic, greeting, audio, motion preferences, and retained legacy portrait code. The active homepage is photo-free; personal imagery is reserved for a future About Me page.
 
 ## 1. Product intent
 
-The author remains visible beside his name. The story area demonstrates security interests through four fictional encounters. The approved illustrated guardian/rogue artwork is retained; a small original pixel-grid infrastructure diagram provides the object being protected. It consists of a terminal, gateway, rack, and connecting network line. It is not a copied logo or a claim about this website's infrastructure.
+The homepage introduces the author through his name, the concise “Security Engineer” role, and writing-focused copy. The story area demonstrates security interests through four fictional encounters. The approved illustrated guardian/rogue artwork is retained; a small original pixel-grid infrastructure diagram provides the object being protected. It consists of a terminal, gateway, rack, and connecting network line. It is not a copied logo or a claim about this website's infrastructure.
 
-The theater begins with prompt injection. A rogue arrives, the guardian appears above the measured surname and jumps toward the infrastructure, the attack is contained, and the guardian returns to watch. Defense diagrams remain below the character lane. The portrait no longer hides, swings automatically, or participates in combat.
+The theater begins with prompt injection. A rogue arrives, the guardian appears above the measured surname and jumps toward the infrastructure, the attack is contained, and the guardian returns to watch. Defense diagrams remain below the character lane. No portrait or portrait hardware is rendered on the homepage.
 
 ## 2. Ownership and file map
 
@@ -14,14 +14,13 @@ Paths below are relative to the repository root.
 
 | File | Responsibility |
 | --- | --- |
-| `src/components/shadcn-studio/blocks/hero-section-44/hero-section-44.tsx` | Server-rendered composition: identity and portrait on the left, theater on the right. |
-| `.../identity-portrait.tsx` | Persistent Next Image portrait with CSS strap/clip; no client runtime or physics. |
+| `src/components/shadcn-studio/blocks/hero-section-44/hero-section-44.tsx` | Server-rendered composition: concise identity on the left, theater on the right. |
 | `.../security-theater.tsx` | Homepage client controller: visibility, pause, sound toggle, story selection, shared semantic state. |
 | `.../greeting-word.tsx` | Separate multilingual greeting; independent pause control, reduced motion, offscreen/hidden suspension. |
 | `src/components/effects/security-stories.ts` | Story copy, source links, duration, phase boundaries, defense timing, signal state. |
 | `src/components/effects/use-security-stories.ts` | Boundary timer, pause accounting, seeking, cycling, catch-up, visibility/preference subscription. |
 | `src/components/effects/AgentDuel.tsx` | Atlas rendering, measured surname entrance, pixel infrastructure, defense diagrams, SVG labels. |
-| `src/styles/agent-duel.css` | Character choreography, sprite poses, effects, result labels, traffic state styling, identity layout. |
+| `src/styles/agent-duel.css` | Character choreography, sprite poses, effects, result labels, and traffic state styling. |
 | `src/components/effects/FlowLines.tsx` | Seven SVG paths and moving packet strokes. Optional semantic mode leaves book-panel usage independent. |
 | `src/app/globals.css` | Base traffic geometry/style, rightward travel, existing hero layout and generic motion preferences. |
 | `src/components/effects/use-threat-audio.ts` | Gesture-enabled Web Audio cue, voice cleanup, pause/visibility suspension, unmount guard. |
@@ -71,7 +70,7 @@ The signal paths have their own short linear travel cycles. Their *meaning* come
 
 ### Identity
 
-The name and portrait share `.profile-identity`. The portrait card is 120×156 CSS pixels on desktop and 88×120 on narrow screens. Its strap, clip, and five-degree resting tilt are CSS. It is intentionally still and no longer advertises dragging. `sizes` guides Next Image delivery.
+The homepage identity contains the rotating greeting, author name, “Security Engineer” role, location, introduction, and primary actions. It intentionally contains no author photo. The surname keeps `#guardian-name-anchor` because the guardian entrance is measured from that rendered text rather than from hardcoded coordinates.
 
 ### Theater coordinates
 
@@ -93,7 +92,7 @@ Sound starts off. The explicit sound button creates/resumes an AudioContext and 
 
 The cue uses two low triangle oscillators with a descending pitch and short gain envelope, lasting approximately 0.62 seconds. It is intentionally quiet. Disabling sound or stopping active playback stops voices and suspends the context. Unmount closes it. A request token and mounted guard prevent a late asynchronous resume from applying state after navigation.
 
-The story is understandable without sound. Story buttons expose `aria-pressed`; pause and sound controls have action labels. Decorative background SVGs are hidden from assistive technology. The agent scene has a descriptive image label. The portrait has an ordinary image alternative. Reduced-motion visitors see a still portrait, infrastructure, and characters with no premature success message.
+The story is understandable without sound. Story buttons expose `aria-pressed`; pause and sound controls have action labels. Decorative background SVGs are hidden from assistive technology. The agent scene has a descriptive image label. Reduced-motion visitors see still infrastructure and characters with no premature success message.
 
 The separate greeting and scene pause buttons control different loops. This is deliberate current behavior; a future global motion preference could consolidate them. Do not silently make the scene's sound switch activate on unrelated clicks.
 
@@ -107,18 +106,18 @@ The separate greeting and scene pause buttons control different loops. This is d
 | Reduced-motion switch could desynchronize playback | CSS removed/recreated animations while JS retained elapsed clock | Fixed: preference transition resets run, phase, and signal together; covered by browser test. |
 | Delayed boundary could show stale state | Old timeout callback applied the scheduled boundary rather than actual elapsed time | Fixed: elapsed-time catch-up with cycle accounting. |
 | Greeting interval kept running offscreen | Interval depended only on pause/reduced motion | Fixed: heading intersection and document visibility now gate it. |
-| Homepage used continuous portrait physics | Active ID card used Three.js/Rapier and rebuilt rope geometry each frame | Removed from active homepage by persistent static identity portrait. |
+| Homepage used continuous portrait physics | Active ID card used Three.js/Rapier and rebuilt rope geometry each frame | Removed from the active homepage; the current hero has no portrait. |
 | Audio could finish an async resume after unmount | `resume()` awaited before unguarded state update | Guarded with request generation and mounted state; promise cleanup failures are handled. |
 
 The legacy ID card still has potential maintenance concerns if reintroduced: per-frame tube allocation, separate pointer-capture lifecycle, retained large model assets, and its own readiness/failure path. Its dormant code is not evidence of current homepage runtime cost. Do not re-enable it without a focused drag/cancel/blur, context-loss, pause/resize, and device-performance pass.
 
 ## 7. Performance facts and limits
 
-- Homepage portrait: no WebGL canvas, model request, Rapier physics, or automatic swing.
+- Homepage identity: no photo, WebGL canvas, model request, Rapier physics, or automatic swing.
 - Story: one boundary timer; no per-frame React scene updates.
 - Traffic: seven SVG tracks/signals; reduced motion hides signals, and inactive scenes pause travel.
 - Character atlas: about 249 KiB per style on disk. The homepage selects illustrated; the study loads the chosen variant.
-- Existing source portrait PNG is about 914 KiB; the identity uses Next Image sizing. On-disk source size is not a measured transferred byte count.
+- The existing source portrait PNG is retained for a future About Me page and is not requested by the active homepage.
 - Retained legacy GLB is about 2.3 MiB and the pin PNG about 216 KiB. They should not be requested by the active homepage.
 
 This review does not claim a frame-rate, battery, or heap-leak benchmark. CSS drop shadows, SVG paths, image decoding, and the large mobile jump still deserve a real-device profile if performance is a release criterion. Headless Chrome viewport checks are not physical-device measurements.
@@ -136,8 +135,8 @@ The Playwright configuration builds production output and serves it on port 3100
 
 Coverage in the focused suite:
 
-- Persistent portrait visible during combat; no canvas; primary links work.
-- Phone width and reduced-motion still presentation.
+- Concise “Security Engineer” role, no portrait markup, no canvas, and working primary links.
+- Phone width and reduced-motion still presentation without a portrait.
 - Illustrated/pixel switching, seeking, replay, and pause.
 - Greeting rotation, user pause, and reduced motion.
 - Four distinct tool stories and paused story clock.
@@ -156,14 +155,14 @@ Manual checks still recommended before public release: physical touch scrolling 
 
 **Change art:** preserve atlas cell layout, explicit clipping, viewBox proportions, and the red/green silhouettes. Review all poses, not only idle. Keep the source artwork/provenance files.
 
-**Change identity layout:** preserve `guardian-name-anchor`, responsive portrait size, and the measurement observer. Inspect the initial pose and apex on both stacked and two-column layouts.
+**Change identity layout:** preserve `guardian-name-anchor` and the measurement observer. Inspect the initial pose and apex on both stacked and two-column layouts.
 
 **Prioritized follow-up options:**
 
 1. Profile actual mobile rendering before adding more effects. Consider shortening the mobile jump if it distracts from reading.
 2. If stronger frame-accurate synchronization is needed, consolidate CSS and semantic timing under one Web Animations controller. The current boundary model is smaller, but timing edits require care in two places.
 3. Add a site-wide motion preference only if users need a single control for greeting and story; respect the OS preference.
-4. Remove dormant 3D dependencies/assets and legacy portrait CSS in a separate, dependency-usage-verified cleanup. Their presence alone is not runtime loading.
+4. Remove dormant 3D dependencies/assets in a separate, dependency-usage-verified cleanup. Their presence alone is not runtime loading.
 5. Consider a one-cycle-then-rest mode if the looping story competes with writing. This would be a behavior decision, not an unrequested change in this pass.
 
 ## 10. Evidence from this pass
@@ -171,8 +170,8 @@ Manual checks still recommended before public release: physical touch scrolling 
 - Production build/TypeScript and focused browser suite: seven tests passed after fixing duplicate keys and waiting for the media-change event in the reduced-motion test.
 - ESLint and `git diff --check`: clean after audio cleanup refinement.
 - Actual homepage browser inspection: zero canvases and zero requests for `.glb` or the legacy lanyard pin image during the captured opening/attack sequence.
-- Desktop 1280×900: portrait beside identity; surname perch; red inbound attack; infrastructure and defense labels remain separate.
-- Phone 375×900, dark: portrait remains beside name, theater fits without horizontal overflow (document width 375), and held attack/secured states are readable.
+- Desktop 1280×900: concise identity; surname perch; red inbound attack; infrastructure and defense labels remain separate.
+- Phone 375×900, dark: photo-free identity and theater fit without horizontal overflow (document width 375), and held attack/secured states are readable.
 - Independent code/document review found no actionable blocker; that review did not replace the executed browser suite or device caveats above.
 
 ## Related article-header scenes
