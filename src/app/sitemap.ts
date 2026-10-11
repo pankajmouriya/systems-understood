@@ -2,6 +2,8 @@ import type { MetadataRoute } from 'next';
 import { books, getBookChapters, getPublishedPages } from '@/lib/source';
 import { siteOrigin } from '@/lib/site';
 
+export const dynamic = 'force-static';
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const origin = siteOrigin();
   const paths = ['/', '/about', '/blog', '/books', '/portfolio', '/portfolio/projects', '/portfolio/talks', '/portfolio/resume', ...books.map((book) => `/books/${book.slug}`)];

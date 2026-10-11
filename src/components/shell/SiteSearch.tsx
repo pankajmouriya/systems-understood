@@ -5,7 +5,24 @@ import { useRouter } from 'next/navigation';
 import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Icon } from '@/components/ui/icon';
-import type { SearchResult } from '@/lib/search';
+import { searchIndex, type SearchIndexEntry, type SearchResult } from '@/lib/search-client';
+
+let searchIndexPromise: Promise<SearchIndexEntry[]> | undefined;
+
+function loadSearchIndex() {
+  searchIndexPromise ??= fetch('/search-index.json')
+    .then((response) => {
+      if (!response.ok) throw new Error('Search index request failed');
+      return response.json() as Promise<{ results: SearchIndexEntry[] }>;
+    })
+    .then(({ results }) => results)
+    .catch((error) => {
+      searchIndexPromise = undefined;
+      throw error;
+    });
+
+  return searchIndexPromise;
+}
 
 export function SiteSearch({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const router = useRouter();
@@ -32,25 +49,20 @@ export function SiteSearch({ open, onOpenChange }: { open: boolean; onOpenChange
 
   useEffect(() => {
     if (!open || !query.trim()) return;
-    const controller = new AbortController();
     const timeout = window.setTimeout(async () => {
       setLoading(true);
       setFailed(false);
       try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(query.trim().slice(0, 120))}`, { signal: controller.signal });
-        if (!response.ok) throw new Error('Search request failed');
-        const data: { results: SearchResult[] } = await response.json();
-        setResults(data.results);
+        const index = await loadSearchIndex();
+        setResults(searchIndex(index, query));
       } catch {
-        if (!controller.signal.aborted) {
-          setFailed(true);
-          setResults([]);
-        }
+        setFailed(true);
+        setResults([]);
       } finally {
-        if (!controller.signal.aborted) setLoading(false);
+        setLoading(false);
       }
     }, 150);
-    return () => { window.clearTimeout(timeout); controller.abort(); };
+    return () => window.clearTimeout(timeout);
   }, [open, query]);
 
   function navigate(href: string) {

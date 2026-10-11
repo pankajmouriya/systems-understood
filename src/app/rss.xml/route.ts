@@ -1,6 +1,8 @@
 import { getPublishedPages } from '@/lib/source';
 import { siteName, siteOrigin } from '@/lib/site';
 
+export const dynamic = 'force-static';
+
 function xml(value: string) { return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&apos;'); }
 
 export function GET() {

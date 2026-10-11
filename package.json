@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/content/*.test.mjs",
+    "test": "node --experimental-strip-types --test tests/content/*.test.mjs tests/deployment/*.test.mjs",
+    "verify:export": "node scripts/verify-static-export.mjs",
     "test:browser": "playwright test"
   },
   "dependencies": {
