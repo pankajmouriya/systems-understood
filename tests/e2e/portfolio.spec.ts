@@ -3,9 +3,16 @@ import { expect, test } from '@playwright/test';
 test('site navigation presents the author and reaches portfolio and public profiles', async ({ page }) => {
   await page.goto('/');
   const header = page.getByRole('banner');
+  const primaryNavigation = header.getByRole('navigation', { name: 'Primary navigation' });
   await expect(header.getByRole('link', { name: 'Pankaj Mouriya, home' })).toBeVisible();
   await expect(header.getByRole('link', { name: 'Writing' })).toHaveAttribute('href', '/blog');
   await expect(header.getByRole('link', { name: 'Portfolio' })).toHaveAttribute('href', '/portfolio');
+  await expect(primaryNavigation.getByRole('button', { name: 'Search writing' })).toHaveCount(0);
+  const search = header.locator('.site-header-actions').getByRole('button', { name: 'Search writing' });
+  await expect(search).toBeVisible();
+  await expect(search).toHaveAttribute('aria-keyshortcuts', 'Control+K Meta+K');
+  await search.hover();
+  await expect(header.getByRole('tooltip', { name: /Search writing.*K/ })).toBeVisible();
   await expect(header.getByRole('link', { name: 'Résumé' })).toHaveCount(0);
   await expect(header.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/pankajmouriya');
   await expect(header.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/pankajmouriya/');
