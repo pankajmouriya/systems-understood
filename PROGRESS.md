@@ -387,3 +387,7 @@ Reviewed the GoDaddy DNS nameserver screen and confirmed the registrar still lis
 ### Checkpoint 88: Cloudflare record set approved without `talks`
 
 The user intentionally excluded `talks.pankajmouriya.com` from the Cloudflare migration. Updated the runbook so the approved pending-zone state is exactly two DNS-only CNAMEs: the flattened apex to Netlify's load balancer and `www` to the active homepage project. Recorded that Cloudflare's displayed TTL value `1` represents Auto in this review screen. The runbook now treats the talks hostname as an intentional retirement after delegation while preserving its source Netlify record and project for rollback or a future host redirect. The supplied Cloudflare screenshot matches the approved two-record state and is ready to continue to activation.
+
+### Checkpoint 89: Planned downtime cutover selected
+
+The user accepted a short website outage and removed the requirement to preserve Netlify routing through Cloudflare. Reworked the runbook so Cloudflare activates with no apex, `www`, or `talks` website record: delete the two prepared Netlify CNAMEs, continue to activation, delegate GoDaddy to the assigned Cloudflare nameservers, confirm the active zone, and attach application records only after the new deployment is verified. The homepage and `www` will be unavailable during that interval, and `talks` remains intentionally retired. Netlify records and projects remain unchanged as rollback sources.

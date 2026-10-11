@@ -5,8 +5,9 @@
 - **Current DNS and hosting:** NS1 / Netlify
 - **Target authoritative DNS:** Cloudflare
 - **Future application target:** Cloudflare, pending a verified Next.js deployment design
+- **Cutover policy:** Planned downtime accepted; Netlify is excluded from active Cloudflare DNS
 
-This runbook moves DNS authority to Cloudflare without transferring the domain registration away from GoDaddy. Complete each checkpoint in order. Do not remove the existing Netlify configuration until the replacement deployment has passed its hosted checks.
+This runbook moves DNS authority to Cloudflare without transferring the domain registration away from GoDaddy. Complete each checkpoint in order. The user accepted a planned outage between nameserver activation and the new Cloudflare application deployment. Do not delete the Netlify projects or source DNS zone until the replacement deployment has passed its hosted checks.
 
 ## Current public state
 
@@ -58,76 +59,39 @@ The complete Netlify zone shown in the dashboard contains only these three recor
 
 Reference: [Cloudflare DNS setup](https://developers.cloudflare.com/dns/get-started/).
 
-## Checkpoint 2: Create the exact temporary Cloudflare records
+## Checkpoint 2: Prepare an empty Cloudflare application zone
 
-The complete source zone has now been reviewed. The `talks` subdomain is intentionally excluded from the Cloudflare migration. On Cloudflare's DNS record review screen, configure exactly these temporary records:
+The user accepted downtime and chose not to route Cloudflare DNS back to Netlify. The Cloudflare zone should therefore contain no apex, `www`, or `talks` website record before activation.
 
-| Type | Name | Target | Proxy status | TTL |
-| --- | --- | --- | --- | --- |
-| CNAME | `@` | `apex-loadbalancer.netlify.com` | DNS only | Auto |
-| CNAME | `www` | `quizzical-swartz-5afd76.netlify.app` | DNS only | Auto |
+On Cloudflare's DNS record review screen:
 
-Cloudflare accepts a CNAME at the apex and flattens it for DNS clients. Netlify documents `apex-loadbalancer.netlify.com` as the recommended external-DNS target when the provider supports ALIAS, ANAME, or CNAME flattening.
+1. Delete every imported A, AAAA, or CNAME record whose Name is `pankajmouriya.com` or `@`.
+2. Delete every imported A, AAAA, or CNAME record whose Name is `www`.
+3. Do not add a `talks` record.
+4. Do not add a Pages or Workers record yet.
+5. Confirm there are no website records in the Cloudflare table.
+6. Select **Continue to activation**.
 
-For each record:
-
-1. Select **Add record**.
-2. Choose **CNAME**.
-3. Enter the Name and Target exactly as shown in the table.
-4. Turn **Proxy status** off so the cloud is gray and reads **DNS only**.
-5. Leave **TTL** at **Auto**.
-6. Save.
-
-Cloudflare may display the numeric value `1` for TTL while reviewing these records. In this interface that represents the automatic TTL setting.
-
-Then reconcile anything Cloudflare imported automatically:
-
-- [ ] Delete any imported A or AAAA record at `@` that conflicts with the apex CNAME.
-- [ ] Delete any imported A, AAAA, or CNAME record at `www` that conflicts with the exact `www` CNAME above.
-- [ ] Do not create a record type named `NETLIFY`; Cloudflare does not use that provider-specific type.
-- [ ] Do not copy `jolly-northcutt-b8f126.netlify.app`; its direct endpoint currently returns 404.
-- [ ] Do not copy the observed `13.215.239.219` or `52.74.6.109` addresses; those were the resolved output of Netlify-managed routing, not the portable source configuration.
-- [ ] Do not copy the old NS or SOA records.
-- [ ] Do not add MX, TXT, CAA, or other service records unless another source proves they exist. The reviewed source zone contains only the three records above.
-- [ ] Do not add a Pages or Workers record yet.
-
-Keep all three original records unchanged in Netlify. They remain the rollback source until the Cloudflare zone and homepage have been verified.
-
-### Intentional `talks` retirement
-
-The source zone contains `talks.pankajmouriya.com`, but the user chose not to migrate it. After GoDaddy delegates the apex zone to Cloudflare, `talks.pankajmouriya.com` will no longer resolve because Cloudflare has no `talks` record. This is an intentional cutover decision.
-
-Do not delete its `NETLIFY` record or the `jovial-kilby-174125.netlify.app` project from Netlify yet. Those preserve a rollback option. If the hostname later needs to redirect into the new portfolio speaking section, add it to the new Cloudflare application and configure a host-level redirect as a separate reviewed change.
-
-### If Cloudflare reports that the host already exists
-
-Cloudflare's initial scan may import resolved Netlify A records instead of the source `NETLIFY` records. Attempting to add the CNAME first then produces:
+If the previously prepared Netlify CNAMEs are still visible, delete both:
 
 ```text
-An A, AAAA, or CNAME record with that host already exists.
+@     CNAME  apex-loadbalancer.netlify.com
+www   CNAME  quizzical-swartz-5afd76.netlify.app
 ```
 
-The reviewed Cloudflare import contained these conflicting records:
+Cloudflare warns that a domain without matching DNS records will not be reachable. That outage is expected under the selected policy and begins as resolvers adopt the new Cloudflare nameservers.
 
-| Type | Name | Imported value |
-| --- | --- | --- |
-| A | `@` / `pankajmouriya.com` | `13.52.188.95` |
-| A | `@` / `pankajmouriya.com` | `52.52.192.191` |
-| A | `www` | `98.84.224.111` |
-| A | `www` | `18.208.88.157` |
+Keep all three original `NETLIFY` records and both Netlify projects unchanged. They provide rollback options even though they are not copied into Cloudflare.
 
-These are another set of resolved Netlify edge addresses and should not become the portable Cloudflare configuration. While the Cloudflare zone is still pending and the Netlify nameservers remain authoritative:
+### Intentional hostname state during the outage
 
-1. Cancel the unsaved CNAME form.
-2. Delete both imported A records whose Name is the apex domain.
-3. Delete both imported A records whose Name is `www`.
-4. Add and save the `@` CNAME from the exact table above.
-5. Add and save the `www` CNAME from the exact table above.
-6. Confirm the table contains exactly the two DNS-only CNAME records before selecting **Continue to activation**.
+Until the new application is deployed and its custom domains are attached:
 
-Deleting records from this pending Cloudflare zone does not alter the live Netlify zone. Do not delete the source records in Netlify.
+- `pankajmouriya.com` will not serve a website;
+- `www.pankajmouriya.com` will not serve or redirect;
+- `talks.pankajmouriya.com` is intentionally retired and will not resolve.
 
-Reference: [Netlify external DNS configuration](https://docs.netlify.com/manage/domains/configure-domains/configure-external-dns/).
+The future Cloudflare application setup will restore the apex and `www`. If `talks` later needs to redirect into the portfolio speaking section, add that hostname and a host-level redirect as a separate reviewed change.
 
 ## Checkpoint 3: Confirm DNSSEC is clear
 
@@ -151,7 +115,7 @@ Cloudflare nameserver 1: ______________________________
 Cloudflare nameserver 2: ______________________________
 ```
 
-They will resemble `name.ns.cloudflare.com`, but only the assigned values are valid. Before changing GoDaddy, review the imported Cloudflare DNS record list one more time.
+They will resemble `name.ns.cloudflare.com`, but only the assigned values are valid. Before changing GoDaddy, confirm the Cloudflare DNS table contains no website records under the planned-downtime policy.
 
 ## Checkpoint 5: Replace nameservers at GoDaddy
 
@@ -167,7 +131,7 @@ Proceed only after Checkpoints 1 through 4 are complete.
 - [ ] Confirm that only those two Cloudflare nameservers remain.
 - [ ] Save and complete GoDaddy identity verification.
 
-Do not select GoDaddy's **Connect Domain** action. Do not enter `apex-loadbalancer.netlify.com` or either `.netlify.app` hostname into the nameserver form; those belong only in Cloudflare's DNS records table. The GoDaddy nameserver form receives only the two assigned `*.ns.cloudflare.com` hostnames.
+Do not select GoDaddy's **Connect Domain** action. Do not enter `apex-loadbalancer.netlify.com` or either `.netlify.app` hostname into the nameserver form. Under the selected downtime policy they should not remain in Cloudflare's DNS table either. The GoDaddy nameserver form receives only the two assigned `*.ns.cloudflare.com` hostnames.
 
 This changes DNS authority only. Registration and renewal remain at GoDaddy.
 
@@ -182,27 +146,19 @@ Reference: [GoDaddy nameserver instructions](https://www.godaddy.com/en-uk/help/
 
 GoDaddy states that changes commonly appear within an hour but can take up to 48 hours globally.
 
-Once Cloudflare shows **Active**, verify:
+Once Cloudflare shows **Active**, confirm the nameserver migration. The website outage is expected because the zone has no application records.
 
-```text
-https://pankajmouriya.com/
-https://www.pankajmouriya.com/
-```
-
-Expected at this stage: the existing Netlify homepage still loads and `www` still redirects to the apex domain. `talks.pankajmouriya.com` is intentionally absent from Cloudflare and will stop resolving after delegation. Do not continue to application deployment if the apex or `www` checks fail.
-
-Useful read-only checks:
+Useful read-only check:
 
 ```sh
 dig +short NS pankajmouriya.com
-dig +short CNAME www.pankajmouriya.com
-curl -I https://pankajmouriya.com/
-curl -I https://www.pankajmouriya.com/
 ```
+
+Expected: the command returns only the two assigned Cloudflare nameservers. Do not troubleshoot the missing website until the new application has been deployed and attached.
 
 ## Checkpoint 7: Enable DNSSEC again
 
-Do this only after Cloudflare shows the zone as **Active** and the existing site resolves correctly.
+Do this only after Cloudflare shows the zone as **Active** and the assigned Cloudflare nameservers resolve publicly.
 
 1. In Cloudflare, open **DNS** → **Settings** → **DNSSEC** and enable it.
 2. Keep the Cloudflare DS values visible.
@@ -221,12 +177,12 @@ Registrar: GoDaddy
 Authoritative DNS: Cloudflare
 Cloudflare zone: Active
 DNSSEC: Active
-Existing Netlify site: still reachable
+Planned website outage: active until the Cloudflare application is attached
 Legacy talks hostname: intentionally not migrated
 Cloudflare Pages or Workers deployment: not connected yet
 ```
 
-Keep the old Netlify site and DNS account recoverable until the new hosted preview, custom domain, TLS, redirects, and rollback checks pass.
+Keep the old Netlify sites and DNS account recoverable until the new hosted preview, custom domain, TLS, redirects, and rollback checks pass.
 
 ## Reference from `tsd.report`
 
