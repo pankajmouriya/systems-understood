@@ -31,6 +31,8 @@ Playwright builds and starts a production server on port 3100. Use `pnpm exec pl
 
 Add articles under `content/blog/`. Required frontmatter: `title`, `description`, `slug`, `date` (`YYYY-MM-DD`), `draft`, `kind`, and controlled `tags`. An optional `updated` date cannot precede publication. Add book chapters under `content/books/<book>/` with `title`, `description`, `slug`, `book`, `order`, and `draft`. Drafts are filtered before route, search, feed, and sitemap generation. `reader-draft.mdx` is a boundary fixture.
 
+The human authoring guide is [`docs/AUTHORING.md`](docs/AUTHORING.md). The versioned `$publication-authoring` skill under [`skills/publication-authoring/`](skills/publication-authoring/) converts rough Markdown and referenced images into review-ready articles, new ebooks, or chapters for existing ebooks.
+
 Fumadocs MDX performs the code syntax transform. Use ordinary fenced code blocks; a verified title syntax is:
 
 ````mdx

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Publication Authoring"
+  short_description: "Turn Markdown drafts into portfolio publications"
+  brand_color: "#275D49"
+  default_prompt: "Use $publication-authoring to convert my Markdown draft and referenced images into review-ready site content."
