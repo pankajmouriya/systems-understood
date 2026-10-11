@@ -37,7 +37,7 @@ Create a GitHub environment named `production`. Environment approval is optional
 
 A same-repository pull request also uploads that artifact to the branch `pr-<number>`. Forked pull requests receive no Cloudflare credentials and only run validation.
 
-`.github/workflows/deploy.yml` starts only after the `CI` workflow completes. It deploys only when the triggering run was a successful push to `main`. It downloads the exact `cloudflare-pages-out` artifact from that CI run, creates the Direct Upload Pages project if absent, deploys it, and idempotently attaches `pankajmouriya.com` through the Cloudflare Pages API.
+`.github/workflows/deploy.yml` starts only after the `CI` workflow completes. It deploys only when the triggering run was a successful push to `main`. It downloads the exact `cloudflare-pages-out` artifact from that CI run, looks up the Direct Upload Pages project by its exact name, creates it only after a `404`, deploys the artifact, and idempotently attaches `pankajmouriya.com` through the Cloudflare Pages API.
 
 ```sh
 npx --yes wrangler@4.149.0 pages deploy out \

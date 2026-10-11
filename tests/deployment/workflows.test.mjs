@@ -33,6 +33,8 @@ test('production deploys only the successful main CI artifact', async () => {
   assert.match(workflow, /CLOUDFLARE_ACCOUNT_ID:\s+\$\{\{ vars\.CLOUDFLARE_ACCOUNT_ID \}\}/);
   assert.match(workflow, /CLOUDFLARE_PROJECT_NAME:\s+\$\{\{ vars\.CLOUDFLARE_PROJECT_NAME \}\}/);
   assert.match(workflow, /pages project create/);
+  assert.match(workflow, /pages\/projects\/\$\{CLOUDFLARE_PROJECT_NAME\}/);
+  assert.match(workflow, /project_status.*404/s);
   assert.match(workflow, /pages deploy out/);
   assert.match(workflow, /--branch main/);
   assert.match(workflow, /pages\/projects\/\$\{CLOUDFLARE_PROJECT_NAME\}\/domains/);

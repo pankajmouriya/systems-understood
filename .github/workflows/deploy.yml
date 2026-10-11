@@ -46,10 +46,23 @@ jobs:
       - name: Ensure Pages project exists
         shell: bash
         run: |
-          projects_file="${RUNNER_TEMP}/cloudflare-pages-projects.json"
-          npx --yes wrangler@4.149.0 pages project list --json > "${projects_file}"
-          if ! jq -e --arg name "${CLOUDFLARE_PROJECT_NAME}" 'any(.[]; .name == $name)' "${projects_file}" >/dev/null; then
+          project_url="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/${CLOUDFLARE_PROJECT_NAME}"
+          project_file="${RUNNER_TEMP}/cloudflare-pages-project.json"
+          project_status="$(curl --silent --show-error \
+            --output "${project_file}" \
+            --write-out '%{http_code}' \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            "${project_url}")"
+
+          if [[ "${project_status}" == "404" ]]; then
             npx --yes wrangler@4.149.0 pages project create "${CLOUDFLARE_PROJECT_NAME}" --production-branch main
+          elif [[ "${project_status}" != "200" ]]; then
+            echo "Cloudflare project lookup failed with HTTP ${project_status}."
+            exit 1
+          else
+            jq -e --arg name "${CLOUDFLARE_PROJECT_NAME}" \
+              '.success == true and .result.name == $name' \
+              "${project_file}" >/dev/null
           fi
 
       - name: Deploy production
