@@ -87,7 +87,15 @@ Acceptance requires:
 
 The production workflow attaches the apex automatically after the verified artifact is deployed. It first lists the project's domains and creates `pankajmouriya.com` only when absent, so retries are safe. It retries validation when needed and waits up to five minutes for Cloudflare to report the domain **Active**; blocked, deactivated, or error states fail immediately with their validation details.
 
-`www.pankajmouriya.com` remains a separate owner action because the deployment token has only Pages Edit permission. Follow Cloudflare's documented **Bulk Redirects** setup from `www.pankajmouriya.com` to `https://pankajmouriya.com` with **Preserve query string**, **Subpath matching**, and **Preserve path suffix** enabled. Create the proxied `www` placeholder record Cloudflare requests. Do not attach `www` as a second Pages hostname because that would serve duplicate content instead of enforcing the canonical apex.
+On the first activation, Pages requested an explicit DNS record rather than creating it through the Pages-only API token. Create this record in the active Cloudflare zone, then select **Check DNS records** in the Pages custom-domain panel:
+
+| Type | Name | Target | Proxy | TTL |
+| --- | --- | --- | --- | --- |
+| `CNAME` | `@` | `systems-understood.pages.dev` | Proxied | Auto |
+
+This record is now part of the production configuration. Do not replace it with a Netlify hostname or a resolved Cloudflare edge IP.
+
+`www.pankajmouriya.com` remains a separate owner action because the deployment token has only Pages Edit permission. Follow Cloudflare's documented **Bulk Redirects** setup from `www.pankajmouriya.com` to `https://pankajmouriya.com` with status `301` and **Preserve query string**, **Subpath matching**, and **Preserve path suffix** enabled. Create the documented proxied placeholder record: type `A`, name `www`, IPv4 `192.0.2.1`, TTL Auto. Do not attach `www` as a second Pages hostname because that would serve duplicate content instead of enforcing the canonical apex.
 
 Keep `talks.pankajmouriya.com` absent; it is intentionally retired.
 
