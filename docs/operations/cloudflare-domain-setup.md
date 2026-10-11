@@ -60,13 +60,12 @@ Reference: [Cloudflare DNS setup](https://developers.cloudflare.com/dns/get-star
 
 ## Checkpoint 2: Create the exact temporary Cloudflare records
 
-The complete source zone has now been reviewed. On Cloudflare's DNS record review screen, configure exactly these temporary records:
+The complete source zone has now been reviewed. The `talks` subdomain is intentionally excluded from the Cloudflare migration. On Cloudflare's DNS record review screen, configure exactly these temporary records:
 
 | Type | Name | Target | Proxy status | TTL |
 | --- | --- | --- | --- | --- |
 | CNAME | `@` | `apex-loadbalancer.netlify.com` | DNS only | Auto |
 | CNAME | `www` | `quizzical-swartz-5afd76.netlify.app` | DNS only | Auto |
-| CNAME | `talks` | `jovial-kilby-174125.netlify.app` | DNS only | Auto |
 
 Cloudflare accepts a CNAME at the apex and flattens it for DNS clients. Netlify documents `apex-loadbalancer.netlify.com` as the recommended external-DNS target when the provider supports ALIAS, ANAME, or CNAME flattening.
 
@@ -79,11 +78,12 @@ For each record:
 5. Leave **TTL** at **Auto**.
 6. Save.
 
+Cloudflare may display the numeric value `1` for TTL while reviewing these records. In this interface that represents the automatic TTL setting.
+
 Then reconcile anything Cloudflare imported automatically:
 
 - [ ] Delete any imported A or AAAA record at `@` that conflicts with the apex CNAME.
 - [ ] Delete any imported A, AAAA, or CNAME record at `www` that conflicts with the exact `www` CNAME above.
-- [ ] Delete any imported A, AAAA, or CNAME record at `talks` that conflicts with the exact `talks` CNAME above.
 - [ ] Do not create a record type named `NETLIFY`; Cloudflare does not use that provider-specific type.
 - [ ] Do not copy `jolly-northcutt-b8f126.netlify.app`; its direct endpoint currently returns 404.
 - [ ] Do not copy the observed `13.215.239.219` or `52.74.6.109` addresses; those were the resolved output of Netlify-managed routing, not the portable source configuration.
@@ -91,7 +91,13 @@ Then reconcile anything Cloudflare imported automatically:
 - [ ] Do not add MX, TXT, CAA, or other service records unless another source proves they exist. The reviewed source zone contains only the three records above.
 - [ ] Do not add a Pages or Workers record yet.
 
-Keep the three original records unchanged in Netlify. They remain the rollback source until the Cloudflare zone and both existing sites have been verified.
+Keep all three original records unchanged in Netlify. They remain the rollback source until the Cloudflare zone and homepage have been verified.
+
+### Intentional `talks` retirement
+
+The source zone contains `talks.pankajmouriya.com`, but the user chose not to migrate it. After GoDaddy delegates the apex zone to Cloudflare, `talks.pankajmouriya.com` will no longer resolve because Cloudflare has no `talks` record. This is an intentional cutover decision.
+
+Do not delete its `NETLIFY` record or the `jovial-kilby-174125.netlify.app` project from Netlify yet. Those preserve a rollback option. If the hostname later needs to redirect into the new portfolio speaking section, add it to the new Cloudflare application and configure a host-level redirect as a separate reviewed change.
 
 ### If Cloudflare reports that the host already exists
 
@@ -117,8 +123,7 @@ These are another set of resolved Netlify edge addresses and should not become t
 3. Delete both imported A records whose Name is `www`.
 4. Add and save the `@` CNAME from the exact table above.
 5. Add and save the `www` CNAME from the exact table above.
-6. Add and save the `talks` CNAME; the automatic scan did not discover it.
-7. Confirm the table contains exactly the three DNS-only CNAME records before selecting **Continue to activation**.
+6. Confirm the table contains exactly the two DNS-only CNAME records before selecting **Continue to activation**.
 
 Deleting records from this pending Cloudflare zone does not alter the live Netlify zone. Do not delete the source records in Netlify.
 
@@ -182,20 +187,17 @@ Once Cloudflare shows **Active**, verify:
 ```text
 https://pankajmouriya.com/
 https://www.pankajmouriya.com/
-https://talks.pankajmouriya.com/
 ```
 
-Expected at this stage: the existing Netlify homepage still loads, `www` still redirects to the apex domain, and the independent talks site still loads. Do not continue to application deployment if any of these checks fail.
+Expected at this stage: the existing Netlify homepage still loads and `www` still redirects to the apex domain. `talks.pankajmouriya.com` is intentionally absent from Cloudflare and will stop resolving after delegation. Do not continue to application deployment if the apex or `www` checks fail.
 
 Useful read-only checks:
 
 ```sh
 dig +short NS pankajmouriya.com
 dig +short CNAME www.pankajmouriya.com
-dig +short CNAME talks.pankajmouriya.com
 curl -I https://pankajmouriya.com/
 curl -I https://www.pankajmouriya.com/
-curl -I https://talks.pankajmouriya.com/
 ```
 
 ## Checkpoint 7: Enable DNSSEC again
@@ -220,7 +222,7 @@ Authoritative DNS: Cloudflare
 Cloudflare zone: Active
 DNSSEC: Active
 Existing Netlify site: still reachable
-Existing talks site: still reachable
+Legacy talks hostname: intentionally not migrated
 Cloudflare Pages or Workers deployment: not connected yet
 ```
 

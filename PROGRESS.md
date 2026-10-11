@@ -383,3 +383,7 @@ Reviewed Cloudflare's pending-zone record screen. Its automatic scan materialize
 ### Checkpoint 87: GoDaddy delegation screen — confirmed
 
 Reviewed the GoDaddy DNS nameserver screen and confirmed the registrar still lists the same four Netlify/NS1 nameservers observed publicly. The adjacent DS Records tab provides the required DNSSEC preflight. Clarified the runbook's exact GoDaddy controls and added a guard against the unrelated Connect Domain action or accidentally entering Netlify application targets into the nameserver form. The registrar remains unchanged until the Cloudflare DNS table contains the three approved records and Cloudflare supplies its assigned pair.
+
+### Checkpoint 88: Cloudflare record set approved without `talks`
+
+The user intentionally excluded `talks.pankajmouriya.com` from the Cloudflare migration. Updated the runbook so the approved pending-zone state is exactly two DNS-only CNAMEs: the flattened apex to Netlify's load balancer and `www` to the active homepage project. Recorded that Cloudflare's displayed TTL value `1` represents Auto in this review screen. The runbook now treats the talks hostname as an intentional retirement after delegation while preserving its source Netlify record and project for rollback or a future host redirect. The supplied Cloudflare screenshot matches the approved two-record state and is ready to continue to activation.
