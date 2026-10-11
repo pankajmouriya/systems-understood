@@ -37,7 +37,7 @@ Create a GitHub environment named `production`. Environment approval is optional
 
 A same-repository pull request also uploads that artifact to the branch `pr-<number>`. Forked pull requests receive no Cloudflare credentials and only run validation.
 
-`.github/workflows/deploy.yml` starts only after the `CI` workflow completes. It deploys only when the triggering run was a successful push to `main`. It downloads the exact `cloudflare-pages-out` artifact from that CI run, creates the Direct Upload Pages project if absent, and deploys with:
+`.github/workflows/deploy.yml` starts only after the `CI` workflow completes. It deploys only when the triggering run was a successful push to `main`. It downloads the exact `cloudflare-pages-out` artifact from that CI run, creates the Direct Upload Pages project if absent, deploys it, and idempotently attaches `pankajmouriya.com` through the Cloudflare Pages API.
 
 ```sh
 npx --yes wrangler@4.149.0 pages deploy out \
@@ -85,15 +85,11 @@ Acceptance requires:
 
 ## Attach `pankajmouriya.com`
 
-Proceed only when the Cloudflare DNS zone is **Active** and the `pages.dev` checks pass.
+The production workflow attaches the apex automatically after the verified artifact is deployed. It first lists the project's domains and creates `pankajmouriya.com` only when absent, so retries are safe. Open **Cloudflare → Workers & Pages → systems-understood → Custom domains** and wait until its status is **Active** and its certificate is issued.
 
-1. Open **Cloudflare → Workers & Pages → systems-understood → Custom domains**.
-2. Select **Set up a custom domain** and enter `pankajmouriya.com`.
-3. Confirm the zone and allow Pages to create the proxied DNS record.
-4. Wait until the custom-domain status is **Active** and its certificate is issued.
-5. Repeat for `www.pankajmouriya.com` only if the Pages dashboard accepts it as a project domain.
-6. Make the apex canonical. Follow Cloudflare's documented **Bulk Redirects** setup from `www.pankajmouriya.com` to `https://pankajmouriya.com` with **Preserve query string**, **Subpath matching**, and **Preserve path suffix** enabled. Create the proxied `www` placeholder record Cloudflare requests.
-7. Keep `talks.pankajmouriya.com` absent; it is intentionally retired.
+`www.pankajmouriya.com` remains a separate owner action because the deployment token has only Pages Edit permission. Follow Cloudflare's documented **Bulk Redirects** setup from `www.pankajmouriya.com` to `https://pankajmouriya.com` with **Preserve query string**, **Subpath matching**, and **Preserve path suffix** enabled. Create the proxied `www` placeholder record Cloudflare requests. Do not attach `www` as a second Pages hostname because that would serve duplicate content instead of enforcing the canonical apex.
+
+Keep `talks.pankajmouriya.com` absent; it is intentionally retired.
 
 Do not create hand-written CNAMEs to Netlify. Do not attach the domain before the zone is active.
 
