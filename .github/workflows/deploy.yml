@@ -1,0 +1,62 @@
+name: Deploy Cloudflare Pages
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: cloudflare-pages-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy verified production artifact
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_PROJECT_NAME: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
+    steps:
+      - name: Download verified Pages artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: cloudflare-pages-out
+          path: out
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Validate deployment configuration
+        shell: bash
+        run: |
+          : "${CLOUDFLARE_API_TOKEN:?Missing CLOUDFLARE_API_TOKEN secret}"
+          : "${CLOUDFLARE_ACCOUNT_ID:?Missing CLOUDFLARE_ACCOUNT_ID variable}"
+          : "${CLOUDFLARE_PROJECT_NAME:?Missing CLOUDFLARE_PROJECT_NAME variable}"
+
+      - name: Ensure Pages project exists
+        shell: bash
+        run: |
+          projects_file="${RUNNER_TEMP}/cloudflare-pages-projects.json"
+          npx --yes wrangler@4.149.0 pages project list --json > "${projects_file}"
+          if ! jq -e --arg name "${CLOUDFLARE_PROJECT_NAME}" 'any(.[]; .name == $name)' "${projects_file}" >/dev/null; then
+            npx --yes wrangler@4.149.0 pages project create "${CLOUDFLARE_PROJECT_NAME}" --production-branch main
+          fi
+
+      - name: Deploy production
+        run: >-
+          npx --yes wrangler@4.149.0 pages deploy out
+          --project-name "${CLOUDFLARE_PROJECT_NAME}"
+          --branch main
+          --commit-hash "${{ github.event.workflow_run.head_sha }}"
+          --commit-dirty=false
+

@@ -391,3 +391,15 @@ The user intentionally excluded `talks.pankajmouriya.com` from the Cloudflare mi
 ### Checkpoint 89: Planned downtime cutover selected
 
 The user accepted a short website outage and removed the requirement to preserve Netlify routing through Cloudflare. Reworked the runbook so Cloudflare activates with no apex, `www`, or `talks` website record: delete the two prepared Netlify CNAMEs, continue to activation, delegate GoDaddy to the assigned Cloudflare nameservers, confirm the active zone, and attach application records only after the new deployment is verified. The homepage and `www` will be unavailable during that interval, and `talks` remains intentionally retired. Netlify records and projects remain unchanged as rollback sources.
+
+### Checkpoint 90: Cloudflare Pages deployment design — complete
+
+Recorded the approved Direct Upload architecture for the public `pankajmouriya/systems-understood` repository. Next.js emits a static `out/` directory; GitHub CI validates and uploads one immutable artifact; production deploys that exact artifact only after a successful push to `main`. Cloudflare credentials remain GitHub-managed, the Pages project is created on the first deployment if absent, and the custom domain is attached only after the `pages.dev` acceptance checks pass.
+
+### Checkpoint 91: Static export and Cloudflare routing — verified locally
+
+Converted Next.js 16 to `output: 'export'`, enabled static image output, marked RSS and metadata routes static, and added an export verifier. Replaced the request-time search endpoint with a generated `/search-index.json` and browser-side ranking. Moved the search, résumé, book-root, and complete legacy migration map into Pages `_redirects`, preserving the existing `308` behavior, and added baseline security headers. All focused deployment and search tests pass, and the production build emits 47 static routes with a valid export contract.
+
+### Checkpoint 92: Cloudflare runtime and GitHub automation — implemented
+
+Pinned Wrangler `4.149.0`, changed Playwright to serve `out/` through `wrangler pages dev`, and verified the static runtime after installing the matching Chromium. The first full run reached all 43 browser cases: 40 passed and three exposed a query-preservation compatibility issue, an expected redirect-status mismatch, and an article test scoped too broadly. The fixes were isolated and the 10 affected article/discovery checks now pass. Added CI, production deployment, pull-request preview, Dependabot, artifact, credential, project-creation, and branch-gating contracts. The next gate is the final full local suite, repository push, GitHub Actions run, and hosted `pages.dev` acceptance.

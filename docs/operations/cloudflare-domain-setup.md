@@ -4,10 +4,12 @@
 - **Registrar:** GoDaddy
 - **Current DNS and hosting:** NS1 / Netlify
 - **Target authoritative DNS:** Cloudflare
-- **Future application target:** Cloudflare, pending a verified Next.js deployment design
+- **Application target:** Cloudflare Pages static export through GitHub Actions Direct Upload
 - **Cutover policy:** Planned downtime accepted; Netlify is excluded from active Cloudflare DNS
 
 This runbook moves DNS authority to Cloudflare without transferring the domain registration away from GoDaddy. Complete each checkpoint in order. The user accepted a planned outage between nameserver activation and the new Cloudflare application deployment. Do not delete the Netlify projects or source DNS zone until the replacement deployment has passed its hosted checks.
+
+**Current migration status (2026-10-11):** The user reports that GoDaddy now has the assigned Cloudflare nameservers and Cloudflare zone activation is in progress. The zone intentionally has no website records during this interval. Application build and deployment are covered by [`cloudflare-pages-deployment.md`](./cloudflare-pages-deployment.md).
 
 ## Current public state
 
@@ -168,7 +170,7 @@ Do this only after Cloudflare shows the zone as **Active** and the assigned Clou
 
 Do not invent or modify these values.
 
-## Stop point before application deployment
+## Handoff to application deployment
 
 DNS migration is complete when:
 
@@ -179,7 +181,7 @@ Cloudflare zone: Active
 DNSSEC: Active
 Planned website outage: active until the Cloudflare application is attached
 Legacy talks hostname: intentionally not migrated
-Cloudflare Pages or Workers deployment: not connected yet
+Cloudflare Pages deployment: follow cloudflare-pages-deployment.md
 ```
 
 Keep the old Netlify sites and DNS account recoverable until the new hosted preview, custom domain, TLS, redirects, and rollback checks pass.

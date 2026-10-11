@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate static export
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.3
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install browser runtime
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Test content and deployment contracts
+        run: pnpm test
+
+      - name: Build static site
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://pankajmouriya.com
+
+      - name: Verify export
+        run: pnpm verify:export
+
+      - name: Test exported site in Cloudflare runtime
+        run: pnpm test:browser
+        env:
+          PLAYWRIGHT_REUSE_EXPORT: '1'
+
+      - name: Upload verified Pages artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: cloudflare-pages-out
+          path: out
+          if-no-files-found: error
+          retention-days: 7
+
+  preview:
+    name: Deploy pull request preview
+    needs: validate
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Download verified Pages artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: cloudflare-pages-out
+          path: out
+
+      - name: Deploy preview
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy out --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=pr-${{ github.event.pull_request.number }} --commit-hash=${{ github.event.pull_request.head.sha }}
+

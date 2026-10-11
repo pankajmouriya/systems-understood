@@ -10,7 +10,9 @@ export default defineConfig({
     channel: process.env.PLAYWRIGHT_CHANNEL || undefined,
   },
   webServer: {
-    command: 'pnpm build && pnpm verify:export && pnpm preview:cloudflare',
+    command: process.env.PLAYWRIGHT_REUSE_EXPORT
+      ? 'pnpm preview:cloudflare'
+      : 'pnpm build && pnpm verify:export && pnpm preview:cloudflare',
     url: 'http://127.0.0.1:3100/blog/devtools',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
