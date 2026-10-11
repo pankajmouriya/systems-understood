@@ -33,7 +33,7 @@ export function SiteSearch({ open, onOpenChange }: { open: boolean; onOpenChange
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const initial = params.get('search');
+    const initial = params.get('search') ?? params.get('q');
     if (initial !== null) {
       queueMicrotask(() => {
         const value = initial.slice(0, 120);
@@ -42,6 +42,7 @@ export function SiteSearch({ open, onOpenChange }: { open: boolean; onOpenChange
         onOpenChange(true);
       });
       params.delete('search');
+      params.delete('q');
       const remaining = params.toString();
       window.history.replaceState(window.history.state, '', `${window.location.pathname}${remaining ? `?${remaining}` : ''}`);
     }

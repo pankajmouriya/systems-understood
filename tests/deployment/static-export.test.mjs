@@ -32,13 +32,13 @@ test('Cloudflare redirects preserve every legacy route and app alias', async () 
   const legacyRoutes = JSON.parse(await read('docs/migration/legacy-route-map.json'));
 
   for (const { old_url: source, new_url: destination } of legacyRoutes) {
-    assert.match(redirects, new RegExp(`^${source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s+${destination.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s+301$`, 'm'));
+    assert.match(redirects, new RegExp(`^${source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s+${destination.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s+308$`, 'm'));
   }
 
   for (const rule of [
-    '/docs/sop /books/same-origin-policy 301',
-    '/docs/Kubernetes/Kubernetes101 /books/kubernetes-101 301',
-    '/resume /portfolio/resume 301',
+    '/docs/sop /books/same-origin-policy 308',
+    '/docs/Kubernetes/Kubernetes101 /books/kubernetes-101 308',
+    '/resume /portfolio/resume 308',
     '/search / 302',
   ]) {
     assert.ok(redirects.includes(rule), `missing redirect: ${rule}`);

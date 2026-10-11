@@ -10,10 +10,10 @@ test('article metadata, headings, and technical content render', async ({ page }
   await expect(page.getByRole('navigation', { name: 'On this page' })).toBeVisible();
   await expect(page.getByRole('table')).toBeVisible();
   await expect(page.getByRole('table').getByRole('columnheader')).toHaveCount(7);
-  await expect(page.getByRole('figure')).toHaveCount(14);
+  await expect(page.locator('article').getByRole('figure')).toHaveCount(14);
   await expect(page.locator('[data-code-block]')).toHaveCount(3);
   await expect(page.locator('img:not([alt])')).toHaveCount(0);
-  await expect(page.getByRole('figure').first()).toBeVisible();
+  await expect(page.locator('article').getByRole('figure').first()).toBeVisible();
   await expect(page.locator('.code-title').first()).toHaveText('postmessage.js');
   await expect(page).toHaveTitle(/The Blend of Developer Tools/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'http://localhost:3000/blog/devtools');

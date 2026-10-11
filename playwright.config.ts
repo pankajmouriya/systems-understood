@@ -10,7 +10,7 @@ export default defineConfig({
     channel: process.env.PLAYWRIGHT_CHANNEL || undefined,
   },
   webServer: {
-    command: 'npm run build && npm run start -- --hostname 127.0.0.1 --port 3100',
+    command: 'pnpm build && pnpm verify:export && pnpm preview:cloudflare',
     url: 'http://127.0.0.1:3100/blog/devtools',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

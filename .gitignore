@@ -1,6 +1,7 @@
 node_modules/
 .next/
 .source/
+.wrangler/
 out/
 coverage/
 playwright-report/
