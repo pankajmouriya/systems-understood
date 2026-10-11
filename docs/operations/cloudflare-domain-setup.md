@@ -27,6 +27,14 @@ The following values were verified before the migration:
 
 `https://pankajmouriya.com/` currently returns a Netlify response. `https://www.pankajmouriya.com/` redirects to the apex domain.
 
+The Netlify domain-management screen was reviewed on 2026-10-11 and confirms:
+
+- the existing Netlify project hostname is `quizzical-swartz-5afd76.netlify.app`;
+- `pankajmouriya.com` is the primary production domain;
+- `www.pankajmouriya.com` redirects automatically to the primary domain;
+- both custom domains use Netlify DNS;
+- HTTPS is active through a Let's Encrypt certificate covering `pankajmouriya.com` and `*.pankajmouriya.com`.
+
 These public queries do not prove that the old DNS zone has no additional subdomain, verification, DKIM, or service records. Compare the complete old DNS record list before changing nameservers.
 
 ## Checkpoint 1: Add the zone to Cloudflare
@@ -43,6 +51,8 @@ Reference: [Cloudflare DNS setup](https://developers.cloudflare.com/dns/get-star
 ## Checkpoint 2: Reconcile every DNS record
 
 Open the old domain/DNS configuration that currently backs the NS1 nameservers. This is likely the Netlify domain configuration. Export or capture the complete record list if the provider offers that option.
+
+In the current Netlify interface, open the project/team switcher in the upper-left, choose **Projects**, select **DNS** in the team sidebar, and open `pankajmouriya.com`. The project-level **Domain management** page is useful evidence, but it does not show the complete DNS zone.
 
 - [ ] Compare every old A, AAAA, CNAME, MX, TXT, SRV, CAA, and custom subdomain record with Cloudflare.
 - [ ] Copy any missing record into Cloudflare with the exact name, value, priority, and TTL.
