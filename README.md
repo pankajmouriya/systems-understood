@@ -15,6 +15,8 @@ Open `http://localhost:3000`. Routes include `/about`, `/blog`, `/books`, `/port
 
 Set `NEXT_PUBLIC_SITE_URL` to the absolute deployment origin before a public build so canonical URLs, RSS, robots, and sitemap use the intended host. Production deployment, DNS, and cutover are separate from this local implementation.
 
+The staged GoDaddy-to-Cloudflare DNS checklist is in [`docs/operations/cloudflare-domain-setup.md`](docs/operations/cloudflare-domain-setup.md). It preserves the current Netlify site while Cloudflare becomes authoritative and records the deployment differences from the sibling `tsd.report` project.
+
 ## Verification
 
 ```sh
