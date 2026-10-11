@@ -3,6 +3,8 @@ import { Icon } from '@/components/ui/icon';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArticleIndexRow } from '@/components/writing/ArticleIndexRow';
+import Process from '@/components/shadcn-studio/blocks/timeline-component-07/timeline-component-07';
+import { experienceSteps } from '@/lib/experience-timeline';
 import { talks } from '@/lib/portfolio';
 import { getPublishedPages } from '@/lib/source';
 
@@ -27,5 +29,9 @@ export default function HomePage() {
       <div className="article-index">{more.map((post) => <ArticleIndexRow key={post.data.slug} post={post.data} />)}</div>
     </section>
     <section className="home-work" aria-labelledby="home-work-heading"><div><p className="eyebrow">Beyond the page</p><h2 id="home-work-heading">Work in the open.</h2></div><p>Projects, research, and speaking connect the writing to the work behind it. <Link href="/portfolio">Explore the portfolio <span aria-hidden="true">↗</span></Link></p><div className="home-work-links"><a className="home-project-feature surface-sheen" href="https://tsd.report" target="_blank" rel="noopener noreferrer"><span className="section-icon tone-teal"><Icon name="code" /></span><span>Selected project</span><strong>The Security Diff</strong><span>Security research and publication ↗</span></a><article className="home-speaking-feature surface-sheen" aria-label="Featured speaking"><div className="home-speaking-topline"><span className="section-icon tone-warm"><Icon name="mic" /></span><span>{talks.length} sessions</span></div><div className="home-speaking-copy"><p><span>{featuredTalk.event}</span><time>{featuredTalk.year}</time></p><h3>{featuredTalk.title}</h3><p>{featuredTalk.description}</p></div><Link href="/portfolio/talks">Explore the speaking archive <Icon name="arrow" /></Link></article></div></section>
+    <section className="home-experience" aria-labelledby="home-experience-heading">
+      <div className="home-experience-heading"><div><h2 id="home-experience-heading">Where I’ve worked</h2><p>From consulting and security research to product security at scale.</p></div><Link href="/portfolio">View the full portfolio <Icon name="arrow" /></Link></div>
+      <Process data={experienceSteps} />
+    </section>
   </main>;
 }
