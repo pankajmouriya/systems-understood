@@ -35,7 +35,17 @@ The Netlify domain-management screen was reviewed on 2026-10-11 and confirms:
 - both custom domains use Netlify DNS;
 - HTTPS is active through a Let's Encrypt certificate covering `pankajmouriya.com` and `*.pankajmouriya.com`.
 
-These public queries do not prove that the old DNS zone has no additional subdomain, verification, DKIM, or service records. Compare the complete old DNS record list before changing nameservers.
+The complete Netlify DNS zone contains three provider-managed `NETLIFY` records:
+
+| Netlify record | TTL | Netlify-managed target |
+| --- | --- | --- |
+| `pankajmouriya.com` | `3600` | `jolly-northcutt-b8f126.netlify.app` |
+| `www.pankajmouriya.com` | `3600` | `jolly-northcutt-b8f126.netlify.app` |
+| `talks.pankajmouriya.com` | `3600` | `jovial-kilby-174125.netlify.app` |
+
+`NETLIFY` is a provider-specific record type and cannot be copied to Cloudflare as written. A hosted check also found that `jolly-northcutt-b8f126.netlify.app` now returns 404, while the current project hostname `quizzical-swartz-5afd76.netlify.app` serves the same content and ETag as `pankajmouriya.com`. `jovial-kilby-174125.netlify.app` serves the same content and ETag as `talks.pankajmouriya.com`.
+
+The complete Netlify zone shown in the dashboard contains only these three records. No separate mail, verification, DKIM, CAA, IPv6, or other service record needs to be migrated from this zone snapshot.
 
 ## Checkpoint 1: Add the zone to Cloudflare
 
@@ -48,20 +58,42 @@ These public queries do not prove that the old DNS zone has no additional subdom
 
 Reference: [Cloudflare DNS setup](https://developers.cloudflare.com/dns/get-started/).
 
-## Checkpoint 2: Reconcile every DNS record
+## Checkpoint 2: Create the exact temporary Cloudflare records
 
-Open the old domain/DNS configuration that currently backs the NS1 nameservers. This is likely the Netlify domain configuration. Export or capture the complete record list if the provider offers that option.
+The complete source zone has now been reviewed. On Cloudflare's DNS record review screen, configure exactly these temporary records:
 
-In the current Netlify interface, open the project/team switcher in the upper-left, choose **Projects**, select **DNS** in the team sidebar, and open `pankajmouriya.com`. The project-level **Domain management** page is useful evidence, but it does not show the complete DNS zone.
+| Type | Name | Target | Proxy status | TTL |
+| --- | --- | --- | --- | --- |
+| CNAME | `@` | `apex-loadbalancer.netlify.com` | DNS only | Auto |
+| CNAME | `www` | `quizzical-swartz-5afd76.netlify.app` | DNS only | Auto |
+| CNAME | `talks` | `jovial-kilby-174125.netlify.app` | DNS only | Auto |
 
-- [ ] Compare every old A, AAAA, CNAME, MX, TXT, SRV, CAA, and custom subdomain record with Cloudflare.
-- [ ] Copy any missing record into Cloudflare with the exact name, value, priority, and TTL.
+Cloudflare accepts a CNAME at the apex and flattens it for DNS clients. Netlify documents `apex-loadbalancer.netlify.com` as the recommended external-DNS target when the provider supports ALIAS, ANAME, or CNAME flattening.
+
+For each record:
+
+1. Select **Add record**.
+2. Choose **CNAME**.
+3. Enter the Name and Target exactly as shown in the table.
+4. Turn **Proxy status** off so the cloud is gray and reads **DNS only**.
+5. Leave **TTL** at **Auto**.
+6. Save.
+
+Then reconcile anything Cloudflare imported automatically:
+
+- [ ] Delete any imported A or AAAA record at `@` that conflicts with the apex CNAME.
+- [ ] Delete any imported A, AAAA, or CNAME record at `www` that conflicts with the exact `www` CNAME above.
+- [ ] Delete any imported A, AAAA, or CNAME record at `talks` that conflicts with the exact `talks` CNAME above.
+- [ ] Do not create a record type named `NETLIFY`; Cloudflare does not use that provider-specific type.
+- [ ] Do not copy `jolly-northcutt-b8f126.netlify.app`; its direct endpoint currently returns 404.
+- [ ] Do not copy the observed `13.215.239.219` or `52.74.6.109` addresses; those were the resolved output of Netlify-managed routing, not the portable source configuration.
 - [ ] Do not copy the old NS or SOA records.
-- [ ] Keep existing web A and CNAME records **DNS only** during migration. Their cloud icon should be gray.
-- [ ] Keep TTL on **Auto** unless the old record requires another value.
-- [ ] Do not add a guessed Pages IP or Pages CNAME.
+- [ ] Do not add MX, TXT, CAA, or other service records unless another source proves they exist. The reviewed source zone contains only the three records above.
+- [ ] Do not add a Pages or Workers record yet.
 
-At minimum, the current apex and `www` behavior must be represented. Do not rely only on the two observed IP addresses if the old provider shows an alias or provider-managed record; reproduce the provider configuration Cloudflare supports.
+Keep the three original records unchanged in Netlify. They remain the rollback source until the Cloudflare zone and both existing sites have been verified.
+
+Reference: [Netlify external DNS configuration](https://docs.netlify.com/manage/domains/configure-domains/configure-external-dns/).
 
 ## Checkpoint 3: Confirm DNSSEC is clear
 
@@ -116,9 +148,21 @@ Once Cloudflare shows **Active**, verify:
 ```text
 https://pankajmouriya.com/
 https://www.pankajmouriya.com/
+https://talks.pankajmouriya.com/
 ```
 
-Expected at this stage: the existing Netlify site still loads, and `www` still redirects to the apex domain.
+Expected at this stage: the existing Netlify homepage still loads, `www` still redirects to the apex domain, and the independent talks site still loads. Do not continue to application deployment if any of these checks fail.
+
+Useful read-only checks:
+
+```sh
+dig +short NS pankajmouriya.com
+dig +short CNAME www.pankajmouriya.com
+dig +short CNAME talks.pankajmouriya.com
+curl -I https://pankajmouriya.com/
+curl -I https://www.pankajmouriya.com/
+curl -I https://talks.pankajmouriya.com/
+```
 
 ## Checkpoint 7: Enable DNSSEC again
 
@@ -142,6 +186,7 @@ Authoritative DNS: Cloudflare
 Cloudflare zone: Active
 DNSSEC: Active
 Existing Netlify site: still reachable
+Existing talks site: still reachable
 Cloudflare Pages or Workers deployment: not connected yet
 ```
 
