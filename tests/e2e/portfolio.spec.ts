@@ -17,7 +17,7 @@ test('footer closes the page with useful publication and portfolio paths', async
   await expect(footer.getByRole('heading', { name: /There is always more to understand/ })).toBeVisible();
   await expect(footer.getByRole('link', { name: 'Explore the writing' })).toHaveAttribute('href', '/blog');
   await expect(footer.getByRole('link', { name: 'Books' })).toHaveAttribute('href', '/books');
-  await expect(footer.getByRole('link', { name: 'Talks & conferences' })).toHaveAttribute('href', '/portfolio/talks');
+  await expect(footer.getByRole('link', { name: 'Speaking' })).toHaveAttribute('href', '/portfolio/talks');
   await expect(footer.getByRole('link', { name: 'RSS feed' })).toHaveAttribute('href', '/rss.xml');
   await expect(footer.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/pankajmouriya');
   await footer.getByRole('link', { name: 'Back to top' }).click();
@@ -35,9 +35,19 @@ test('portfolio routes show experience, a maintained project, and talks', async 
   await expect(page).toHaveURL(/\/portfolio\/projects$/);
   await expect(page.getByRole('navigation', { name: 'Portfolio sections' }).getByRole('link', { name: 'Projects' })).toHaveAttribute('aria-current', 'page');
   await expect(page.getByRole('heading', { name: 'The Security Diff' })).toBeVisible();
-  await page.getByRole('link', { name: 'Talks', exact: true }).first().click();
+  await page.getByRole('link', { name: 'Speaking', exact: true }).first().click();
   await expect(page).toHaveURL(/\/portfolio\/talks$/);
   await expect(page.getByText('BSides Goa 2024')).toBeVisible();
+});
+
+test('homepage surfaces a notable talk and the complete speaking archive', async ({ page }) => {
+  await page.goto('/');
+
+  const speaking = page.getByRole('article', { name: 'Featured speaking' });
+  await expect(speaking.getByRole('heading', { name: 'Safeguarding Against RCE through Dependency Management and eBPF' })).toBeVisible();
+  await expect(speaking.getByText('BSides Goa 2024')).toBeVisible();
+  await expect(speaking.getByText('9 sessions')).toBeVisible();
+  await expect(speaking.getByRole('link', { name: 'Explore the speaking archive' })).toHaveAttribute('href', '/portfolio/talks');
 });
 
 test('résumé is a source-backed portfolio section with a downloadable document', async ({ page }) => {

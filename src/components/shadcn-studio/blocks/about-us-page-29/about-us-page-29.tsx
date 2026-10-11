@@ -14,7 +14,7 @@ import { experience } from '@/lib/portfolio';
 
 const facts = [
   { value: '5', label: 'roles' },
-  { value: '9', label: 'talks' },
+  { value: '9', label: 'talks', href: '/portfolio/talks' },
   { value: '2', label: 'guides' },
 ] as const;
 
@@ -54,7 +54,7 @@ function ProfileCard() {
               <div><strong>Pankaj Mouriya</strong><span><MapPin aria-hidden="true" /> Bengaluru, India</span></div>
             </div>
             <Separator />
-            <dl className="about-facts">{facts.map(({ value, label }) => <div key={label}><dt>{value}</dt><dd>{label}</dd></div>)}</dl>
+            <dl className="about-facts">{facts.map((fact) => <div key={fact.label}><dt>{fact.value}</dt><dd>{fact.label}</dd></div>)}</dl>
             <div className="about-card-current"><span>Currently at {experience[0].organization}</span><p>{experience[0].summary}</p></div>
             <span className="about-flip-hint"><RotateCcw aria-hidden="true" /> Flip for the short version</span>
           </CardContent>
@@ -72,6 +72,7 @@ function ProfileCard() {
           </CardContent>
         </Card>
       </button>
+      {!isFlipped && <Link className="about-talks-stat-link" href="/portfolio/talks" aria-label="9 talks" />}
     </motion.div>
     <div className="about-profile-footer"><Badge variant="outline" className="about-connect-status"><span />Available to connect</Badge><Link href="/portfolio">Explore my experience <ArrowUpRight aria-hidden="true" /></Link></div>
   </div>;

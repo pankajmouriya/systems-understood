@@ -3,6 +3,7 @@ import { Icon } from '@/components/ui/icon';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArticleIndexRow } from '@/components/writing/ArticleIndexRow';
+import { talks } from '@/lib/portfolio';
 import { getPublishedPages } from '@/lib/source';
 
 export const metadata: Metadata = { title: 'Pankaj Mouriya — Engineering, security, and writing', alternates: { canonical: '/' } };
@@ -11,6 +12,7 @@ export default function HomePage() {
   const posts = getPublishedPages();
   const selected = posts.find((post) => post.data.slug === 'devtools');
   const more = posts.filter((post) => post.data.slug !== 'devtools').slice(0, 3);
+  const featuredTalk = talks[0];
   return <main id="main-content" className="home-page">
     <HeroSection />
     {selected && <section className="home-feature-section" aria-labelledby="selected-writing" data-featured-writing>
@@ -24,6 +26,6 @@ export default function HomePage() {
       <div className="writing-section-heading"><div><p className="eyebrow">Beyond the feature</p><h2 id="more-writing-title">More from the archive</h2></div><Link href="/blog">View all {posts.length} articles <Icon name="arrow" /></Link></div>
       <div className="article-index">{more.map((post) => <ArticleIndexRow key={post.data.slug} post={post.data} />)}</div>
     </section>
-    <section className="home-work" aria-labelledby="home-work-heading"><div><p className="eyebrow">Beyond the page</p><h2 id="home-work-heading">Work in the open.</h2></div><p>Projects, research, and talks connect the writing to the work behind it. <Link href="/portfolio">Explore the portfolio <span aria-hidden="true">↗</span></Link></p><div className="home-work-links"><a className="surface-sheen" href="https://tsd.report" target="_blank" rel="noopener noreferrer"><span className="section-icon tone-teal"><Icon name="code" /></span><span>Selected project</span><strong>The Security Diff</strong><span>Security research and publication ↗</span></a><Link className="surface-sheen" href="/portfolio/talks"><span className="section-icon tone-warm"><Icon name="mic" /></span><span>On stage</span><strong>Talks &amp; conferences</strong><span>See the speaking archive ↗</span></Link></div></section>
+    <section className="home-work" aria-labelledby="home-work-heading"><div><p className="eyebrow">Beyond the page</p><h2 id="home-work-heading">Work in the open.</h2></div><p>Projects, research, and speaking connect the writing to the work behind it. <Link href="/portfolio">Explore the portfolio <span aria-hidden="true">↗</span></Link></p><div className="home-work-links"><a className="home-project-feature surface-sheen" href="https://tsd.report" target="_blank" rel="noopener noreferrer"><span className="section-icon tone-teal"><Icon name="code" /></span><span>Selected project</span><strong>The Security Diff</strong><span>Security research and publication ↗</span></a><article className="home-speaking-feature surface-sheen" aria-label="Featured speaking"><div className="home-speaking-topline"><span className="section-icon tone-warm"><Icon name="mic" /></span><span>{talks.length} sessions</span></div><div className="home-speaking-copy"><p><span>{featuredTalk.event}</span><time>{featuredTalk.year}</time></p><h3>{featuredTalk.title}</h3><p>{featuredTalk.description}</p></div><Link href="/portfolio/talks">Explore the speaking archive <Icon name="arrow" /></Link></article></div></section>
   </main>;
 }

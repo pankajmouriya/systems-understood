@@ -15,7 +15,7 @@ const explore = [
 const work: { label: string; href: string; external?: boolean }[] = [
   { label: 'Experience', href: '/portfolio' },
   { label: 'Projects', href: '/portfolio/projects' },
-  { label: 'Talks & conferences', href: '/portfolio/talks' },
+  { label: 'Speaking', href: '/portfolio/talks' },
   { label: 'Résumé', href: '/portfolio/resume' },
   { label: 'The Security Diff', href: 'https://tsd.report', external: true },
 ];

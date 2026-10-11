@@ -8,10 +8,11 @@ test('about page combines biography, portrait, and an interactive profile card',
   await expect(page.getByRole('img', { name: 'Pankaj Mouriya outdoors' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'About Me', exact: true })).toHaveAttribute('aria-current', 'page');
   await expect(page.locator('.about-facts > div')).toHaveText(['5roles', '9talks', '2guides']);
+  await expect(page.getByRole('link', { name: '9 talks' })).toHaveAttribute('href', '/portfolio/talks');
 
   const profileCard = page.getByRole('button', { name: 'Flip profile card' });
   await expect(profileCard).toHaveAttribute('aria-pressed', 'false');
-  await profileCard.click();
+  await profileCard.press('Enter');
   await expect(profileCard).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByTestId('profile-card-back')).toHaveAttribute('aria-hidden', 'false');
   await profileCard.press('Enter');
