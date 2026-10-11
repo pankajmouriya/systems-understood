@@ -10,7 +10,7 @@ test('CI validates and uploads the static Pages artifact', async () => {
   assert.match(workflow, /pull_request:/);
   assert.match(workflow, /push:[\s\S]*branches:\s*\[main\]/);
   assert.match(workflow, /permissions:\s*\n\s+contents:\s+read/);
-  assert.match(workflow, /pnpm\/action-setup@v4/);
+  assert.match(workflow, /pnpm\/action-setup@v6/);
   assert.match(workflow, /version:\s+10\.18\.3/);
   assert.match(workflow, /node-version:\s+24/);
   for (const command of ['pnpm lint', 'pnpm typecheck', 'pnpm test', 'pnpm build', 'pnpm verify:export', 'pnpm test:browser']) {

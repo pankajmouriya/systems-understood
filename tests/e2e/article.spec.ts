@@ -16,7 +16,8 @@ test('article metadata, headings, and technical content render', async ({ page }
   await expect(page.locator('article').getByRole('figure').first()).toBeVisible();
   await expect(page.locator('.code-title').first()).toHaveText('postmessage.js');
   await expect(page).toHaveTitle(/The Blend of Developer Tools/);
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'http://localhost:3000/blog/devtools');
+  const canonicalOrigin = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `${canonicalOrigin}/blog/devtools`);
   await expect(page.locator('meta[property="article:published_time"]')).toHaveAttribute('content', '2021-07-07');
 });
 

@@ -28,7 +28,7 @@ Create a GitHub environment named `production`. Environment approval is optional
 
 `.github/workflows/ci.yml` runs on pull requests and pushes to `main`:
 
-1. install pnpm `10.18.3` and Node.js `24`;
+1. install pnpm `10.18.3` and Node.js `24` with the Node 24 compatible pnpm setup action;
 2. install the frozen dependency graph and Chromium;
 3. run lint, type checks, content/deployment tests, and the Next.js build;
 4. verify the static export contract;
