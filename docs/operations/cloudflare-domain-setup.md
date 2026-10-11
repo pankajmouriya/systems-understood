@@ -93,6 +93,35 @@ Then reconcile anything Cloudflare imported automatically:
 
 Keep the three original records unchanged in Netlify. They remain the rollback source until the Cloudflare zone and both existing sites have been verified.
 
+### If Cloudflare reports that the host already exists
+
+Cloudflare's initial scan may import resolved Netlify A records instead of the source `NETLIFY` records. Attempting to add the CNAME first then produces:
+
+```text
+An A, AAAA, or CNAME record with that host already exists.
+```
+
+The reviewed Cloudflare import contained these conflicting records:
+
+| Type | Name | Imported value |
+| --- | --- | --- |
+| A | `@` / `pankajmouriya.com` | `13.52.188.95` |
+| A | `@` / `pankajmouriya.com` | `52.52.192.191` |
+| A | `www` | `98.84.224.111` |
+| A | `www` | `18.208.88.157` |
+
+These are another set of resolved Netlify edge addresses and should not become the portable Cloudflare configuration. While the Cloudflare zone is still pending and the Netlify nameservers remain authoritative:
+
+1. Cancel the unsaved CNAME form.
+2. Delete both imported A records whose Name is the apex domain.
+3. Delete both imported A records whose Name is `www`.
+4. Add and save the `@` CNAME from the exact table above.
+5. Add and save the `www` CNAME from the exact table above.
+6. Add and save the `talks` CNAME; the automatic scan did not discover it.
+7. Confirm the table contains exactly the three DNS-only CNAME records before selecting **Continue to activation**.
+
+Deleting records from this pending Cloudflare zone does not alter the live Netlify zone. Do not delete the source records in Netlify.
+
 Reference: [Netlify external DNS configuration](https://docs.netlify.com/manage/domains/configure-domains/configure-external-dns/).
 
 ## Checkpoint 3: Confirm DNSSEC is clear
@@ -105,6 +134,8 @@ No public DS record was found, so DNSSEC does not appear to be enabled. Confirm 
 - [ ] Confirm that there is no DS record.
 
 If a DS record exists, remove it and wait until GoDaddy and public DNS no longer show it before continuing. A stale DS record can make the domain fail DNS validation after the nameserver change.
+
+The reviewed GoDaddy screen shows **DNS** → **Nameservers**, the four expected `dns*.p06.nsone.net` values, and a separate **DS Records** tab. Use that DS Records tab for this check. The **Connect Domain** button is unrelated to this migration and should not be used.
 
 ## Checkpoint 4: Capture the assigned Cloudflare nameservers
 
@@ -123,12 +154,15 @@ Proceed only after Checkpoints 1 through 4 are complete.
 
 - [ ] Open **GoDaddy Domain Portfolio**.
 - [ ] Select `pankajmouriya.com`.
-- [ ] Select **DNS**, then **Nameservers**.
-- [ ] Choose **Change Nameservers** or **I'll use my own nameservers**.
+- [ ] Select **DNS**, then **Nameservers**. The screen should still show **Using custom nameservers** and the four `dns*.p06.nsone.net` values.
+- [ ] Select **Change Nameservers**.
+- [ ] Choose **I'll use my own nameservers** if GoDaddy asks which mode to use.
 - [ ] Remove all four current `dns*.p06.nsone.net` nameservers.
 - [ ] Enter the two exact Cloudflare nameservers.
 - [ ] Confirm that only those two Cloudflare nameservers remain.
 - [ ] Save and complete GoDaddy identity verification.
+
+Do not select GoDaddy's **Connect Domain** action. Do not enter `apex-loadbalancer.netlify.com` or either `.netlify.app` hostname into the nameserver form; those belong only in Cloudflare's DNS records table. The GoDaddy nameserver form receives only the two assigned `*.ns.cloudflare.com` hostnames.
 
 This changes DNS authority only. Registration and renewal remain at GoDaddy.
 

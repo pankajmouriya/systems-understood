@@ -375,3 +375,11 @@ Reviewed the Netlify domain-management evidence. `pankajmouriya.com` is the prim
 ### Checkpoint 85: Netlify zone translated for Cloudflare — complete
 
 Reviewed the complete three-record Netlify zone and added exact temporary Cloudflare records for the apex, `www`, and the separately hosted `talks` subdomain. Live HTTPS checks showed that the project hostname `quizzical-swartz-5afd76.netlify.app` matches the apex response, the old provider-managed `jolly-northcutt-b8f126.netlify.app` target returns 404 directly, and `jovial-kilby-174125.netlify.app` matches the talks site. The runbook now translates the proprietary `NETLIFY` records to a flattened apex CNAME targeting Netlify's documented load balancer and DNS-only CNAMEs targeting the two active project hostnames. It explicitly excludes the transient resolved IPs, stale hostname, conflicting imports, old NS/SOA, and premature Cloudflare application records. Nameserver cutover remains gated on comparing Cloudflare's record review screen with this exact table and recording its two assigned nameservers.
+
+### Checkpoint 86: Cloudflare import conflict — resolved in runbook
+
+Reviewed Cloudflare's pending-zone record screen. Its automatic scan materialized four Netlify edge A records—two at the apex and two at `www`—and omitted the `talks` record, so the required apex CNAME correctly failed with the same-host conflict. Added the exact remediation sequence to the runbook: delete only those four records in the inactive Cloudflare zone, create the three approved DNS-only CNAMEs, verify the table, and then continue to activation. The authoritative Netlify zone remains unchanged, so the live homepage and talks site are unaffected during this preparation step.
+
+### Checkpoint 87: GoDaddy delegation screen — confirmed
+
+Reviewed the GoDaddy DNS nameserver screen and confirmed the registrar still lists the same four Netlify/NS1 nameservers observed publicly. The adjacent DS Records tab provides the required DNSSEC preflight. Clarified the runbook's exact GoDaddy controls and added a guard against the unrelated Connect Domain action or accidentally entering Netlify application targets into the nameserver form. The registrar remains unchanged until the Cloudflare DNS table contains the three approved records and Cloudflare supplies its assigned pair.
