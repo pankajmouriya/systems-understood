@@ -39,6 +39,8 @@ test('production deploys only the successful main CI artifact', async () => {
   assert.match(workflow, /--branch main/);
   assert.match(workflow, /pages\/projects\/\$\{CLOUDFLARE_PROJECT_NAME\}\/domains/);
   assert.match(workflow, /"name":"pankajmouriya\.com"/);
+  assert.match(workflow, /Verify production domain/);
+  assert.match(workflow, /domain_status.*active/s);
 });
 
 test('Dependabot tracks package and workflow dependencies', async () => {

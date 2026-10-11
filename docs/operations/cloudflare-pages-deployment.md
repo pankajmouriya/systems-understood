@@ -85,7 +85,7 @@ Acceptance requires:
 
 ## Attach `pankajmouriya.com`
 
-The production workflow attaches the apex automatically after the verified artifact is deployed. It first lists the project's domains and creates `pankajmouriya.com` only when absent, so retries are safe. Open **Cloudflare → Workers & Pages → systems-understood → Custom domains** and wait until its status is **Active** and its certificate is issued.
+The production workflow attaches the apex automatically after the verified artifact is deployed. It first lists the project's domains and creates `pankajmouriya.com` only when absent, so retries are safe. It retries validation when needed and waits up to five minutes for Cloudflare to report the domain **Active**; blocked, deactivated, or error states fail immediately with their validation details.
 
 `www.pankajmouriya.com` remains a separate owner action because the deployment token has only Pages Edit permission. Follow Cloudflare's documented **Bulk Redirects** setup from `www.pankajmouriya.com` to `https://pankajmouriya.com` with **Preserve query string**, **Subpath matching**, and **Preserve path suffix** enabled. Create the proxied `www` placeholder record Cloudflare requests. Do not attach `www` as a second Pages hostname because that would serve duplicate content instead of enforcing the canonical apex.
 

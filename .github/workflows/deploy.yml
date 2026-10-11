@@ -94,3 +94,46 @@ jobs:
             jq -e '.success == true' "${create_file}" >/dev/null
           fi
 
+      - name: Verify production domain
+        shell: bash
+        run: |
+          domain_url="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/${CLOUDFLARE_PROJECT_NAME}/domains/pankajmouriya.com"
+          domain_file="${RUNNER_TEMP}/cloudflare-pages-domain.json"
+
+          curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            "${domain_url}" > "${domain_file}"
+
+          if [[ "$(jq -r '.result.status' "${domain_file}")" != "active" ]]; then
+            curl --fail-with-body --silent --show-error \
+              -X PATCH \
+              -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+              "${domain_url}" > "${domain_file}"
+          fi
+
+          for attempt in {1..30}; do
+            curl --fail-with-body --silent --show-error \
+              -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+              "${domain_url}" > "${domain_file}"
+
+            domain_status="$(jq -r '.result.status' "${domain_file}")"
+            validation_status="$(jq -r '.result.validation_data.status' "${domain_file}")"
+            verification_status="$(jq -r '.result.verification_data.status' "${domain_file}")"
+            echo "Domain ${domain_status}; validation ${validation_status}; verification ${verification_status}."
+
+            if [[ "${domain_status}" == "active" ]]; then
+              exit 0
+            fi
+
+            if [[ "${domain_status}" =~ ^(blocked|deactivated|error)$ ]]; then
+              jq '{status: .result.status, validation: .result.validation_data, verification: .result.verification_data}' "${domain_file}"
+              exit 1
+            fi
+
+            sleep 10
+          done
+
+          echo "Cloudflare did not activate pankajmouriya.com within five minutes."
+          jq '{status: .result.status, validation: .result.validation_data, verification: .result.verification_data}' "${domain_file}"
+          exit 1
+
